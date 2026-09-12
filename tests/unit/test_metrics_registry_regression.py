@@ -1,0 +1,114 @@
+"""Metrics + regression engine + registry unit tests."""
+import math
+
+import pytest
+
+from agent_eval_harness.core.errors import InfraError
+from agent_eval_harness.core.schemas import BaselineRecord, RunRecord
+from agent_eval_harness.metrics.aggregation import percentile, wilson_ci
+from agent_eval_harness.registry.registry import list_benchmarks, load_benchmark
+
+
+def test_wilson_known_values():
+    lo, hi = wilson_ci(0, 0)
+    assert (lo, hi) == (0.0, 0.0)
+    lo, hi = wilson_ci(50, 50)
+    assert lo <= 0.9 <= hi or math.isclose(lo, 0.9, abs_tol=0.05)
+    lo, hi = wilson_ci(1, 2)
+    assert 0.0 < lo < 0.5 < hi < 1.0
+
+
+def test_percentile():
+    assert percentile([1, 2, 3, 4, 5], 50) == 3
+    assert percentile([], 50) == 0.0
+    assert percentile([10], 95) == 10
+
+
+def test_registry_load_and_validate():
+    bm = load_benchmark("react_basic")
+    assert bm.name == "react_basic" and bm.evaluators
+    names = [b["name"] for b in list_benchmarks()]
+    assert {"react_basic", "supervisor_basic", "map_reduce_basic",
+            "failure_recovery", "adversarial"} <= set(names)
+    with pytest.raises(InfraError):
+        load_benchmark("no_such_benchmark")
+
+
+def test_registry_rejects_unknown_evaluator(tmp_path):
+    bad = tmp_path / "bad.yaml"
+    bad.write_text("""
+benchmark: {name: bad, version: "1.0", pattern: react}
+dataset: {path: datasets/react/golden.jsonl}
+evaluators: [task_checks, not_a_real_evaluator]
+thresholds: {overall_pass_rate: 0.5}
+""")
+    with pytest.raises(InfraError):
+        load_benchmark(str(bad))
+
+
+def test_registry_rejects_bad_threshold(tmp_path):
+    bad = tmp_path / "bad2.yaml"
+    bad.write_text("""
+benchmark: {name: bad2, version: "1.0", pattern: react}
+dataset: {path: datasets/react/golden.jsonl}
+evaluators: [task_checks]
+thresholds: {overall_pass_rate: 1.5}
+""")
+    with pytest.raises(InfraError):
+        load_benchmark(str(bad))
+
+
+# ---- regression engine -----------------------------------------------------
+
+
+def _record(rate_a, n=40, evals=None):
+    from agent_eval_harness.core.schemas import CaseVerdict
+
+    verdicts = []
+    for i in range(n):
+        passed = i < int(rate_a * n)
+        verdicts.append(CaseVerdict(
+            case_id=f"c{i}", pattern="react", category="normal", passed=passed,
+            scores=evals or {}, failed_evaluators=[] if passed else ["task_checks"]))
+    return RunRecord(
+        run_id="r1", benchmark="react_basic", benchmark_version="1.0",
+        agent="builtin:react", agent_pattern="react", seed=1, ablation="full",
+        versions={}, config={},
+        verdicts=verdicts,
+        metrics={"cases": n, "passed": int(rate_a * n), "pass_rate": rate_a,
+                 "per_evaluator": evals and {} or {}})
+
+
+def _baseline(rate):
+    return BaselineRecord(name="b", run_id="r0", benchmark="react_basic",
+                          created_at="t",
+                          metrics={"pass_rate": rate, "per_evaluator": {}})
+
+
+def test_regression_detected():
+    from agent_eval_harness.regression.engine import check_regression
+
+    gate = check_regression(_record(0.84), _baseline(0.84))
+    assert gate.passed
+    gate = check_regression(_record(0.79), _baseline(0.84))
+    assert not gate.passed
+    assert "REGRESSION DETECTED" in gate.summary
+    assert gate.exit_code == 1
+
+
+def test_regression_boundary_exact_threshold():
+    from agent_eval_harness.regression.engine import check_regression
+
+    # delta exactly -0.03 is NOT below threshold -0.03 -> ok (boundary is inclusive)
+    gate = check_regression(_record(0.81), _baseline(0.84))
+    assert gate.passed, "delta -0.03 should be within threshold"
+    gate = check_regression(_record(0.8099), _baseline(0.84))
+    assert not gate.passed
+
+
+def test_regression_insufficient_data():
+    from agent_eval_harness.regression.engine import check_regression
+
+    gate = check_regression(_record(0.5, n=5), _baseline(0.84))
+    assert any(f.verdict == "insufficient_data" for f in gate.findings)
+    assert not gate.passed  # fail-closed by default

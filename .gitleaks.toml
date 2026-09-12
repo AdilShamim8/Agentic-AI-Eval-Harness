@@ -1,0 +1,8 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Ignore test fixtures with dummy credentials"
+paths = [
+    '''tests/unit/test_security_basics\.py'''
+]
