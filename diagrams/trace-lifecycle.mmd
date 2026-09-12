@@ -1,0 +1,18 @@
+sequenceDiagram
+    participant R as Runner
+    participant E as Environment
+    participant A as Agent
+    participant G as ToolGateway
+    participant T as Tool
+    participant V as Evaluators
+    R->>E: prepare(case) [fresh store]
+    E->>A: RunContext(gateway, events, limits)
+    A->>G: tool_call(name, args)
+    G->>G: permission → validation → fault → retry
+    G->>T: handler(args)
+    T-->>G: value / error
+    G-->>A: observation
+    A-->>R: AgentResult (trajectory, answer, failure_class)
+    R->>V: evaluate(case, result) per evaluator (isolated)
+    V-->>R: EvaluationResult[]
+    R->>R: verdict + metrics + events export (redacted)

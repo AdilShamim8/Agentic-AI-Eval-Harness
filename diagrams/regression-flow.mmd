@@ -1,0 +1,7 @@
+flowchart TD
+    RUN["agent-eval run --benchmark X"] --> REC["RunRecord"]
+    REC --> BASE["baseline 'main'<br/>(pass_rate 0.893)"]
+    BASE --> CHK{"delta vs threshold<br/>(-0.03)"}
+    CHK -->|"0.893 → 0.750<br/>delta -0.143"| REG["REGRESSION DETECTED<br/>exit 1 → CI FAIL"]
+    CHK -->|"0.893 → 0.893"| PASS["GATE PASS<br/>exit 0"]
+    CHK -->|"n < 10"| INCON["inconclusive →<br/>fail closed"]

@@ -1,0 +1,44 @@
+graph TB
+    subgraph Clients["Clients"]
+        CLI["agent-eval CLI"]
+        PYT["pytest bridge"]
+        CI["GitHub Actions<br/>(ci · eval-gate · security)"]
+    end
+    subgraph Core["Runner pipeline"]
+        REG["Benchmark Registry<br/>(YAML, versioned)"]
+        RUN["Benchmark Runner"]
+        ENV["Environment per case<br/>(fresh store, gateway, guards)"]
+        EV["Event Recorder<br/>(JSONL, redacted)"]
+    end
+    subgraph UUT["Unit under test"]
+        AG["Pattern Agents ×5<br/>ReAct · Plan-Execute ·<br/>Supervisor · Swarm · Map-Reduce"]
+        ADP["Framework Adapters<br/>LangGraph · OpenAI Agents · CrewAI"]
+        MB["Model Backend<br/>ScriptedModel (deterministic)<br/>live backends (interface)"]
+    end
+    subgraph Harness["ToolGateway (harness engineering)"]
+        PERM["Permissions +<br/>arg guards"]
+        VAL["Validation + repair<br/>(ablatable)"]
+        RET["Retry + fault<br/>injection (ablatable)"]
+        TOO["Offline tools ×10"]
+    end
+    subgraph Eval["Evaluators (20)"]
+        DET["Deterministic<br/>outcome/tool checks"]
+        TRA["Trajectory + behavioral<br/>alignment · efficiency · loop ·<br/>termination · recovery · planning"]
+        JUD["LLM-as-Judge<br/>rubric (measured) · live (interface)"]
+    end
+    subgraph Post["Evidence"]
+        MET["Metrics + Wilson CI"]
+        CMP["Comparison + McNemar"]
+        REG2["Regression gates"]
+        REP["Reports MD/JSON<br/>failure taxonomy"]
+    end
+    CLI & PYT & CI --> RUN
+    RUN --> REG
+    RUN --> ENV --> AG & ADP
+    AG --> MB
+    AG & ADP --> PERM --> VAL --> RET --> TOO
+    ENV --> EV
+    RUN --> DET & TRA & JUD
+    DET & TRA & JUD --> MET --> CMP --> REG2 --> REP
+    classDef uut fill:#ffe9b3,stroke:#b8860b
+    class AG,ADP,MB uut

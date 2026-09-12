@@ -1,0 +1,13 @@
+flowchart TB
+    INJ["Adversarial benchmark input<br/>(task or tool output)"] --> SCREEN["Injection screener<br/>flag + audit (never drop)"]
+    SCREEN --> AG{"Agent"}
+    AG -->|"follows injection"| DENY["Gateway deny<br/>(case forbidden tools)"]
+    AG -->|"resists"| NORMAL["Normal tool call"]
+    DENY --> AUD["Audit JSONL"]
+    CALL["Tool call"] --> PERM{"Permission +<br/>arg guards"}
+    PERM -->|"allowed"| LIM{"Resource caps<br/>steps · calls · time · bytes"}
+    PERM -->|"denied ×3"| SEC["SECURITY_VIOLATION"]
+    LIM --> TOOL["Offline tool<br/>(no network)"]
+    TOOL --> OUT["Observation"]
+    NET["Any socket use"] -->|"NetworkGuard"| SEC
+    OUT --> RED["Redaction at export"]

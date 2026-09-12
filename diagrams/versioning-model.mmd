@@ -1,0 +1,13 @@
+graph LR
+    EXP["Experiment / Run"] --> VB["VersionBundle"]
+    VB --> A1["agent"]
+    VB --> M1["model backend"]
+    VB --> H1["harness (pkg ver + ablation)"]
+    VB --> B1["benchmark (name+ver)"]
+    VB --> D1["dataset (sha256)"]
+    VB --> E1["evaluator set"]
+    VB --> P1["prompt version"]
+    VB --> EN1["environment (python, os)"]
+    VB --> FP["fingerprint = sha256(bundle)"]
+    D1 --> SAME{"Compare runs"}
+    SAME -->|"revision differs"| WARN["version-drift warning"]
