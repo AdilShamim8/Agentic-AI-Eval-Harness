@@ -1,0 +1,69 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agent-eval-harness"
+version = "0.2.0"
+description = "pytest for Agentic AI — evaluation harness, benchmarks, trajectory evaluation, regression gates"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Principal AI Engineer" }]
+keywords = ["agents", "evaluation", "benchmarks", "llm", "regression", "trajectory"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Testing",
+]
+dependencies = [
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+    "mypy>=1.10",
+]
+live-judge = []  # live judge uses stdlib urllib; no extra deps needed
+
+[project.scripts]
+agent-eval = "agent_eval_harness.cli.app:main"
+eval = "agent_eval_harness.cli.app:main"  # convenience alias
+
+[project.entry-points.pytest11]
+agent_eval = "agent_eval_harness.pytest_plugin"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+agent_eval_harness = ["py.typed"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W"]
+ignore = [
+    "E501", "B011", "E741", "F541", "E402", "F841", "F401", "W291", "W293", "E731", "E703"
+]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+check_untyped_defs = false
+warn_unused_ignores = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "agent_eval: golden benchmark cases through the harness",
+    "benchmark: alias of agent_eval",
+]
+addopts = "-q"
