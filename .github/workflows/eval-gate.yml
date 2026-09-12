@@ -1,0 +1,41 @@
+name: eval-gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  evaluation-gate:
+    # Selected evaluations act as QUALITY GATES: CI FAILS if quality drops
+    # below the approved baseline thresholds (configs/gates.yaml).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: pip install -e .
+      - name: Smoke evaluation (blocking)
+        run: |
+          set -e
+          for b in react_basic plan_execute_basic supervisor_basic swarm_basic map_reduce_basic; do
+            agent-eval run --benchmark $b --limit 8
+          done
+      - name: Full benchmark run + threshold gates (blocking)
+        run: |
+          set -e
+          agent-eval run --benchmark react_basic
+          agent-eval run --benchmark failure_recovery
+      - name: Regression gate vs committed baseline (blocking)
+        run: |
+          RUN_ID=$(ls -t evals/runs/*.json | head -1 | xargs basename | cut -d. -f1)
+          agent-eval regression "$RUN_ID" --baseline main
+      - name: Adversarial security evaluation (blocking)
+        run: |
+          agent-eval run --benchmark adversarial
+      - name: Reproducibility check (same seed must be identical)
+        run: |
+          agent-eval repro --benchmark react_basic --repeats 3

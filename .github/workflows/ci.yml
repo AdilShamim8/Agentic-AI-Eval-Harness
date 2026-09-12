@@ -1,0 +1,36 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        run: pip install -e .[dev]
+      - name: Lint (ruff)
+        run: ruff check src tests scripts || true
+      - name: Format check (ruff)
+        run: ruff format --check src tests scripts || true
+      - name: Type check (mypy, non-blocking detail level)
+        run: mypy src/agent_eval_harness --ignore-missing-imports || true
+      - name: Unit + integration tests
+        run: pytest -m "not agent_eval" tests/unit tests/integration tests/failure_injection
+      - name: E2E + CLI tests
+        run: pytest tests/e2e --tb=short
+      - name: Benchmark validation
+        run: |
+          agent-eval validate
+          agent-eval list benchmarks
+      - name: Dataset integrity (byte-identical regeneration)
+        run: pytest tests/integration/test_runner_e2e.py -k "regenerates"

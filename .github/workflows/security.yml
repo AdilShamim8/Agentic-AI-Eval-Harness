@@ -1,0 +1,38 @@
+name: security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "0 6 * * 1"  # weekly, Mondays 06:00 UTC
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: pip install -e .[dev]
+      - name: Secret scan (pattern-based, repo-wide)
+        run: python scripts/scan_secrets.py --strict
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Dependency audit (pip-audit)
+        run: |
+          pip install pip-audit
+          pip-audit --skip-editable . || true  # advisories reported, non-blocking v0.1
+      - name: Security test suite (sandbox, injection, redaction)
+        run: pytest tests/unit/test_security_basics.py tests/integration/test_harness_and_adapters.py -k "security or sandbox or redaction or injection or forbidden or network"
+      - name: Adversarial injection evaluation
+        run: |
+          pip install -e .
+          agent-eval run --benchmark adversarial
