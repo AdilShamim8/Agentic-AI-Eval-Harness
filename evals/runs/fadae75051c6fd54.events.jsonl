@@ -1,0 +1,172 @@
+{"case_id": "", "kind": "run_start", "payload": {"ablation": "full", "agent": "builtin:swarm", "benchmark": "swarm_basic", "benchmark_version": "1.0", "cases": 8, "run_id": "fadae75051c6fd54", "seed": 20260912, "skill": 0.85}, "phase": "", "ts": 1789188425.197}
+{"case_id": "swarm-norm-001", "kind": "case_start", "payload": {"case_id": "swarm-norm-001", "category": "normal"}, "phase": "case", "ts": 1789188425.197}
+{"case_id": "swarm-norm-001", "kind": "tool_call", "payload": {"args": {"expression": "21 - 60"}, "tool": "calculator"}, "phase": "act", "ts": 1789188425.198}
+{"case_id": "swarm-norm-001", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.028, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188425.198}
+{"case_id": "swarm-norm-001", "kind": "tool_call", "payload": {"args": {"corpus": "city_data", "query": "the annual rainfall in Highland"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.198}
+{"case_id": "swarm-norm-001", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.03, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.198}
+{"case_id": "swarm-norm-001", "kind": "agent_done", "payload": {"case_id": "swarm-norm-001", "failure_class": "none", "latency_ms": 0.588, "ok": true, "termination": "answer", "tool_calls": 2}, "phase": "case", "ts": 1789188425.198}
+{"case_id": "swarm-norm-001", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-001", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-001", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-001", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-001", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-001", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-001", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-001", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-001", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-001", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-001", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-001", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-001", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-001", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-001", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-001", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-001", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-001", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-001", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-001", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-001", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-001", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-001", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-001", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-001", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-001", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-001", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-001", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-001", "kind": "case_end", "payload": {"case_id": "swarm-norm-001", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188425.198}
+{"case_id": "swarm-norm-002", "kind": "case_start", "payload": {"case_id": "swarm-norm-002", "category": "normal"}, "phase": "case", "ts": 1789188425.198}
+{"case_id": "swarm-norm-002", "kind": "tool_call", "payload": {"args": {"expression": "24 + 82"}, "tool": "calculator"}, "phase": "act", "ts": 1789188425.198}
+{"case_id": "swarm-norm-002", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.017, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188425.198}
+{"case_id": "swarm-norm-002", "kind": "tool_call", "payload": {"args": {"op": "upper", "text": "caf\u00e9 na\u00efve \u6d4b\u8bd5"}, "tool": "text_transform"}, "phase": "act", "ts": 1789188425.198}
+{"case_id": "swarm-norm-002", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.004, "ok": true, "tool": "text_transform"}, "phase": "observe", "ts": 1789188425.198}
+{"case_id": "swarm-norm-002", "kind": "agent_done", "payload": {"case_id": "swarm-norm-002", "failure_class": "none", "latency_ms": 0.241, "ok": true, "termination": "answer", "tool_calls": 2}, "phase": "case", "ts": 1789188425.198}
+{"case_id": "swarm-norm-002", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-002", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-002", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-002", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-002", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-002", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-002", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-002", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-002", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-002", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-002", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-002", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-002", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-002", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-002", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-002", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-002", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-002", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-002", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-002", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-002", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-002", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-002", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-002", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-002", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-002", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-002", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-002", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.198}
+{"case_id": "swarm-norm-002", "kind": "case_end", "payload": {"case_id": "swarm-norm-002", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188425.198}
+{"case_id": "swarm-norm-003", "kind": "case_start", "payload": {"case_id": "swarm-norm-003", "category": "normal"}, "phase": "case", "ts": 1789188425.198}
+{"case_id": "swarm-norm-003", "kind": "tool_call", "payload": {"args": {"corpus": "employee_handbook", "query": "the per-diem meal cap for domestic travel"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.199}
+{"case_id": "swarm-norm-003", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.026, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.199}
+{"case_id": "swarm-norm-003", "kind": "tool_call", "payload": {"args": {"corpus": "employee_handbook", "query": "the per-diem meal cap for domestic travel"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.199}
+{"case_id": "swarm-norm-003", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.02, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.199}
+{"case_id": "swarm-norm-003", "kind": "tool_call", "payload": {"args": {"text": "Data pipelines move records from sources through transforms into the warehouse before dashboards read them"}, "tool": "text_stats"}, "phase": "act", "ts": 1789188425.199}
+{"case_id": "swarm-norm-003", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.007, "ok": true, "tool": "text_stats"}, "phase": "observe", "ts": 1789188425.199}
+{"case_id": "swarm-norm-003", "kind": "agent_done", "payload": {"case_id": "swarm-norm-003", "failure_class": "none", "latency_ms": 0.331, "ok": true, "termination": "answer", "tool_calls": 3}, "phase": "case", "ts": 1789188425.199}
+{"case_id": "swarm-norm-003", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-003", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-003", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-003", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-003", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-003", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-003", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-003", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-003", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-003", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-003", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-003", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-003", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-003", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-003", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-003", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-003", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-003", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-003", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-003", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-003", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-003", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-003", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-003", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-003", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-003", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-003", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-003", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-003", "kind": "case_end", "payload": {"case_id": "swarm-norm-003", "failure_class": "test_failure", "passed": false}, "phase": "case", "ts": 1789188425.199}
+{"case_id": "swarm-norm-004", "kind": "case_start", "payload": {"case_id": "swarm-norm-004", "category": "normal"}, "phase": "case", "ts": 1789188425.199}
+{"case_id": "swarm-norm-004", "kind": "tool_call", "payload": {"args": {"key": "team.answer", "value": 236}, "tool": "store_set"}, "phase": "act", "ts": 1789188425.199}
+{"case_id": "swarm-norm-004", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.002, "ok": true, "tool": "store_set"}, "phase": "observe", "ts": 1789188425.199}
+{"case_id": "swarm-norm-004", "kind": "tool_call", "payload": {"args": {"key": "team.answer"}, "tool": "store_get"}, "phase": "act", "ts": 1789188425.199}
+{"case_id": "swarm-norm-004", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.002, "ok": true, "tool": "store_get"}, "phase": "observe", "ts": 1789188425.199}
+{"case_id": "swarm-norm-004", "kind": "agent_done", "payload": {"case_id": "swarm-norm-004", "failure_class": "none", "latency_ms": 0.161, "ok": true, "termination": "answer", "tool_calls": 2}, "phase": "case", "ts": 1789188425.199}
+{"case_id": "swarm-norm-004", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-004", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-004", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-004", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-004", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-004", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-004", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-004", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-004", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-004", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-004", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-004", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-004", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-004", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-004", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-004", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-004", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-004", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-004", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-004", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-004", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-004", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-004", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-004", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-004", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-004", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-004", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-004", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.199}
+{"case_id": "swarm-norm-004", "kind": "case_end", "payload": {"case_id": "swarm-norm-004", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188425.199}
+{"case_id": "swarm-norm-005", "kind": "case_start", "payload": {"case_id": "swarm-norm-005", "category": "normal"}, "phase": "case", "ts": 1789188425.199}
+{"case_id": "swarm-norm-005", "kind": "tool_call", "payload": {"args": {"expression": "8 * 6"}, "tool": "calculator"}, "phase": "act", "ts": 1789188425.199}
+{"case_id": "swarm-norm-005", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.017, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188425.199}
+{"case_id": "swarm-norm-005", "kind": "tool_call", "payload": {"args": {"corpus": "employee_handbook", "query": "the claims threshold requiring director pre-approval"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.199}
+{"case_id": "swarm-norm-005", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.032, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.199}
+{"case_id": "swarm-norm-005", "kind": "agent_done", "payload": {"case_id": "swarm-norm-005", "failure_class": "none", "latency_ms": 0.266, "ok": true, "termination": "answer", "tool_calls": 2}, "phase": "case", "ts": 1789188425.2}
+{"case_id": "swarm-norm-005", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-005", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-005", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-005", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-005", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-005", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-005", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-005", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-005", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-005", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-005", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-005", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-005", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-005", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-005", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-005", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-005", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-005", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-005", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-005", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-005", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-005", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-005", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-005", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-005", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-005", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-005", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-005", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-005", "kind": "case_end", "payload": {"case_id": "swarm-norm-005", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188425.2}
+{"case_id": "swarm-norm-006", "kind": "case_start", "payload": {"case_id": "swarm-norm-006", "category": "normal"}, "phase": "case", "ts": 1789188425.2}
+{"case_id": "swarm-norm-006", "kind": "tool_call", "payload": {"args": {"expression": "59 + 47"}, "tool": "calculator"}, "phase": "act", "ts": 1789188425.2}
+{"case_id": "swarm-norm-006", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.013, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188425.2}
+{"case_id": "swarm-norm-006", "kind": "tool_call", "payload": {"args": {"op": "upper", "text": "launch checklist"}, "tool": "text_transform"}, "phase": "act", "ts": 1789188425.2}
+{"case_id": "swarm-norm-006", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.003, "ok": true, "tool": "text_transform"}, "phase": "observe", "ts": 1789188425.2}
+{"case_id": "swarm-norm-006", "kind": "agent_done", "payload": {"case_id": "swarm-norm-006", "failure_class": "none", "latency_ms": 0.182, "ok": true, "termination": "answer", "tool_calls": 2}, "phase": "case", "ts": 1789188425.2}
+{"case_id": "swarm-norm-006", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-006", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-006", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-006", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-006", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-006", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-006", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-006", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-006", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-006", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-006", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-006", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-006", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-006", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-006", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-006", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-006", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-006", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-006", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-006", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-006", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-006", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-006", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-006", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-006", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-006", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-006", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-006", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-006", "kind": "case_end", "payload": {"case_id": "swarm-norm-006", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188425.2}
+{"case_id": "swarm-norm-007", "kind": "case_start", "payload": {"case_id": "swarm-norm-007", "category": "normal"}, "phase": "case", "ts": 1789188425.2}
+{"case_id": "swarm-norm-007", "kind": "tool_call", "payload": {"args": {"corpus": "science_facts", "query": "standard Earth gravity"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.2}
+{"case_id": "swarm-norm-007", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.017, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.2}
+{"case_id": "swarm-norm-007", "kind": "tool_call", "payload": {"args": {"text": "The quick brown fox jumps over the lazy dog near the river bank at dawn"}, "tool": "text_stats"}, "phase": "act", "ts": 1789188425.2}
+{"case_id": "swarm-norm-007", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.007, "ok": true, "tool": "text_stats"}, "phase": "observe", "ts": 1789188425.2}
+{"case_id": "swarm-norm-007", "kind": "agent_done", "payload": {"case_id": "swarm-norm-007", "failure_class": "none", "latency_ms": 0.217, "ok": true, "termination": "answer", "tool_calls": 2}, "phase": "case", "ts": 1789188425.2}
+{"case_id": "swarm-norm-007", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-007", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-007", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-007", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-007", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-007", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-007", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-007", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-007", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-007", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-007", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-007", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-007", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-007", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-007", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-007", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-007", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-007", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-007", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-007", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-007", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-007", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-007", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-007", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-007", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-007", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-007", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-007", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-007", "kind": "case_end", "payload": {"case_id": "swarm-norm-007", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188425.2}
+{"case_id": "swarm-norm-008", "kind": "case_start", "payload": {"case_id": "swarm-norm-008", "category": "normal"}, "phase": "case", "ts": 1789188425.2}
+{"case_id": "swarm-norm-008", "kind": "tool_call", "payload": {"args": {"key": "team.answer", "value": 95}, "tool": "store_set"}, "phase": "act", "ts": 1789188425.2}
+{"case_id": "swarm-norm-008", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.002, "ok": true, "tool": "store_set"}, "phase": "observe", "ts": 1789188425.2}
+{"case_id": "swarm-norm-008", "kind": "tool_call", "payload": {"args": {"key": "team.answer"}, "tool": "store_get"}, "phase": "act", "ts": 1789188425.2}
+{"case_id": "swarm-norm-008", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.001, "ok": true, "tool": "store_get"}, "phase": "observe", "ts": 1789188425.2}
+{"case_id": "swarm-norm-008", "kind": "agent_done", "payload": {"case_id": "swarm-norm-008", "failure_class": "none", "latency_ms": 0.157, "ok": true, "termination": "answer", "tool_calls": 2}, "phase": "case", "ts": 1789188425.2}
+{"case_id": "swarm-norm-008", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-008", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-008", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-008", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-008", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-008", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-008", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-008", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-008", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-008", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-008", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-008", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-008", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-008", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-008", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-008", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-008", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-008", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-008", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-008", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-008", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-008", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-008", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-008", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-008", "kind": "evaluator_start", "payload": {"case_id": "swarm-norm-008", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-008", "kind": "evaluator_end", "payload": {"case_id": "swarm-norm-008", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.2}
+{"case_id": "swarm-norm-008", "kind": "case_end", "payload": {"case_id": "swarm-norm-008", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188425.2}
+{"case_id": "", "kind": "run_end", "payload": {"cases": 8, "pass_rate": 0.875, "passed": 7, "run_id": "fadae75051c6fd54"}, "phase": "", "ts": 1789188425.201}

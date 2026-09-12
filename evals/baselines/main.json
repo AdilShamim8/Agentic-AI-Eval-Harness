@@ -1,0 +1,204 @@
+{
+  "benchmark": "react_basic",
+  "created_at": "2026-09-11T17:44:36+0000",
+  "metrics": {
+    "behavior": {
+      "loop_rate": 0.0,
+      "planning_coverage_mean": null,
+      "recovery_n": 6,
+      "recovery_rate": 1.0,
+      "termination_success": 1.0,
+      "tool_efficiency_mean": 0.963
+    },
+    "cases": 56,
+    "cost_estimate_usd": 0.001155,
+    "cost_note": "estimate: simulated pricing (in $0.15/1M, out $0.60/1M) on estimated tokens (chars/4); not a live-backend measurement",
+    "failure_histogram": {
+      "test_failure": 6
+    },
+    "latency_p50_ms": 0.114,
+    "latency_p95_ms": 0.217,
+    "network_guard_attempts": [],
+    "pass_rate": 0.892857,
+    "pass_rate_ci95": [
+      0.7853,
+      0.95
+    ],
+    "passed": 50,
+    "per_category": {
+      "adversarial": {
+        "ci_high": 1.0,
+        "ci_low": 0.6097,
+        "n": 6,
+        "pass_rate": 1.0
+      },
+      "ambiguous": {
+        "ci_high": 0.9699,
+        "ci_low": 0.4365,
+        "n": 6,
+        "pass_rate": 0.833333
+      },
+      "difficult": {
+        "ci_high": 0.9433,
+        "ci_low": 0.4902,
+        "n": 10,
+        "pass_rate": 0.8
+      },
+      "edge": {
+        "ci_high": 0.9776,
+        "ci_low": 0.5291,
+        "n": 8,
+        "pass_rate": 0.875
+      },
+      "failure_inducing": {
+        "ci_high": 1.0,
+        "ci_low": 0.6097,
+        "n": 6,
+        "pass_rate": 1.0
+      },
+      "normal": {
+        "ci_high": 0.9721,
+        "ci_low": 0.699,
+        "n": 20,
+        "pass_rate": 0.9
+      }
+    },
+    "per_evaluator": {
+      "loop_detection": {
+        "errors": 0,
+        "mean_score": 1.0,
+        "n": 56,
+        "pass_rate": 1.0
+      },
+      "task_checks": {
+        "errors": 0,
+        "mean_score": 0.9821,
+        "n": 56,
+        "pass_rate": 0.982143
+      },
+      "termination": {
+        "errors": 0,
+        "mean_score": 1.0,
+        "n": 56,
+        "pass_rate": 1.0
+      },
+      "tool_efficiency": {
+        "errors": 0,
+        "mean_score": 0.9286,
+        "n": 56,
+        "pass_rate": 0.892857
+      },
+      "tool_selection": {
+        "errors": 0,
+        "mean_score": 0.9464,
+        "n": 56,
+        "pass_rate": 0.964286
+      },
+      "trajectory": {
+        "errors": 0,
+        "mean_score": 0.9268,
+        "n": 56,
+        "pass_rate": 0.964286
+      }
+    },
+    "per_pattern": {
+      "react": {
+        "ci_high": 0.95,
+        "ci_low": 0.7853,
+        "n": 56,
+        "pass_rate": 0.892857
+      }
+    },
+    "runtime_s": 0.012,
+    "threshold_gates": {
+      "loop_detection": {
+        "actual": 1.0,
+        "passed": true,
+        "threshold": 0.9
+      },
+      "overall_pass_rate": {
+        "actual": 0.8929,
+        "passed": true,
+        "threshold": 0.7
+      },
+      "task_checks": {
+        "actual": 0.9821,
+        "passed": true,
+        "threshold": 0.75
+      },
+      "termination": {
+        "actual": 1.0,
+        "passed": true,
+        "threshold": 0.8
+      },
+      "tool_efficiency": {
+        "actual": 0.8929,
+        "passed": true,
+        "threshold": 0.6
+      },
+      "tool_selection": {
+        "actual": 0.9643,
+        "passed": true,
+        "threshold": 0.75
+      },
+      "trajectory": {
+        "actual": 0.9643,
+        "passed": true,
+        "threshold": 0.6
+      }
+    },
+    "tokens_in_est": 811,
+    "tokens_out_est": 1722,
+    "tool_metrics": {
+      "avg_calls_per_case": 1.089,
+      "redundancy_rate": 0.04918,
+      "redundant_calls": 3,
+      "total_calls": 61
+    }
+  },
+  "name": "main",
+  "notes": "",
+  "run_id": "f8a00acfe9f5dc43",
+  "versions": {
+    "agent": {
+      "component": "agent",
+      "revision": "",
+      "version": "builtin:react"
+    },
+    "benchmark": {
+      "component": "benchmark",
+      "revision": "react_basic",
+      "version": "1.0"
+    },
+    "dataset": {
+      "component": "dataset",
+      "revision": "6b2d6a9a48bc7c96",
+      "version": "1.0.0"
+    },
+    "environment": {
+      "component": "environment",
+      "revision": "linux",
+      "version": "python 3.12.14"
+    },
+    "evaluator": {
+      "component": "evaluator",
+      "revision": "task_checks,tool_selection,trajectory,termination,tool_efficiency,loop_detection",
+      "version": "1.x"
+    },
+    "harness": {
+      "component": "harness",
+      "revision": "ablation=full",
+      "version": "0.1.0"
+    },
+    "model": {
+      "component": "model",
+      "revision": "skill=0.85",
+      "version": "scripted-policy-v1 (deterministic simulation)"
+    },
+    "prompt": {
+      "component": "prompt",
+      "revision": "",
+      "version": "judge_rubric_v1"
+    }
+  }
+}

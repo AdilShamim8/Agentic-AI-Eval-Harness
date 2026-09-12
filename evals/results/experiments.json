@@ -1,0 +1,864 @@
+{
+  "ablation": {
+    "react_basic_skill_0.85": {
+      "attribution": {
+        "no_context_optimization": {
+          "note": "pass-rate change when harness capability is REMOVED (no_context_optimization vs full)",
+          "pass_rate_delta": 0.0
+        },
+        "no_retry": {
+          "note": "pass-rate change when harness capability is REMOVED (no_retry vs full)",
+          "pass_rate_delta": 0.0
+        },
+        "no_tool_validation": {
+          "note": "pass-rate change when harness capability is REMOVED (no_tool_validation vs full)",
+          "pass_rate_delta": 0.0
+        },
+        "no_verification": {
+          "note": "pass-rate change when harness capability is REMOVED (no_verification vs full)",
+          "pass_rate_delta": -0.0536
+        }
+      },
+      "benchmark": "react_basic",
+      "profiles": {
+        "full": {
+          "cases": 56,
+          "loop_rate": 0.0,
+          "pass_rate": 0.892857,
+          "recovery_rate": 1.0,
+          "run_id": "f8a00acfe9f5dc43",
+          "termination_success": 1.0,
+          "tool_efficiency": 0.963
+        },
+        "no_context_optimization": {
+          "cases": 56,
+          "loop_rate": 0.0,
+          "pass_rate": 0.892857,
+          "recovery_rate": 1.0,
+          "run_id": "367364c29907385a",
+          "termination_success": 1.0,
+          "tool_efficiency": 0.963
+        },
+        "no_retry": {
+          "cases": 56,
+          "loop_rate": 0.0,
+          "pass_rate": 0.892857,
+          "recovery_rate": 0.833333,
+          "run_id": "d715e8f70c70c37a",
+          "termination_success": 1.0,
+          "tool_efficiency": 0.963
+        },
+        "no_tool_validation": {
+          "cases": 56,
+          "loop_rate": 0.035714,
+          "pass_rate": 0.892857,
+          "recovery_rate": 1.0,
+          "run_id": "3d19d9fee65f2420",
+          "termination_success": 0.964286,
+          "tool_efficiency": 0.9537
+        },
+        "no_verification": {
+          "cases": 56,
+          "loop_rate": 0.0,
+          "pass_rate": 0.839286,
+          "recovery_rate": 0.833333,
+          "run_id": "0cbb06305de1734b",
+          "termination_success": 0.946429,
+          "tool_efficiency": 0.9623
+        }
+      }
+    },
+    "skill_0.6": {
+      "attribution": {
+        "no_context_optimization": {
+          "note": "pass-rate change when harness capability is REMOVED (no_context_optimization vs full)",
+          "pass_rate_delta": 0.0
+        },
+        "no_retry": {
+          "note": "pass-rate change when harness capability is REMOVED (no_retry vs full)",
+          "pass_rate_delta": -0.125
+        },
+        "no_tool_validation": {
+          "note": "pass-rate change when harness capability is REMOVED (no_tool_validation vs full)",
+          "pass_rate_delta": 0.0
+        },
+        "no_verification": {
+          "note": "pass-rate change when harness capability is REMOVED (no_verification vs full)",
+          "pass_rate_delta": -0.0625
+        }
+      },
+      "benchmark": "failure_recovery",
+      "profiles": {
+        "full": {
+          "cases": 16,
+          "loop_rate": 0.0625,
+          "pass_rate": 0.5625,
+          "recovery_rate": 1.0,
+          "run_id": "cc0173a5bc243fbf",
+          "termination_success": 0.9375,
+          "tool_efficiency": 0.7937
+        },
+        "no_context_optimization": {
+          "cases": 16,
+          "loop_rate": 0.0625,
+          "pass_rate": 0.5625,
+          "recovery_rate": 1.0,
+          "run_id": "eebd017e151ae76c",
+          "termination_success": 0.9375,
+          "tool_efficiency": 0.7937
+        },
+        "no_retry": {
+          "cases": 16,
+          "loop_rate": 0.125,
+          "pass_rate": 0.4375,
+          "recovery_rate": 0.5,
+          "run_id": "6d1f8459596f96f0",
+          "termination_success": 0.875,
+          "tool_efficiency": 0.7937
+        },
+        "no_tool_validation": {
+          "cases": 16,
+          "loop_rate": 0.125,
+          "pass_rate": 0.5625,
+          "recovery_rate": 1.0,
+          "run_id": "c73527c9521cdfbe",
+          "termination_success": 0.875,
+          "tool_efficiency": 0.7781
+        },
+        "no_verification": {
+          "cases": 16,
+          "loop_rate": 0.0625,
+          "pass_rate": 0.5,
+          "recovery_rate": 0.833333,
+          "run_id": "60231ce736593607",
+          "termination_success": 0.8125,
+          "tool_efficiency": 0.7937
+        }
+      }
+    },
+    "skill_0.85": {
+      "attribution": {
+        "no_context_optimization": {
+          "note": "pass-rate change when harness capability is REMOVED (no_context_optimization vs full)",
+          "pass_rate_delta": 0.0
+        },
+        "no_retry": {
+          "note": "pass-rate change when harness capability is REMOVED (no_retry vs full)",
+          "pass_rate_delta": -0.0625
+        },
+        "no_tool_validation": {
+          "note": "pass-rate change when harness capability is REMOVED (no_tool_validation vs full)",
+          "pass_rate_delta": 0.0
+        },
+        "no_verification": {
+          "note": "pass-rate change when harness capability is REMOVED (no_verification vs full)",
+          "pass_rate_delta": -0.0625
+        }
+      },
+      "benchmark": "failure_recovery",
+      "profiles": {
+        "full": {
+          "cases": 16,
+          "loop_rate": 0.0,
+          "pass_rate": 0.875,
+          "recovery_rate": 1.0,
+          "run_id": "7682ea0bd3956b74",
+          "termination_success": 1.0,
+          "tool_efficiency": 0.9375
+        },
+        "no_context_optimization": {
+          "cases": 16,
+          "loop_rate": 0.0,
+          "pass_rate": 0.875,
+          "recovery_rate": 1.0,
+          "run_id": "dde7f70b227cc060",
+          "termination_success": 1.0,
+          "tool_efficiency": 0.9375
+        },
+        "no_retry": {
+          "cases": 16,
+          "loop_rate": 0.0,
+          "pass_rate": 0.8125,
+          "recovery_rate": 0.833333,
+          "run_id": "2c243b7b011e3211",
+          "termination_success": 1.0,
+          "tool_efficiency": 0.9375
+        },
+        "no_tool_validation": {
+          "cases": 16,
+          "loop_rate": 0.0625,
+          "pass_rate": 0.875,
+          "recovery_rate": 1.0,
+          "run_id": "ef442de26a67de20",
+          "termination_success": 0.9375,
+          "tool_efficiency": 0.9219
+        },
+        "no_verification": {
+          "cases": 16,
+          "loop_rate": 0.0,
+          "pass_rate": 0.8125,
+          "recovery_rate": 0.833333,
+          "run_id": "60793213e4192986",
+          "termination_success": 0.9375,
+          "tool_efficiency": 0.9375
+        }
+      }
+    }
+  },
+  "calibration": {
+    "agreement": 1.0,
+    "annotators": [
+      "principal-eng"
+    ],
+    "cohens_kappa": 1.0,
+    "human_pass_rate": 0.9643,
+    "judge_false_negatives": 0,
+    "judge_false_positives": 0,
+    "judge_pass_rate": 0.9643,
+    "kappa_met": true,
+    "kappa_target": 0.6,
+    "labels_path": "evals/calibration/hand_labels.csv",
+    "limitation": "single annotator",
+    "n": 56
+  },
+  "full_suite": {
+    "map_reduce_basic": {
+      "behavior": {
+        "loop_rate": 0.0,
+        "planning_coverage_mean": 0.5,
+        "recovery_n": 6,
+        "recovery_rate": 1.0,
+        "termination_success": 1.0,
+        "tool_efficiency_mean": 0.9169
+      },
+      "cases": 56,
+      "ci95": [
+        0.6423,
+        0.859
+      ],
+      "cost_estimate_usd": 0.011791,
+      "latency_p50_ms": 0.472,
+      "latency_p95_ms": 0.73,
+      "pass_rate": 0.767857,
+      "passed": 43,
+      "per_category": {
+        "adversarial": {
+          "ci_high": 0.9032,
+          "ci_low": 0.3,
+          "n": 6,
+          "pass_rate": 0.666667
+        },
+        "ambiguous": {
+          "ci_high": 0.9699,
+          "ci_low": 0.4365,
+          "n": 6,
+          "pass_rate": 0.833333
+        },
+        "difficult": {
+          "ci_high": 0.9821,
+          "ci_low": 0.5958,
+          "n": 10,
+          "pass_rate": 0.9
+        },
+        "edge": {
+          "ci_high": 0.8632,
+          "ci_low": 0.3057,
+          "n": 8,
+          "pass_rate": 0.625
+        },
+        "failure_inducing": {
+          "ci_high": 0.9032,
+          "ci_low": 0.3,
+          "n": 6,
+          "pass_rate": 0.666667
+        },
+        "normal": {
+          "ci_high": 0.9193,
+          "ci_low": 0.584,
+          "n": 20,
+          "pass_rate": 0.8
+        }
+      },
+      "per_evaluator": {
+        "loop_detection": {
+          "errors": 0,
+          "mean_score": 1.0,
+          "n": 56,
+          "pass_rate": 1.0
+        },
+        "task_checks": {
+          "errors": 0,
+          "mean_score": 0.7768,
+          "n": 56,
+          "pass_rate": 0.767857
+        },
+        "termination": {
+          "errors": 0,
+          "mean_score": 1.0,
+          "n": 56,
+          "pass_rate": 1.0
+        },
+        "tool_efficiency": {
+          "errors": 0,
+          "mean_score": 0.9169,
+          "n": 56,
+          "pass_rate": 0.982143
+        },
+        "tool_selection": {
+          "errors": 0,
+          "mean_score": 0.9268,
+          "n": 56,
+          "pass_rate": 0.928571
+        },
+        "trajectory": {
+          "errors": 0,
+          "mean_score": 0.8707,
+          "n": 56,
+          "pass_rate": 0.946429
+        }
+      },
+      "run_id": "69c7edb9479719f4",
+      "runtime_s": 0.034,
+      "tokens_in_est": 3053,
+      "tokens_out_est": 18889
+    },
+    "plan_execute_basic": {
+      "behavior": {
+        "loop_rate": 0.0,
+        "planning_coverage_mean": 1.0,
+        "recovery_n": 6,
+        "recovery_rate": 0.833333,
+        "termination_success": 1.0,
+        "tool_efficiency_mean": 0.8994
+      },
+      "cases": 56,
+      "ci95": [
+        0.6041,
+        0.8304
+      ],
+      "cost_estimate_usd": 0.002152,
+      "latency_p50_ms": 0.206,
+      "latency_p95_ms": 0.452,
+      "pass_rate": 0.732143,
+      "passed": 41,
+      "per_category": {
+        "adversarial": {
+          "ci_high": 0.8124,
+          "ci_low": 0.1876,
+          "n": 6,
+          "pass_rate": 0.5
+        },
+        "ambiguous": {
+          "ci_high": 0.9699,
+          "ci_low": 0.4365,
+          "n": 6,
+          "pass_rate": 0.833333
+        },
+        "difficult": {
+          "ci_high": 0.8922,
+          "ci_low": 0.3968,
+          "n": 10,
+          "pass_rate": 0.7
+        },
+        "edge": {
+          "ci_high": 0.9776,
+          "ci_low": 0.5291,
+          "n": 8,
+          "pass_rate": 0.875
+        },
+        "failure_inducing": {
+          "ci_high": 0.9699,
+          "ci_low": 0.4365,
+          "n": 6,
+          "pass_rate": 0.833333
+        },
+        "normal": {
+          "ci_high": 0.8545,
+          "ci_low": 0.481,
+          "n": 20,
+          "pass_rate": 0.7
+        }
+      },
+      "per_evaluator": {
+        "loop_detection": {
+          "errors": 0,
+          "mean_score": 1.0,
+          "n": 56,
+          "pass_rate": 1.0
+        },
+        "planning_quality": {
+          "errors": 0,
+          "mean_score": 1.0,
+          "n": 56,
+          "pass_rate": 1.0
+        },
+        "task_checks": {
+          "errors": 0,
+          "mean_score": 0.8393,
+          "n": 56,
+          "pass_rate": 0.803571
+        },
+        "termination": {
+          "errors": 0,
+          "mean_score": 1.0,
+          "n": 56,
+          "pass_rate": 1.0
+        },
+        "tool_efficiency": {
+          "errors": 0,
+          "mean_score": 0.8994,
+          "n": 56,
+          "pass_rate": 0.928571
+        },
+        "tool_selection": {
+          "errors": 0,
+          "mean_score": 0.9207,
+          "n": 56,
+          "pass_rate": 0.839286
+        },
+        "trajectory": {
+          "errors": 0,
+          "mean_score": 0.8169,
+          "n": 56,
+          "pass_rate": 0.821429
+        }
+      },
+      "run_id": "e529fc0d604abcd6",
+      "runtime_s": 0.021,
+      "tokens_in_est": 1596,
+      "tokens_out_est": 3188
+    },
+    "react_basic": {
+      "behavior": {
+        "loop_rate": 0.0,
+        "planning_coverage_mean": null,
+        "recovery_n": 6,
+        "recovery_rate": 1.0,
+        "termination_success": 1.0,
+        "tool_efficiency_mean": 0.963
+      },
+      "cases": 56,
+      "ci95": [
+        0.7853,
+        0.95
+      ],
+      "cost_estimate_usd": 0.001155,
+      "latency_p50_ms": 0.121,
+      "latency_p95_ms": 0.411,
+      "pass_rate": 0.892857,
+      "passed": 50,
+      "per_category": {
+        "adversarial": {
+          "ci_high": 1.0,
+          "ci_low": 0.6097,
+          "n": 6,
+          "pass_rate": 1.0
+        },
+        "ambiguous": {
+          "ci_high": 0.9699,
+          "ci_low": 0.4365,
+          "n": 6,
+          "pass_rate": 0.833333
+        },
+        "difficult": {
+          "ci_high": 0.9433,
+          "ci_low": 0.4902,
+          "n": 10,
+          "pass_rate": 0.8
+        },
+        "edge": {
+          "ci_high": 0.9776,
+          "ci_low": 0.5291,
+          "n": 8,
+          "pass_rate": 0.875
+        },
+        "failure_inducing": {
+          "ci_high": 1.0,
+          "ci_low": 0.6097,
+          "n": 6,
+          "pass_rate": 1.0
+        },
+        "normal": {
+          "ci_high": 0.9721,
+          "ci_low": 0.699,
+          "n": 20,
+          "pass_rate": 0.9
+        }
+      },
+      "per_evaluator": {
+        "loop_detection": {
+          "errors": 0,
+          "mean_score": 1.0,
+          "n": 56,
+          "pass_rate": 1.0
+        },
+        "task_checks": {
+          "errors": 0,
+          "mean_score": 0.9821,
+          "n": 56,
+          "pass_rate": 0.982143
+        },
+        "termination": {
+          "errors": 0,
+          "mean_score": 1.0,
+          "n": 56,
+          "pass_rate": 1.0
+        },
+        "tool_efficiency": {
+          "errors": 0,
+          "mean_score": 0.9286,
+          "n": 56,
+          "pass_rate": 0.892857
+        },
+        "tool_selection": {
+          "errors": 0,
+          "mean_score": 0.9464,
+          "n": 56,
+          "pass_rate": 0.964286
+        },
+        "trajectory": {
+          "errors": 0,
+          "mean_score": 0.9268,
+          "n": 56,
+          "pass_rate": 0.964286
+        }
+      },
+      "run_id": "f8a00acfe9f5dc43",
+      "runtime_s": 0.015,
+      "tokens_in_est": 811,
+      "tokens_out_est": 1722
+    },
+    "supervisor_basic": {
+      "behavior": {
+        "loop_rate": 0.035714,
+        "planning_coverage_mean": 1.0,
+        "recovery_n": 6,
+        "recovery_rate": 1.0,
+        "termination_success": 0.964286,
+        "tool_efficiency_mean": 0.9116
+      },
+      "cases": 56,
+      "ci95": [
+        0.6816,
+        0.8866
+      ],
+      "cost_estimate_usd": 0.002343,
+      "latency_p50_ms": 0.239,
+      "latency_p95_ms": 0.408,
+      "pass_rate": 0.803571,
+      "passed": 45,
+      "per_category": {
+        "adversarial": {
+          "ci_high": 0.9699,
+          "ci_low": 0.4365,
+          "n": 6,
+          "pass_rate": 0.833333
+        },
+        "ambiguous": {
+          "ci_high": 0.9699,
+          "ci_low": 0.4365,
+          "n": 6,
+          "pass_rate": 0.833333
+        },
+        "difficult": {
+          "ci_high": 0.8922,
+          "ci_low": 0.3968,
+          "n": 10,
+          "pass_rate": 0.7
+        },
+        "edge": {
+          "ci_high": 0.8632,
+          "ci_low": 0.3057,
+          "n": 8,
+          "pass_rate": 0.625
+        },
+        "failure_inducing": {
+          "ci_high": 0.9699,
+          "ci_low": 0.4365,
+          "n": 6,
+          "pass_rate": 0.833333
+        },
+        "normal": {
+          "ci_high": 0.9721,
+          "ci_low": 0.699,
+          "n": 20,
+          "pass_rate": 0.9
+        }
+      },
+      "per_evaluator": {
+        "loop_detection": {
+          "errors": 0,
+          "mean_score": 0.9643,
+          "n": 56,
+          "pass_rate": 0.964286
+        },
+        "planning_quality": {
+          "errors": 0,
+          "mean_score": 1.0,
+          "n": 56,
+          "pass_rate": 1.0
+        },
+        "task_checks": {
+          "errors": 0,
+          "mean_score": 0.8839,
+          "n": 56,
+          "pass_rate": 0.803571
+        },
+        "termination": {
+          "errors": 0,
+          "mean_score": 0.9643,
+          "n": 56,
+          "pass_rate": 0.964286
+        },
+        "tool_efficiency": {
+          "errors": 0,
+          "mean_score": 0.9116,
+          "n": 56,
+          "pass_rate": 0.964286
+        },
+        "tool_selection": {
+          "errors": 0,
+          "mean_score": 0.9592,
+          "n": 56,
+          "pass_rate": 0.910714
+        },
+        "trajectory": {
+          "errors": 0,
+          "mean_score": 0.8734,
+          "n": 56,
+          "pass_rate": 0.892857
+        }
+      },
+      "run_id": "20352466ee741b48",
+      "runtime_s": 0.023,
+      "tokens_in_est": 1577,
+      "tokens_out_est": 3511
+    },
+    "swarm_basic": {
+      "behavior": {
+        "loop_rate": 0.0,
+        "planning_coverage_mean": null,
+        "recovery_n": 6,
+        "recovery_rate": 1.0,
+        "termination_success": 1.0,
+        "tool_efficiency_mean": 0.8943
+      },
+      "cases": 56,
+      "ci95": [
+        0.7016,
+        0.9
+      ],
+      "cost_estimate_usd": 0.002386,
+      "latency_p50_ms": 0.262,
+      "latency_p95_ms": 0.638,
+      "pass_rate": 0.821429,
+      "passed": 46,
+      "per_category": {
+        "adversarial": {
+          "ci_high": 0.9032,
+          "ci_low": 0.3,
+          "n": 6,
+          "pass_rate": 0.666667
+        },
+        "ambiguous": {
+          "ci_high": 0.8124,
+          "ci_low": 0.1876,
+          "n": 6,
+          "pass_rate": 0.5
+        },
+        "difficult": {
+          "ci_high": 0.9821,
+          "ci_low": 0.5958,
+          "n": 10,
+          "pass_rate": 0.9
+        },
+        "edge": {
+          "ci_high": 0.9776,
+          "ci_low": 0.5291,
+          "n": 8,
+          "pass_rate": 0.875
+        },
+        "failure_inducing": {
+          "ci_high": 1.0,
+          "ci_low": 0.6097,
+          "n": 6,
+          "pass_rate": 1.0
+        },
+        "normal": {
+          "ci_high": 0.9476,
+          "ci_low": 0.6396,
+          "n": 20,
+          "pass_rate": 0.85
+        }
+      },
+      "per_evaluator": {
+        "loop_detection": {
+          "errors": 0,
+          "mean_score": 1.0,
+          "n": 56,
+          "pass_rate": 1.0
+        },
+        "planning_quality": {
+          "errors": 0,
+          "mean_score": 1.0,
+          "n": 56,
+          "pass_rate": 1.0
+        },
+        "task_checks": {
+          "errors": 0,
+          "mean_score": 0.9375,
+          "n": 56,
+          "pass_rate": 0.875
+        },
+        "termination": {
+          "errors": 0,
+          "mean_score": 1.0,
+          "n": 56,
+          "pass_rate": 1.0
+        },
+        "tool_efficiency": {
+          "errors": 0,
+          "mean_score": 0.8943,
+          "n": 56,
+          "pass_rate": 0.928571
+        },
+        "tool_selection": {
+          "errors": 0,
+          "mean_score": 0.9486,
+          "n": 56,
+          "pass_rate": 0.946429
+        },
+        "trajectory": {
+          "errors": 0,
+          "mean_score": 0.8732,
+          "n": 56,
+          "pass_rate": 0.928571
+        }
+      },
+      "run_id": "fadae75051c6fd54",
+      "runtime_s": 0.024,
+      "tokens_in_est": 1672,
+      "tokens_out_est": 3558
+    }
+  },
+  "regression_demo": {
+    "challenger_pass_rate": 0.75,
+    "challenger_run_id": "d3bb0e02f974dd55",
+    "findings": [
+      {
+        "baseline": 0.892857,
+        "delta": -0.1429,
+        "metric": "overall_pass_rate",
+        "new": 0.75,
+        "verdict": "regression"
+      },
+      {
+        "baseline": 1.0,
+        "delta": -0.0179,
+        "metric": "loop_detection",
+        "new": 0.982143,
+        "verdict": "ok"
+      },
+      {
+        "baseline": 0.982143,
+        "delta": -0.0357,
+        "metric": "task_checks",
+        "new": 0.946429,
+        "verdict": "ok"
+      },
+      {
+        "baseline": 1.0,
+        "delta": -0.0536,
+        "metric": "termination",
+        "new": 0.946429,
+        "verdict": "regression"
+      },
+      {
+        "baseline": 0.892857,
+        "delta": -0.1071,
+        "metric": "tool_efficiency",
+        "new": 0.785714,
+        "verdict": "regression"
+      },
+      {
+        "baseline": 0.964286,
+        "delta": -0.0714,
+        "metric": "tool_selection",
+        "new": 0.892857,
+        "verdict": "regression"
+      },
+      {
+        "baseline": 0.964286,
+        "delta": -0.1071,
+        "metric": "trajectory",
+        "new": 0.857143,
+        "verdict": "regression"
+      }
+    ],
+    "gate_passed": false,
+    "summary": "REGRESSION DETECTED: 5 metric(s) below threshold \u2014 overall_pass_rate 0.893->0.750 (delta -0.143 < -0.030); termination 1.000->0.946 (delta -0.054 < -0.030); tool_efficiency 0.893->0.786 (delta -0.107 < -0.030); tool_selection 0.964->0.893 (delta -0.071 < -0.030); trajectory 0.964->0.857 (delta -0.107 < -0.030)"
+  },
+  "repro": {
+    "react_same_seed_x5": {
+      "benchmark": "react_basic",
+      "byte_identical_same_seed": true,
+      "max_spread_pp": 0.0,
+      "pass_rates": [
+        0.8929,
+        0.8929,
+        0.8929,
+        0.8929,
+        0.8929
+      ],
+      "repeats": 5,
+      "run_ids": [
+        "f8a00acfe9f5dc43",
+        "f8a00acfe9f5dc43",
+        "f8a00acfe9f5dc43",
+        "f8a00acfe9f5dc43",
+        "f8a00acfe9f5dc43"
+      ],
+      "target_met": true,
+      "target_within_pp": 2.0,
+      "vary_seed": false
+    },
+    "supervisor_same_seed_x3": {
+      "benchmark": "supervisor_basic",
+      "byte_identical_same_seed": true,
+      "max_spread_pp": 0.0,
+      "pass_rates": [
+        0.8036,
+        0.8036,
+        0.8036
+      ],
+      "repeats": 3,
+      "run_ids": [
+        "20352466ee741b48",
+        "20352466ee741b48",
+        "20352466ee741b48"
+      ],
+      "target_met": true,
+      "target_within_pp": 2.0,
+      "vary_seed": false
+    },
+    "supervisor_varied_seed_x3": {
+      "benchmark": "supervisor_basic",
+      "byte_identical_same_seed": null,
+      "max_spread_pp": 8.929,
+      "pass_rates": [
+        0.8036,
+        0.875,
+        0.8929
+      ],
+      "repeats": 3,
+      "run_ids": [
+        "20352466ee741b48",
+        "319d010e499c42e2",
+        "b101ed381e1afe63"
+      ],
+      "target_met": false,
+      "target_within_pp": 2.0,
+      "vary_seed": true
+    }
+  }
+}

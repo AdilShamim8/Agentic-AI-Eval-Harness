@@ -1,0 +1,173 @@
+{"case_id": "", "kind": "run_start", "payload": {"ablation": "full", "agent": "builtin:plan_execute", "benchmark": "plan_execute_basic", "benchmark_version": "1.0", "cases": 8, "run_id": "e529fc0d604abcd6", "seed": 20260912, "skill": 0.85}, "phase": "", "ts": 1789188425.166}
+{"case_id": "plan_execute-norm-001", "kind": "case_start", "payload": {"case_id": "plan_execute-norm-001", "category": "normal"}, "phase": "case", "ts": 1789188425.166}
+{"case_id": "plan_execute-norm-001", "kind": "tool_call", "payload": {"args": {"expression": "4 * 5"}, "tool": "calculator"}, "phase": "act", "ts": 1789188425.167}
+{"case_id": "plan_execute-norm-001", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.035, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188425.167}
+{"case_id": "plan_execute-norm-001", "kind": "tool_call", "payload": {"args": {"op": "upper", "text": "boundary condition"}, "tool": "text_transform"}, "phase": "act", "ts": 1789188425.167}
+{"case_id": "plan_execute-norm-001", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.004, "ok": true, "tool": "text_transform"}, "phase": "observe", "ts": 1789188425.167}
+{"case_id": "plan_execute-norm-001", "kind": "agent_done", "payload": {"case_id": "plan_execute-norm-001", "failure_class": "none", "latency_ms": 0.935, "ok": true, "termination": "answer", "tool_calls": 2}, "phase": "case", "ts": 1789188425.167}
+{"case_id": "plan_execute-norm-001", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-001", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.167}
+{"case_id": "plan_execute-norm-001", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-001", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.167}
+{"case_id": "plan_execute-norm-001", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-001", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.167}
+{"case_id": "plan_execute-norm-001", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-001", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.167}
+{"case_id": "plan_execute-norm-001", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-001", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.167}
+{"case_id": "plan_execute-norm-001", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-001", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.167}
+{"case_id": "plan_execute-norm-001", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-001", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.167}
+{"case_id": "plan_execute-norm-001", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-001", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.167}
+{"case_id": "plan_execute-norm-001", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-001", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.167}
+{"case_id": "plan_execute-norm-001", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-001", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.167}
+{"case_id": "plan_execute-norm-001", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-001", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.167}
+{"case_id": "plan_execute-norm-001", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-001", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.167}
+{"case_id": "plan_execute-norm-001", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-001", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.167}
+{"case_id": "plan_execute-norm-001", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-001", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.167}
+{"case_id": "plan_execute-norm-001", "kind": "case_end", "payload": {"case_id": "plan_execute-norm-001", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188425.167}
+{"case_id": "plan_execute-norm-002", "kind": "case_start", "payload": {"case_id": "plan_execute-norm-002", "category": "normal"}, "phase": "case", "ts": 1789188425.167}
+{"case_id": "plan_execute-norm-002", "kind": "tool_call", "payload": {"args": {"corpus": "employee_handbook", "query": "the vacation request filing lead time"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.167}
+{"case_id": "plan_execute-norm-002", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.04, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.167}
+{"case_id": "plan_execute-norm-002", "kind": "tool_call", "payload": {"args": {"expression": "28 - 31"}, "tool": "calculator"}, "phase": "act", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-002", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.022, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-002", "kind": "agent_done", "payload": {"case_id": "plan_execute-norm-002", "failure_class": "none", "latency_ms": 0.525, "ok": true, "termination": "answer", "tool_calls": 2}, "phase": "case", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-002", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-002", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-002", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-002", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-002", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-002", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-002", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-002", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-002", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-002", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-002", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-002", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-002", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-002", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-002", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-002", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-002", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-002", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-002", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-002", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-002", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-002", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-002", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-002", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-002", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-002", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-002", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-002", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-002", "kind": "case_end", "payload": {"case_id": "plan_execute-norm-002", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-003", "kind": "case_start", "payload": {"case_id": "plan_execute-norm-003", "category": "normal"}, "phase": "case", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-003", "kind": "tool_call", "payload": {"args": {"query": "irrelevant xyzzy"}, "tool": "calculator"}, "phase": "act", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-003", "kind": "tool_call", "payload": {"args": {"query": "irrelevant xyzzy"}, "tool": "calculator"}, "phase": "act", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-003", "kind": "tool_call", "payload": {"args": {"text": "Data pipelines move records from sources through transforms into the warehouse before dashboards read them"}, "tool": "text_stats"}, "phase": "act", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-003", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.009, "ok": true, "tool": "text_stats"}, "phase": "observe", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-003", "kind": "agent_done", "payload": {"case_id": "plan_execute-norm-003", "failure_class": "none", "latency_ms": 0.248, "ok": true, "termination": "answer", "tool_calls": 3}, "phase": "case", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-003", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-003", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-003", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-003", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-003", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-003", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-003", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-003", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-003", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-003", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-003", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-003", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-003", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-003", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-003", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-003", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-003", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-003", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-003", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-003", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-003", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-003", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-003", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-003", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-003", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-003", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-003", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-003", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-003", "kind": "case_end", "payload": {"case_id": "plan_execute-norm-003", "failure_class": "test_failure", "passed": false}, "phase": "case", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-004", "kind": "case_start", "payload": {"case_id": "plan_execute-norm-004", "category": "normal"}, "phase": "case", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-004", "kind": "tool_call", "payload": {"args": {"key": "note.value", "value": 483}, "tool": "store_set"}, "phase": "act", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-004", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.003, "ok": true, "tool": "store_set"}, "phase": "observe", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-004", "kind": "tool_call", "payload": {"args": {"query": "irrelevant xyzzy"}, "tool": "store_set"}, "phase": "act", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-004", "kind": "tool_call", "payload": {"args": {"key": "note.value", "value": 483}, "tool": "store_set"}, "phase": "act", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-004", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.002, "ok": true, "tool": "store_set"}, "phase": "observe", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-004", "kind": "tool_call", "payload": {"args": {"key": "note.value"}, "tool": "store_get"}, "phase": "act", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-004", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.002, "ok": true, "tool": "store_get"}, "phase": "observe", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-004", "kind": "agent_done", "payload": {"case_id": "plan_execute-norm-004", "failure_class": "none", "latency_ms": 0.248, "ok": true, "termination": "answer", "tool_calls": 4}, "phase": "case", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-004", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-004", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-004", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-004", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-004", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-004", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-004", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-004", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-004", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-004", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-004", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-004", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-004", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-004", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-004", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-004", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-004", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-004", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-004", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-004", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-004", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-004", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-004", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-004", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-004", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-004", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-004", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-004", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-004", "kind": "case_end", "payload": {"case_id": "plan_execute-norm-004", "failure_class": "test_failure", "passed": false}, "phase": "case", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-005", "kind": "case_start", "payload": {"case_id": "plan_execute-norm-005", "category": "normal"}, "phase": "case", "ts": 1789188425.168}
+{"case_id": "plan_execute-norm-005", "kind": "tool_call", "payload": {"args": {"expression": "19 * 3"}, "tool": "calculator"}, "phase": "act", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-005", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.017, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-005", "kind": "agent_done", "payload": {"case_id": "plan_execute-norm-005", "failure_class": "none", "latency_ms": 0.14, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-005", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-005", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-005", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-005", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-005", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-005", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-005", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-005", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-005", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-005", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-005", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-005", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-005", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-005", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-005", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-005", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-005", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-005", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-005", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-005", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-005", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-005", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-005", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-005", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-005", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-005", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-005", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-005", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-005", "kind": "case_end", "payload": {"case_id": "plan_execute-norm-005", "failure_class": "test_failure", "passed": false}, "phase": "case", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-006", "kind": "case_start", "payload": {"case_id": "plan_execute-norm-006", "category": "normal"}, "phase": "case", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-006", "kind": "tool_call", "payload": {"args": {"corpus": "employee_handbook", "query": "the core-hours overlap requirement"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-006", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.03, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-006", "kind": "tool_call", "payload": {"args": {"expression": "43 * 8"}, "tool": "calculator"}, "phase": "act", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-006", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.013, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-006", "kind": "agent_done", "payload": {"case_id": "plan_execute-norm-006", "failure_class": "none", "latency_ms": 0.256, "ok": true, "termination": "answer", "tool_calls": 2}, "phase": "case", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-006", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-006", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-006", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-006", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-006", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-006", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-006", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-006", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-006", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-006", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-006", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-006", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-006", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-006", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-006", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-006", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-006", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-006", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-006", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-006", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-006", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-006", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-006", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-006", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-006", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-006", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-006", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-006", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-006", "kind": "case_end", "payload": {"case_id": "plan_execute-norm-006", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-007", "kind": "case_start", "payload": {"case_id": "plan_execute-norm-007", "category": "normal"}, "phase": "case", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-007", "kind": "tool_call", "payload": {"args": {"text": "The quick brown fox jumps over the lazy dog near the river bank at dawn"}, "tool": "text_stats"}, "phase": "act", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-007", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.007, "ok": true, "tool": "text_stats"}, "phase": "observe", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-007", "kind": "tool_call", "payload": {"args": {"expression": "77 * 12"}, "tool": "calculator"}, "phase": "act", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-007", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.012, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-007", "kind": "tool_call", "payload": {"args": {"expression": "77 * 11"}, "tool": "calculator"}, "phase": "act", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-007", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.011, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-007", "kind": "agent_done", "payload": {"case_id": "plan_execute-norm-007", "failure_class": "none", "latency_ms": 0.325, "ok": true, "termination": "answer", "tool_calls": 3}, "phase": "case", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-007", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-007", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-007", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-007", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-007", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-007", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-007", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-007", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-007", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-007", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-007", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-007", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-007", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-007", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-007", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-007", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-007", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-007", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-007", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-007", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-007", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-007", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-007", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-007", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-007", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-007", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.169}
+{"case_id": "plan_execute-norm-007", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-007", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.17}
+{"case_id": "plan_execute-norm-007", "kind": "case_end", "payload": {"case_id": "plan_execute-norm-007", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188425.17}
+{"case_id": "plan_execute-norm-008", "kind": "case_start", "payload": {"case_id": "plan_execute-norm-008", "category": "normal"}, "phase": "case", "ts": 1789188425.17}
+{"case_id": "plan_execute-norm-008", "kind": "tool_call", "payload": {"args": {"key": "note.value", "value": 330}, "tool": "store_set"}, "phase": "act", "ts": 1789188425.17}
+{"case_id": "plan_execute-norm-008", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.002, "ok": true, "tool": "store_set"}, "phase": "observe", "ts": 1789188425.17}
+{"case_id": "plan_execute-norm-008", "kind": "tool_call", "payload": {"args": {"key": "note.value"}, "tool": "store_get"}, "phase": "act", "ts": 1789188425.17}
+{"case_id": "plan_execute-norm-008", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.002, "ok": true, "tool": "store_get"}, "phase": "observe", "ts": 1789188425.17}
+{"case_id": "plan_execute-norm-008", "kind": "agent_done", "payload": {"case_id": "plan_execute-norm-008", "failure_class": "none", "latency_ms": 0.154, "ok": true, "termination": "answer", "tool_calls": 2}, "phase": "case", "ts": 1789188425.17}
+{"case_id": "plan_execute-norm-008", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-008", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.17}
+{"case_id": "plan_execute-norm-008", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-008", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.17}
+{"case_id": "plan_execute-norm-008", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-008", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.17}
+{"case_id": "plan_execute-norm-008", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-008", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.17}
+{"case_id": "plan_execute-norm-008", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-008", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.17}
+{"case_id": "plan_execute-norm-008", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-008", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.17}
+{"case_id": "plan_execute-norm-008", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-008", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.17}
+{"case_id": "plan_execute-norm-008", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-008", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.17}
+{"case_id": "plan_execute-norm-008", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-008", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.17}
+{"case_id": "plan_execute-norm-008", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-008", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.17}
+{"case_id": "plan_execute-norm-008", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-008", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.17}
+{"case_id": "plan_execute-norm-008", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-008", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.17}
+{"case_id": "plan_execute-norm-008", "kind": "evaluator_start", "payload": {"case_id": "plan_execute-norm-008", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.17}
+{"case_id": "plan_execute-norm-008", "kind": "evaluator_end", "payload": {"case_id": "plan_execute-norm-008", "evaluator": "planning_quality"}, "phase": "evaluate", "ts": 1789188425.17}
+{"case_id": "plan_execute-norm-008", "kind": "case_end", "payload": {"case_id": "plan_execute-norm-008", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188425.17}
+{"case_id": "", "kind": "run_end", "payload": {"cases": 8, "pass_rate": 0.625, "passed": 5, "run_id": "e529fc0d604abcd6"}, "phase": "", "ts": 1789188425.17}

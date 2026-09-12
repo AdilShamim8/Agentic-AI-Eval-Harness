@@ -1,0 +1,969 @@
+{"case_id": "", "kind": "run_start", "payload": {"ablation": "full", "agent": "builtin:react", "benchmark": "react_basic", "benchmark_version": "1.0", "cases": 56, "run_id": "f8a00acfe9f5dc43", "seed": 20260912, "skill": 0.85}, "phase": "", "ts": 1789188483.111}
+{"case_id": "react-norm-001", "kind": "case_start", "payload": {"case_id": "react-norm-001", "category": "normal"}, "phase": "case", "ts": 1789188483.111}
+{"case_id": "react-norm-001", "kind": "tool_call", "payload": {"args": {"expression": "73 + 20"}, "tool": "calculator"}, "phase": "act", "ts": 1789188483.112}
+{"case_id": "react-norm-001", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.078, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188483.112}
+{"case_id": "react-norm-001", "kind": "agent_done", "payload": {"case_id": "react-norm-001", "failure_class": "none", "latency_ms": 1.094, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.112}
+{"case_id": "react-norm-001", "kind": "evaluator_start", "payload": {"case_id": "react-norm-001", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.112}
+{"case_id": "react-norm-001", "kind": "evaluator_end", "payload": {"case_id": "react-norm-001", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.112}
+{"case_id": "react-norm-001", "kind": "evaluator_start", "payload": {"case_id": "react-norm-001", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.112}
+{"case_id": "react-norm-001", "kind": "evaluator_end", "payload": {"case_id": "react-norm-001", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.112}
+{"case_id": "react-norm-001", "kind": "evaluator_start", "payload": {"case_id": "react-norm-001", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.112}
+{"case_id": "react-norm-001", "kind": "evaluator_end", "payload": {"case_id": "react-norm-001", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.112}
+{"case_id": "react-norm-001", "kind": "evaluator_start", "payload": {"case_id": "react-norm-001", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.112}
+{"case_id": "react-norm-001", "kind": "evaluator_end", "payload": {"case_id": "react-norm-001", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.112}
+{"case_id": "react-norm-001", "kind": "evaluator_start", "payload": {"case_id": "react-norm-001", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.112}
+{"case_id": "react-norm-001", "kind": "evaluator_end", "payload": {"case_id": "react-norm-001", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.112}
+{"case_id": "react-norm-001", "kind": "evaluator_start", "payload": {"case_id": "react-norm-001", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.112}
+{"case_id": "react-norm-001", "kind": "evaluator_end", "payload": {"case_id": "react-norm-001", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.112}
+{"case_id": "react-norm-001", "kind": "case_end", "payload": {"case_id": "react-norm-001", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.112}
+{"case_id": "react-norm-002", "kind": "case_start", "payload": {"case_id": "react-norm-002", "category": "normal"}, "phase": "case", "ts": 1789188483.112}
+{"case_id": "react-norm-002", "kind": "tool_call", "payload": {"args": {"expression": "82 - 73"}, "tool": "calculator"}, "phase": "act", "ts": 1789188483.112}
+{"case_id": "react-norm-002", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.031, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188483.112}
+{"case_id": "react-norm-002", "kind": "agent_done", "payload": {"case_id": "react-norm-002", "failure_class": "none", "latency_ms": 0.162, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.112}
+{"case_id": "react-norm-002", "kind": "evaluator_start", "payload": {"case_id": "react-norm-002", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.112}
+{"case_id": "react-norm-002", "kind": "evaluator_end", "payload": {"case_id": "react-norm-002", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.112}
+{"case_id": "react-norm-002", "kind": "evaluator_start", "payload": {"case_id": "react-norm-002", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.112}
+{"case_id": "react-norm-002", "kind": "evaluator_end", "payload": {"case_id": "react-norm-002", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.112}
+{"case_id": "react-norm-002", "kind": "evaluator_start", "payload": {"case_id": "react-norm-002", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.112}
+{"case_id": "react-norm-002", "kind": "evaluator_end", "payload": {"case_id": "react-norm-002", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.112}
+{"case_id": "react-norm-002", "kind": "evaluator_start", "payload": {"case_id": "react-norm-002", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.112}
+{"case_id": "react-norm-002", "kind": "evaluator_end", "payload": {"case_id": "react-norm-002", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.112}
+{"case_id": "react-norm-002", "kind": "evaluator_start", "payload": {"case_id": "react-norm-002", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.112}
+{"case_id": "react-norm-002", "kind": "evaluator_end", "payload": {"case_id": "react-norm-002", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.112}
+{"case_id": "react-norm-002", "kind": "evaluator_start", "payload": {"case_id": "react-norm-002", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.112}
+{"case_id": "react-norm-002", "kind": "evaluator_end", "payload": {"case_id": "react-norm-002", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.112}
+{"case_id": "react-norm-002", "kind": "case_end", "payload": {"case_id": "react-norm-002", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.112}
+{"case_id": "react-norm-003", "kind": "case_start", "payload": {"case_id": "react-norm-003", "category": "normal"}, "phase": "case", "ts": 1789188483.112}
+{"case_id": "react-norm-003", "kind": "tool_call", "payload": {"args": {"corpus": "city_data", "query": "the landmark of Springfield"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188483.112}
+{"case_id": "react-norm-003", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.079, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188483.112}
+{"case_id": "react-norm-003", "kind": "agent_done", "payload": {"case_id": "react-norm-003", "failure_class": "none", "latency_ms": 0.381, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.113}
+{"case_id": "react-norm-003", "kind": "evaluator_start", "payload": {"case_id": "react-norm-003", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.113}
+{"case_id": "react-norm-003", "kind": "evaluator_end", "payload": {"case_id": "react-norm-003", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.113}
+{"case_id": "react-norm-003", "kind": "evaluator_start", "payload": {"case_id": "react-norm-003", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.113}
+{"case_id": "react-norm-003", "kind": "evaluator_end", "payload": {"case_id": "react-norm-003", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.113}
+{"case_id": "react-norm-003", "kind": "evaluator_start", "payload": {"case_id": "react-norm-003", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.113}
+{"case_id": "react-norm-003", "kind": "evaluator_end", "payload": {"case_id": "react-norm-003", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.113}
+{"case_id": "react-norm-003", "kind": "evaluator_start", "payload": {"case_id": "react-norm-003", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.113}
+{"case_id": "react-norm-003", "kind": "evaluator_end", "payload": {"case_id": "react-norm-003", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.113}
+{"case_id": "react-norm-003", "kind": "evaluator_start", "payload": {"case_id": "react-norm-003", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.113}
+{"case_id": "react-norm-003", "kind": "evaluator_end", "payload": {"case_id": "react-norm-003", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.113}
+{"case_id": "react-norm-003", "kind": "evaluator_start", "payload": {"case_id": "react-norm-003", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.113}
+{"case_id": "react-norm-003", "kind": "evaluator_end", "payload": {"case_id": "react-norm-003", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.113}
+{"case_id": "react-norm-003", "kind": "case_end", "payload": {"case_id": "react-norm-003", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.113}
+{"case_id": "react-norm-004", "kind": "case_start", "payload": {"case_id": "react-norm-004", "category": "normal"}, "phase": "case", "ts": 1789188483.113}
+{"case_id": "react-norm-004", "kind": "tool_call", "payload": {"args": {"text": "Data pipelines move records from sources through transforms into the warehouse before dashboards read them."}, "tool": "text_stats"}, "phase": "act", "ts": 1789188483.113}
+{"case_id": "react-norm-004", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.043, "ok": true, "tool": "text_stats"}, "phase": "observe", "ts": 1789188483.113}
+{"case_id": "react-norm-004", "kind": "agent_done", "payload": {"case_id": "react-norm-004", "failure_class": "none", "latency_ms": 0.683, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.113}
+{"case_id": "react-norm-004", "kind": "evaluator_start", "payload": {"case_id": "react-norm-004", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.113}
+{"case_id": "react-norm-004", "kind": "evaluator_end", "payload": {"case_id": "react-norm-004", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.113}
+{"case_id": "react-norm-004", "kind": "evaluator_start", "payload": {"case_id": "react-norm-004", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.113}
+{"case_id": "react-norm-004", "kind": "evaluator_end", "payload": {"case_id": "react-norm-004", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.113}
+{"case_id": "react-norm-004", "kind": "evaluator_start", "payload": {"case_id": "react-norm-004", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.113}
+{"case_id": "react-norm-004", "kind": "evaluator_end", "payload": {"case_id": "react-norm-004", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.113}
+{"case_id": "react-norm-004", "kind": "evaluator_start", "payload": {"case_id": "react-norm-004", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.113}
+{"case_id": "react-norm-004", "kind": "evaluator_end", "payload": {"case_id": "react-norm-004", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.113}
+{"case_id": "react-norm-004", "kind": "evaluator_start", "payload": {"case_id": "react-norm-004", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.113}
+{"case_id": "react-norm-004", "kind": "evaluator_end", "payload": {"case_id": "react-norm-004", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.113}
+{"case_id": "react-norm-004", "kind": "evaluator_start", "payload": {"case_id": "react-norm-004", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.113}
+{"case_id": "react-norm-004", "kind": "evaluator_end", "payload": {"case_id": "react-norm-004", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.113}
+{"case_id": "react-norm-004", "kind": "case_end", "payload": {"case_id": "react-norm-004", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.113}
+{"case_id": "react-norm-005", "kind": "case_start", "payload": {"case_id": "react-norm-005", "category": "normal"}, "phase": "case", "ts": 1789188483.113}
+{"case_id": "react-norm-005", "kind": "tool_call", "payload": {"args": {"op": "upper", "text": "boundary condition"}, "tool": "text_transform"}, "phase": "act", "ts": 1789188483.113}
+{"case_id": "react-norm-005", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.005, "ok": true, "tool": "text_transform"}, "phase": "observe", "ts": 1789188483.113}
+{"case_id": "react-norm-005", "kind": "agent_done", "payload": {"case_id": "react-norm-005", "failure_class": "none", "latency_ms": 0.103, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.114}
+{"case_id": "react-norm-005", "kind": "evaluator_start", "payload": {"case_id": "react-norm-005", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-005", "kind": "evaluator_end", "payload": {"case_id": "react-norm-005", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-005", "kind": "evaluator_start", "payload": {"case_id": "react-norm-005", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-005", "kind": "evaluator_end", "payload": {"case_id": "react-norm-005", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-005", "kind": "evaluator_start", "payload": {"case_id": "react-norm-005", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-005", "kind": "evaluator_end", "payload": {"case_id": "react-norm-005", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-005", "kind": "evaluator_start", "payload": {"case_id": "react-norm-005", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-005", "kind": "evaluator_end", "payload": {"case_id": "react-norm-005", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-005", "kind": "evaluator_start", "payload": {"case_id": "react-norm-005", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-005", "kind": "evaluator_end", "payload": {"case_id": "react-norm-005", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-005", "kind": "evaluator_start", "payload": {"case_id": "react-norm-005", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-005", "kind": "evaluator_end", "payload": {"case_id": "react-norm-005", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-005", "kind": "case_end", "payload": {"case_id": "react-norm-005", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.114}
+{"case_id": "react-norm-006", "kind": "case_start", "payload": {"case_id": "react-norm-006", "category": "normal"}, "phase": "case", "ts": 1789188483.114}
+{"case_id": "react-norm-006", "kind": "tool_call", "payload": {"args": {"expression": "78 - 43"}, "tool": "calculator"}, "phase": "act", "ts": 1789188483.114}
+{"case_id": "react-norm-006", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.019, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188483.114}
+{"case_id": "react-norm-006", "kind": "agent_done", "payload": {"case_id": "react-norm-006", "failure_class": "none", "latency_ms": 0.109, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.114}
+{"case_id": "react-norm-006", "kind": "evaluator_start", "payload": {"case_id": "react-norm-006", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-006", "kind": "evaluator_end", "payload": {"case_id": "react-norm-006", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-006", "kind": "evaluator_start", "payload": {"case_id": "react-norm-006", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-006", "kind": "evaluator_end", "payload": {"case_id": "react-norm-006", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-006", "kind": "evaluator_start", "payload": {"case_id": "react-norm-006", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-006", "kind": "evaluator_end", "payload": {"case_id": "react-norm-006", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-006", "kind": "evaluator_start", "payload": {"case_id": "react-norm-006", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-006", "kind": "evaluator_end", "payload": {"case_id": "react-norm-006", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-006", "kind": "evaluator_start", "payload": {"case_id": "react-norm-006", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-006", "kind": "evaluator_end", "payload": {"case_id": "react-norm-006", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-006", "kind": "evaluator_start", "payload": {"case_id": "react-norm-006", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-006", "kind": "evaluator_end", "payload": {"case_id": "react-norm-006", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-006", "kind": "case_end", "payload": {"case_id": "react-norm-006", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.114}
+{"case_id": "react-norm-007", "kind": "case_start", "payload": {"case_id": "react-norm-007", "category": "normal"}, "phase": "case", "ts": 1789188483.114}
+{"case_id": "react-norm-007", "kind": "tool_call", "payload": {"args": {"expression": "68 * 11"}, "tool": "calculator"}, "phase": "act", "ts": 1789188483.114}
+{"case_id": "react-norm-007", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.013, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188483.114}
+{"case_id": "react-norm-007", "kind": "agent_done", "payload": {"case_id": "react-norm-007", "failure_class": "none", "latency_ms": 0.107, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.114}
+{"case_id": "react-norm-007", "kind": "evaluator_start", "payload": {"case_id": "react-norm-007", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-007", "kind": "evaluator_end", "payload": {"case_id": "react-norm-007", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-007", "kind": "evaluator_start", "payload": {"case_id": "react-norm-007", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-007", "kind": "evaluator_end", "payload": {"case_id": "react-norm-007", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-007", "kind": "evaluator_start", "payload": {"case_id": "react-norm-007", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-007", "kind": "evaluator_end", "payload": {"case_id": "react-norm-007", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-007", "kind": "evaluator_start", "payload": {"case_id": "react-norm-007", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-007", "kind": "evaluator_end", "payload": {"case_id": "react-norm-007", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-007", "kind": "evaluator_start", "payload": {"case_id": "react-norm-007", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-007", "kind": "evaluator_end", "payload": {"case_id": "react-norm-007", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-007", "kind": "evaluator_start", "payload": {"case_id": "react-norm-007", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-007", "kind": "evaluator_end", "payload": {"case_id": "react-norm-007", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-007", "kind": "case_end", "payload": {"case_id": "react-norm-007", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.114}
+{"case_id": "react-norm-008", "kind": "case_start", "payload": {"case_id": "react-norm-008", "category": "normal"}, "phase": "case", "ts": 1789188483.114}
+{"case_id": "react-norm-008", "kind": "tool_call", "payload": {"args": {"corpus": "product_specs", "query": "the Pulse Phone X storage"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188483.114}
+{"case_id": "react-norm-008", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.02, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188483.114}
+{"case_id": "react-norm-008", "kind": "agent_done", "payload": {"case_id": "react-norm-008", "failure_class": "none", "latency_ms": 0.175, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.114}
+{"case_id": "react-norm-008", "kind": "evaluator_start", "payload": {"case_id": "react-norm-008", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-008", "kind": "evaluator_end", "payload": {"case_id": "react-norm-008", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-008", "kind": "evaluator_start", "payload": {"case_id": "react-norm-008", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-008", "kind": "evaluator_end", "payload": {"case_id": "react-norm-008", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-008", "kind": "evaluator_start", "payload": {"case_id": "react-norm-008", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-008", "kind": "evaluator_end", "payload": {"case_id": "react-norm-008", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-008", "kind": "evaluator_start", "payload": {"case_id": "react-norm-008", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-008", "kind": "evaluator_end", "payload": {"case_id": "react-norm-008", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-008", "kind": "evaluator_start", "payload": {"case_id": "react-norm-008", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-008", "kind": "evaluator_end", "payload": {"case_id": "react-norm-008", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-008", "kind": "evaluator_start", "payload": {"case_id": "react-norm-008", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-008", "kind": "evaluator_end", "payload": {"case_id": "react-norm-008", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-008", "kind": "case_end", "payload": {"case_id": "react-norm-008", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.114}
+{"case_id": "react-norm-009", "kind": "case_start", "payload": {"case_id": "react-norm-009", "category": "normal"}, "phase": "case", "ts": 1789188483.114}
+{"case_id": "react-norm-009", "kind": "tool_call", "payload": {"args": {"text": "The quick brown fox jumps over the lazy dog near the river bank at dawn."}, "tool": "text_stats"}, "phase": "act", "ts": 1789188483.114}
+{"case_id": "react-norm-009", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.009, "ok": true, "tool": "text_stats"}, "phase": "observe", "ts": 1789188483.114}
+{"case_id": "react-norm-009", "kind": "agent_done", "payload": {"case_id": "react-norm-009", "failure_class": "none", "latency_ms": 0.122, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.114}
+{"case_id": "react-norm-009", "kind": "evaluator_start", "payload": {"case_id": "react-norm-009", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-009", "kind": "evaluator_end", "payload": {"case_id": "react-norm-009", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-009", "kind": "evaluator_start", "payload": {"case_id": "react-norm-009", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-009", "kind": "evaluator_end", "payload": {"case_id": "react-norm-009", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-009", "kind": "evaluator_start", "payload": {"case_id": "react-norm-009", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-009", "kind": "evaluator_end", "payload": {"case_id": "react-norm-009", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-009", "kind": "evaluator_start", "payload": {"case_id": "react-norm-009", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-009", "kind": "evaluator_end", "payload": {"case_id": "react-norm-009", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-009", "kind": "evaluator_start", "payload": {"case_id": "react-norm-009", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-009", "kind": "evaluator_end", "payload": {"case_id": "react-norm-009", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-009", "kind": "evaluator_start", "payload": {"case_id": "react-norm-009", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-009", "kind": "evaluator_end", "payload": {"case_id": "react-norm-009", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.114}
+{"case_id": "react-norm-009", "kind": "case_end", "payload": {"case_id": "react-norm-009", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.114}
+{"case_id": "react-norm-010", "kind": "case_start", "payload": {"case_id": "react-norm-010", "category": "normal"}, "phase": "case", "ts": 1789188483.114}
+{"case_id": "react-norm-010", "kind": "tool_call", "payload": {"args": {"query": "irrelevant xyzzy"}, "tool": "summarize"}, "phase": "act", "ts": 1789188483.114}
+{"case_id": "react-norm-010", "kind": "tool_call", "payload": {"args": {"op": "upper", "text": "status update"}, "tool": "text_transform"}, "phase": "act", "ts": 1789188483.115}
+{"case_id": "react-norm-010", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.004, "ok": true, "tool": "text_transform"}, "phase": "observe", "ts": 1789188483.115}
+{"case_id": "react-norm-010", "kind": "agent_done", "payload": {"case_id": "react-norm-010", "failure_class": "none", "latency_ms": 0.124, "ok": true, "termination": "answer", "tool_calls": 2}, "phase": "case", "ts": 1789188483.115}
+{"case_id": "react-norm-010", "kind": "evaluator_start", "payload": {"case_id": "react-norm-010", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-010", "kind": "evaluator_end", "payload": {"case_id": "react-norm-010", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-010", "kind": "evaluator_start", "payload": {"case_id": "react-norm-010", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-010", "kind": "evaluator_end", "payload": {"case_id": "react-norm-010", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-010", "kind": "evaluator_start", "payload": {"case_id": "react-norm-010", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-010", "kind": "evaluator_end", "payload": {"case_id": "react-norm-010", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-010", "kind": "evaluator_start", "payload": {"case_id": "react-norm-010", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-010", "kind": "evaluator_end", "payload": {"case_id": "react-norm-010", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-010", "kind": "evaluator_start", "payload": {"case_id": "react-norm-010", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-010", "kind": "evaluator_end", "payload": {"case_id": "react-norm-010", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-010", "kind": "evaluator_start", "payload": {"case_id": "react-norm-010", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-010", "kind": "evaluator_end", "payload": {"case_id": "react-norm-010", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-010", "kind": "case_end", "payload": {"case_id": "react-norm-010", "failure_class": "test_failure", "passed": false}, "phase": "case", "ts": 1789188483.115}
+{"case_id": "react-norm-011", "kind": "case_start", "payload": {"case_id": "react-norm-011", "category": "normal"}, "phase": "case", "ts": 1789188483.115}
+{"case_id": "react-norm-011", "kind": "tool_call", "payload": {"args": {"expression": "70 - 82"}, "tool": "calculator"}, "phase": "act", "ts": 1789188483.115}
+{"case_id": "react-norm-011", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.015, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188483.115}
+{"case_id": "react-norm-011", "kind": "agent_done", "payload": {"case_id": "react-norm-011", "failure_class": "none", "latency_ms": 0.096, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.115}
+{"case_id": "react-norm-011", "kind": "evaluator_start", "payload": {"case_id": "react-norm-011", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-011", "kind": "evaluator_end", "payload": {"case_id": "react-norm-011", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-011", "kind": "evaluator_start", "payload": {"case_id": "react-norm-011", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-011", "kind": "evaluator_end", "payload": {"case_id": "react-norm-011", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-011", "kind": "evaluator_start", "payload": {"case_id": "react-norm-011", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-011", "kind": "evaluator_end", "payload": {"case_id": "react-norm-011", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-011", "kind": "evaluator_start", "payload": {"case_id": "react-norm-011", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-011", "kind": "evaluator_end", "payload": {"case_id": "react-norm-011", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-011", "kind": "evaluator_start", "payload": {"case_id": "react-norm-011", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-011", "kind": "evaluator_end", "payload": {"case_id": "react-norm-011", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-011", "kind": "evaluator_start", "payload": {"case_id": "react-norm-011", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-011", "kind": "evaluator_end", "payload": {"case_id": "react-norm-011", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-011", "kind": "case_end", "payload": {"case_id": "react-norm-011", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.115}
+{"case_id": "react-norm-012", "kind": "case_start", "payload": {"case_id": "react-norm-012", "category": "normal"}, "phase": "case", "ts": 1789188483.115}
+{"case_id": "react-norm-012", "kind": "tool_call", "payload": {"args": {"expression": "53 - 53"}, "tool": "calculator"}, "phase": "act", "ts": 1789188483.115}
+{"case_id": "react-norm-012", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.013, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188483.115}
+{"case_id": "react-norm-012", "kind": "agent_done", "payload": {"case_id": "react-norm-012", "failure_class": "none", "latency_ms": 0.097, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.115}
+{"case_id": "react-norm-012", "kind": "evaluator_start", "payload": {"case_id": "react-norm-012", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-012", "kind": "evaluator_end", "payload": {"case_id": "react-norm-012", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-012", "kind": "evaluator_start", "payload": {"case_id": "react-norm-012", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-012", "kind": "evaluator_end", "payload": {"case_id": "react-norm-012", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-012", "kind": "evaluator_start", "payload": {"case_id": "react-norm-012", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-012", "kind": "evaluator_end", "payload": {"case_id": "react-norm-012", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-012", "kind": "evaluator_start", "payload": {"case_id": "react-norm-012", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-012", "kind": "evaluator_end", "payload": {"case_id": "react-norm-012", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-012", "kind": "evaluator_start", "payload": {"case_id": "react-norm-012", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-012", "kind": "evaluator_end", "payload": {"case_id": "react-norm-012", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-012", "kind": "evaluator_start", "payload": {"case_id": "react-norm-012", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-012", "kind": "evaluator_end", "payload": {"case_id": "react-norm-012", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-012", "kind": "case_end", "payload": {"case_id": "react-norm-012", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.115}
+{"case_id": "react-norm-013", "kind": "case_start", "payload": {"case_id": "react-norm-013", "category": "normal"}, "phase": "case", "ts": 1789188483.115}
+{"case_id": "react-norm-013", "kind": "tool_call", "payload": {"args": {"corpus": "city_data", "query": "the founding year of Riverton"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188483.115}
+{"case_id": "react-norm-013", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.015, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188483.115}
+{"case_id": "react-norm-013", "kind": "agent_done", "payload": {"case_id": "react-norm-013", "failure_class": "none", "latency_ms": 0.127, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.115}
+{"case_id": "react-norm-013", "kind": "evaluator_start", "payload": {"case_id": "react-norm-013", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-013", "kind": "evaluator_end", "payload": {"case_id": "react-norm-013", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-013", "kind": "evaluator_start", "payload": {"case_id": "react-norm-013", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-013", "kind": "evaluator_end", "payload": {"case_id": "react-norm-013", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-013", "kind": "evaluator_start", "payload": {"case_id": "react-norm-013", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-013", "kind": "evaluator_end", "payload": {"case_id": "react-norm-013", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-013", "kind": "evaluator_start", "payload": {"case_id": "react-norm-013", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-013", "kind": "evaluator_end", "payload": {"case_id": "react-norm-013", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-013", "kind": "evaluator_start", "payload": {"case_id": "react-norm-013", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-013", "kind": "evaluator_end", "payload": {"case_id": "react-norm-013", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-013", "kind": "evaluator_start", "payload": {"case_id": "react-norm-013", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-013", "kind": "evaluator_end", "payload": {"case_id": "react-norm-013", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-013", "kind": "case_end", "payload": {"case_id": "react-norm-013", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.115}
+{"case_id": "react-norm-014", "kind": "case_start", "payload": {"case_id": "react-norm-014", "category": "normal"}, "phase": "case", "ts": 1789188483.115}
+{"case_id": "react-norm-014", "kind": "agent_done", "payload": {"case_id": "react-norm-014", "failure_class": "none", "latency_ms": 0.063, "ok": true, "termination": "answer", "tool_calls": 0}, "phase": "case", "ts": 1789188483.115}
+{"case_id": "react-norm-014", "kind": "evaluator_start", "payload": {"case_id": "react-norm-014", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-014", "kind": "evaluator_end", "payload": {"case_id": "react-norm-014", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-014", "kind": "evaluator_start", "payload": {"case_id": "react-norm-014", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-014", "kind": "evaluator_end", "payload": {"case_id": "react-norm-014", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-014", "kind": "evaluator_start", "payload": {"case_id": "react-norm-014", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-014", "kind": "evaluator_end", "payload": {"case_id": "react-norm-014", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-014", "kind": "evaluator_start", "payload": {"case_id": "react-norm-014", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-014", "kind": "evaluator_end", "payload": {"case_id": "react-norm-014", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-014", "kind": "evaluator_start", "payload": {"case_id": "react-norm-014", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-014", "kind": "evaluator_end", "payload": {"case_id": "react-norm-014", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-014", "kind": "evaluator_start", "payload": {"case_id": "react-norm-014", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-014", "kind": "evaluator_end", "payload": {"case_id": "react-norm-014", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-014", "kind": "case_end", "payload": {"case_id": "react-norm-014", "failure_class": "test_failure", "passed": false}, "phase": "case", "ts": 1789188483.115}
+{"case_id": "react-norm-015", "kind": "case_start", "payload": {"case_id": "react-norm-015", "category": "normal"}, "phase": "case", "ts": 1789188483.115}
+{"case_id": "react-norm-015", "kind": "tool_call", "payload": {"args": {"op": "upper", "text": "launch checklist"}, "tool": "text_transform"}, "phase": "act", "ts": 1789188483.115}
+{"case_id": "react-norm-015", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.003, "ok": true, "tool": "text_transform"}, "phase": "observe", "ts": 1789188483.115}
+{"case_id": "react-norm-015", "kind": "agent_done", "payload": {"case_id": "react-norm-015", "failure_class": "none", "latency_ms": 0.082, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.115}
+{"case_id": "react-norm-015", "kind": "evaluator_start", "payload": {"case_id": "react-norm-015", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-015", "kind": "evaluator_end", "payload": {"case_id": "react-norm-015", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-015", "kind": "evaluator_start", "payload": {"case_id": "react-norm-015", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-015", "kind": "evaluator_end", "payload": {"case_id": "react-norm-015", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-015", "kind": "evaluator_start", "payload": {"case_id": "react-norm-015", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-015", "kind": "evaluator_end", "payload": {"case_id": "react-norm-015", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-015", "kind": "evaluator_start", "payload": {"case_id": "react-norm-015", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-015", "kind": "evaluator_end", "payload": {"case_id": "react-norm-015", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-015", "kind": "evaluator_start", "payload": {"case_id": "react-norm-015", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.115}
+{"case_id": "react-norm-015", "kind": "evaluator_end", "payload": {"case_id": "react-norm-015", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-015", "kind": "evaluator_start", "payload": {"case_id": "react-norm-015", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-015", "kind": "evaluator_end", "payload": {"case_id": "react-norm-015", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-015", "kind": "case_end", "payload": {"case_id": "react-norm-015", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.116}
+{"case_id": "react-norm-016", "kind": "case_start", "payload": {"case_id": "react-norm-016", "category": "normal"}, "phase": "case", "ts": 1789188483.116}
+{"case_id": "react-norm-016", "kind": "tool_call", "payload": {"args": {"expression": "27 + 79"}, "tool": "calculator"}, "phase": "act", "ts": 1789188483.116}
+{"case_id": "react-norm-016", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.014, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188483.116}
+{"case_id": "react-norm-016", "kind": "agent_done", "payload": {"case_id": "react-norm-016", "failure_class": "none", "latency_ms": 0.091, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.116}
+{"case_id": "react-norm-016", "kind": "evaluator_start", "payload": {"case_id": "react-norm-016", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-016", "kind": "evaluator_end", "payload": {"case_id": "react-norm-016", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-016", "kind": "evaluator_start", "payload": {"case_id": "react-norm-016", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-016", "kind": "evaluator_end", "payload": {"case_id": "react-norm-016", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-016", "kind": "evaluator_start", "payload": {"case_id": "react-norm-016", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-016", "kind": "evaluator_end", "payload": {"case_id": "react-norm-016", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-016", "kind": "evaluator_start", "payload": {"case_id": "react-norm-016", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-016", "kind": "evaluator_end", "payload": {"case_id": "react-norm-016", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-016", "kind": "evaluator_start", "payload": {"case_id": "react-norm-016", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-016", "kind": "evaluator_end", "payload": {"case_id": "react-norm-016", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-016", "kind": "evaluator_start", "payload": {"case_id": "react-norm-016", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-016", "kind": "evaluator_end", "payload": {"case_id": "react-norm-016", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-016", "kind": "case_end", "payload": {"case_id": "react-norm-016", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.116}
+{"case_id": "react-norm-017", "kind": "case_start", "payload": {"case_id": "react-norm-017", "category": "normal"}, "phase": "case", "ts": 1789188483.116}
+{"case_id": "react-norm-017", "kind": "tool_call", "payload": {"args": {"expression": "21 * 5"}, "tool": "calculator"}, "phase": "act", "ts": 1789188483.116}
+{"case_id": "react-norm-017", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.011, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188483.116}
+{"case_id": "react-norm-017", "kind": "agent_done", "payload": {"case_id": "react-norm-017", "failure_class": "none", "latency_ms": 0.084, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.116}
+{"case_id": "react-norm-017", "kind": "evaluator_start", "payload": {"case_id": "react-norm-017", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-017", "kind": "evaluator_end", "payload": {"case_id": "react-norm-017", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-017", "kind": "evaluator_start", "payload": {"case_id": "react-norm-017", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-017", "kind": "evaluator_end", "payload": {"case_id": "react-norm-017", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-017", "kind": "evaluator_start", "payload": {"case_id": "react-norm-017", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-017", "kind": "evaluator_end", "payload": {"case_id": "react-norm-017", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-017", "kind": "evaluator_start", "payload": {"case_id": "react-norm-017", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-017", "kind": "evaluator_end", "payload": {"case_id": "react-norm-017", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-017", "kind": "evaluator_start", "payload": {"case_id": "react-norm-017", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-017", "kind": "evaluator_end", "payload": {"case_id": "react-norm-017", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-017", "kind": "evaluator_start", "payload": {"case_id": "react-norm-017", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-017", "kind": "evaluator_end", "payload": {"case_id": "react-norm-017", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-017", "kind": "case_end", "payload": {"case_id": "react-norm-017", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.116}
+{"case_id": "react-norm-018", "kind": "case_start", "payload": {"case_id": "react-norm-018", "category": "normal"}, "phase": "case", "ts": 1789188483.116}
+{"case_id": "react-norm-018", "kind": "tool_call", "payload": {"args": {"corpus": "employee_handbook", "query": "the secret rotation interval"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188483.116}
+{"case_id": "react-norm-018", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.021, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188483.116}
+{"case_id": "react-norm-018", "kind": "agent_done", "payload": {"case_id": "react-norm-018", "failure_class": "none", "latency_ms": 0.117, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.116}
+{"case_id": "react-norm-018", "kind": "evaluator_start", "payload": {"case_id": "react-norm-018", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-018", "kind": "evaluator_end", "payload": {"case_id": "react-norm-018", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-018", "kind": "evaluator_start", "payload": {"case_id": "react-norm-018", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-018", "kind": "evaluator_end", "payload": {"case_id": "react-norm-018", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-018", "kind": "evaluator_start", "payload": {"case_id": "react-norm-018", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-018", "kind": "evaluator_end", "payload": {"case_id": "react-norm-018", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-018", "kind": "evaluator_start", "payload": {"case_id": "react-norm-018", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-018", "kind": "evaluator_end", "payload": {"case_id": "react-norm-018", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-018", "kind": "evaluator_start", "payload": {"case_id": "react-norm-018", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-018", "kind": "evaluator_end", "payload": {"case_id": "react-norm-018", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-018", "kind": "evaluator_start", "payload": {"case_id": "react-norm-018", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-018", "kind": "evaluator_end", "payload": {"case_id": "react-norm-018", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-018", "kind": "case_end", "payload": {"case_id": "react-norm-018", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.116}
+{"case_id": "react-norm-019", "kind": "case_start", "payload": {"case_id": "react-norm-019", "category": "normal"}, "phase": "case", "ts": 1789188483.116}
+{"case_id": "react-norm-019", "kind": "tool_call", "payload": {"args": {"text": "The quick brown fox jumps over the lazy dog near the river bank at dawn."}, "tool": "text_stats"}, "phase": "act", "ts": 1789188483.116}
+{"case_id": "react-norm-019", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.007, "ok": true, "tool": "text_stats"}, "phase": "observe", "ts": 1789188483.116}
+{"case_id": "react-norm-019", "kind": "agent_done", "payload": {"case_id": "react-norm-019", "failure_class": "none", "latency_ms": 0.097, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.116}
+{"case_id": "react-norm-019", "kind": "evaluator_start", "payload": {"case_id": "react-norm-019", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-019", "kind": "evaluator_end", "payload": {"case_id": "react-norm-019", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-019", "kind": "evaluator_start", "payload": {"case_id": "react-norm-019", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-019", "kind": "evaluator_end", "payload": {"case_id": "react-norm-019", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-019", "kind": "evaluator_start", "payload": {"case_id": "react-norm-019", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-019", "kind": "evaluator_end", "payload": {"case_id": "react-norm-019", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-019", "kind": "evaluator_start", "payload": {"case_id": "react-norm-019", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-019", "kind": "evaluator_end", "payload": {"case_id": "react-norm-019", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-019", "kind": "evaluator_start", "payload": {"case_id": "react-norm-019", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-019", "kind": "evaluator_end", "payload": {"case_id": "react-norm-019", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-019", "kind": "evaluator_start", "payload": {"case_id": "react-norm-019", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-019", "kind": "evaluator_end", "payload": {"case_id": "react-norm-019", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-019", "kind": "case_end", "payload": {"case_id": "react-norm-019", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.116}
+{"case_id": "react-norm-020", "kind": "case_start", "payload": {"case_id": "react-norm-020", "category": "normal"}, "phase": "case", "ts": 1789188483.116}
+{"case_id": "react-norm-020", "kind": "tool_call", "payload": {"args": {"op": "upper", "text": "status update"}, "tool": "text_transform"}, "phase": "act", "ts": 1789188483.116}
+{"case_id": "react-norm-020", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.003, "ok": true, "tool": "text_transform"}, "phase": "observe", "ts": 1789188483.116}
+{"case_id": "react-norm-020", "kind": "agent_done", "payload": {"case_id": "react-norm-020", "failure_class": "none", "latency_ms": 0.09, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.116}
+{"case_id": "react-norm-020", "kind": "evaluator_start", "payload": {"case_id": "react-norm-020", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-020", "kind": "evaluator_end", "payload": {"case_id": "react-norm-020", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-020", "kind": "evaluator_start", "payload": {"case_id": "react-norm-020", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-020", "kind": "evaluator_end", "payload": {"case_id": "react-norm-020", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-020", "kind": "evaluator_start", "payload": {"case_id": "react-norm-020", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-020", "kind": "evaluator_end", "payload": {"case_id": "react-norm-020", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-020", "kind": "evaluator_start", "payload": {"case_id": "react-norm-020", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-020", "kind": "evaluator_end", "payload": {"case_id": "react-norm-020", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-020", "kind": "evaluator_start", "payload": {"case_id": "react-norm-020", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-020", "kind": "evaluator_end", "payload": {"case_id": "react-norm-020", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-020", "kind": "evaluator_start", "payload": {"case_id": "react-norm-020", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-020", "kind": "evaluator_end", "payload": {"case_id": "react-norm-020", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.116}
+{"case_id": "react-norm-020", "kind": "case_end", "payload": {"case_id": "react-norm-020", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.116}
+{"case_id": "react-diff-001", "kind": "case_start", "payload": {"case_id": "react-diff-001", "category": "difficult"}, "phase": "case", "ts": 1789188483.116}
+{"case_id": "react-diff-001", "kind": "tool_call", "payload": {"args": {"expression": "82153 * 34 - 66964"}, "tool": "calculator"}, "phase": "act", "ts": 1789188483.116}
+{"case_id": "react-diff-001", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.015, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188483.116}
+{"case_id": "react-diff-001", "kind": "agent_done", "payload": {"case_id": "react-diff-001", "failure_class": "none", "latency_ms": 0.091, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.117}
+{"case_id": "react-diff-001", "kind": "evaluator_start", "payload": {"case_id": "react-diff-001", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-001", "kind": "evaluator_end", "payload": {"case_id": "react-diff-001", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-001", "kind": "evaluator_start", "payload": {"case_id": "react-diff-001", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-001", "kind": "evaluator_end", "payload": {"case_id": "react-diff-001", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-001", "kind": "evaluator_start", "payload": {"case_id": "react-diff-001", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-001", "kind": "evaluator_end", "payload": {"case_id": "react-diff-001", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-001", "kind": "evaluator_start", "payload": {"case_id": "react-diff-001", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-001", "kind": "evaluator_end", "payload": {"case_id": "react-diff-001", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-001", "kind": "evaluator_start", "payload": {"case_id": "react-diff-001", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-001", "kind": "evaluator_end", "payload": {"case_id": "react-diff-001", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-001", "kind": "evaluator_start", "payload": {"case_id": "react-diff-001", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-001", "kind": "evaluator_end", "payload": {"case_id": "react-diff-001", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-001", "kind": "case_end", "payload": {"case_id": "react-diff-001", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.117}
+{"case_id": "react-diff-002", "kind": "case_start", "payload": {"case_id": "react-diff-002", "category": "difficult"}, "phase": "case", "ts": 1789188483.117}
+{"case_id": "react-diff-002", "kind": "tool_call", "payload": {"args": {"query": "irrelevant xyzzy"}, "tool": "text_stats"}, "phase": "act", "ts": 1789188483.117}
+{"case_id": "react-diff-002", "kind": "tool_call", "payload": {"args": {"expression": "38766 + 54237 - 21118"}, "tool": "calculator"}, "phase": "act", "ts": 1789188483.117}
+{"case_id": "react-diff-002", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.014, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188483.117}
+{"case_id": "react-diff-002", "kind": "agent_done", "payload": {"case_id": "react-diff-002", "failure_class": "none", "latency_ms": 0.12, "ok": true, "termination": "answer", "tool_calls": 2}, "phase": "case", "ts": 1789188483.117}
+{"case_id": "react-diff-002", "kind": "evaluator_start", "payload": {"case_id": "react-diff-002", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-002", "kind": "evaluator_end", "payload": {"case_id": "react-diff-002", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-002", "kind": "evaluator_start", "payload": {"case_id": "react-diff-002", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-002", "kind": "evaluator_end", "payload": {"case_id": "react-diff-002", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-002", "kind": "evaluator_start", "payload": {"case_id": "react-diff-002", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-002", "kind": "evaluator_end", "payload": {"case_id": "react-diff-002", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-002", "kind": "evaluator_start", "payload": {"case_id": "react-diff-002", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-002", "kind": "evaluator_end", "payload": {"case_id": "react-diff-002", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-002", "kind": "evaluator_start", "payload": {"case_id": "react-diff-002", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-002", "kind": "evaluator_end", "payload": {"case_id": "react-diff-002", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-002", "kind": "evaluator_start", "payload": {"case_id": "react-diff-002", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-002", "kind": "evaluator_end", "payload": {"case_id": "react-diff-002", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-002", "kind": "case_end", "payload": {"case_id": "react-diff-002", "failure_class": "test_failure", "passed": false}, "phase": "case", "ts": 1789188483.117}
+{"case_id": "react-diff-003", "kind": "case_start", "payload": {"case_id": "react-diff-003", "category": "difficult"}, "phase": "case", "ts": 1789188483.117}
+{"case_id": "react-diff-003", "kind": "tool_call", "payload": {"args": {"expression": "74774 - 30318 + 24851"}, "tool": "calculator"}, "phase": "act", "ts": 1789188483.117}
+{"case_id": "react-diff-003", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.014, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188483.117}
+{"case_id": "react-diff-003", "kind": "agent_done", "payload": {"case_id": "react-diff-003", "failure_class": "none", "latency_ms": 0.097, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.117}
+{"case_id": "react-diff-003", "kind": "evaluator_start", "payload": {"case_id": "react-diff-003", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-003", "kind": "evaluator_end", "payload": {"case_id": "react-diff-003", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-003", "kind": "evaluator_start", "payload": {"case_id": "react-diff-003", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-003", "kind": "evaluator_end", "payload": {"case_id": "react-diff-003", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-003", "kind": "evaluator_start", "payload": {"case_id": "react-diff-003", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-003", "kind": "evaluator_end", "payload": {"case_id": "react-diff-003", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-003", "kind": "evaluator_start", "payload": {"case_id": "react-diff-003", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-003", "kind": "evaluator_end", "payload": {"case_id": "react-diff-003", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-003", "kind": "evaluator_start", "payload": {"case_id": "react-diff-003", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-003", "kind": "evaluator_end", "payload": {"case_id": "react-diff-003", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-003", "kind": "evaluator_start", "payload": {"case_id": "react-diff-003", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-003", "kind": "evaluator_end", "payload": {"case_id": "react-diff-003", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-003", "kind": "case_end", "payload": {"case_id": "react-diff-003", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.117}
+{"case_id": "react-diff-004", "kind": "case_start", "payload": {"case_id": "react-diff-004", "category": "difficult"}, "phase": "case", "ts": 1789188483.117}
+{"case_id": "react-diff-004", "kind": "tool_call", "payload": {"args": {"expression": "52999 * 36 + 36773"}, "tool": "calculator"}, "phase": "act", "ts": 1789188483.117}
+{"case_id": "react-diff-004", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.015, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188483.117}
+{"case_id": "react-diff-004", "kind": "agent_done", "payload": {"case_id": "react-diff-004", "failure_class": "none", "latency_ms": 0.099, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.117}
+{"case_id": "react-diff-004", "kind": "evaluator_start", "payload": {"case_id": "react-diff-004", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-004", "kind": "evaluator_end", "payload": {"case_id": "react-diff-004", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-004", "kind": "evaluator_start", "payload": {"case_id": "react-diff-004", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-004", "kind": "evaluator_end", "payload": {"case_id": "react-diff-004", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-004", "kind": "evaluator_start", "payload": {"case_id": "react-diff-004", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-004", "kind": "evaluator_end", "payload": {"case_id": "react-diff-004", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-004", "kind": "evaluator_start", "payload": {"case_id": "react-diff-004", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-004", "kind": "evaluator_end", "payload": {"case_id": "react-diff-004", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-004", "kind": "evaluator_start", "payload": {"case_id": "react-diff-004", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-004", "kind": "evaluator_end", "payload": {"case_id": "react-diff-004", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-004", "kind": "evaluator_start", "payload": {"case_id": "react-diff-004", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-004", "kind": "evaluator_end", "payload": {"case_id": "react-diff-004", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-004", "kind": "case_end", "payload": {"case_id": "react-diff-004", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.117}
+{"case_id": "react-diff-005", "kind": "case_start", "payload": {"case_id": "react-diff-005", "category": "difficult"}, "phase": "case", "ts": 1789188483.117}
+{"case_id": "react-diff-005", "kind": "tool_call", "payload": {"args": {"corpus": "science_facts", "query": "the Avogadro constant"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188483.117}
+{"case_id": "react-diff-005", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.021, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188483.117}
+{"case_id": "react-diff-005", "kind": "agent_done", "payload": {"case_id": "react-diff-005", "failure_class": "none", "latency_ms": 0.164, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.117}
+{"case_id": "react-diff-005", "kind": "evaluator_start", "payload": {"case_id": "react-diff-005", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-005", "kind": "evaluator_end", "payload": {"case_id": "react-diff-005", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-005", "kind": "evaluator_start", "payload": {"case_id": "react-diff-005", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-005", "kind": "evaluator_end", "payload": {"case_id": "react-diff-005", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-005", "kind": "evaluator_start", "payload": {"case_id": "react-diff-005", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-005", "kind": "evaluator_end", "payload": {"case_id": "react-diff-005", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-005", "kind": "evaluator_start", "payload": {"case_id": "react-diff-005", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-005", "kind": "evaluator_end", "payload": {"case_id": "react-diff-005", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-005", "kind": "evaluator_start", "payload": {"case_id": "react-diff-005", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-005", "kind": "evaluator_end", "payload": {"case_id": "react-diff-005", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-005", "kind": "evaluator_start", "payload": {"case_id": "react-diff-005", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-005", "kind": "evaluator_end", "payload": {"case_id": "react-diff-005", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.117}
+{"case_id": "react-diff-005", "kind": "case_end", "payload": {"case_id": "react-diff-005", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.117}
+{"case_id": "react-diff-006", "kind": "case_start", "payload": {"case_id": "react-diff-006", "category": "difficult"}, "phase": "case", "ts": 1789188483.117}
+{"case_id": "react-diff-006", "kind": "tool_call", "payload": {"args": {"corpus": "product_specs", "query": "the Nimbus Dock pass-through charging"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188483.117}
+{"case_id": "react-diff-006", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.017, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188483.117}
+{"case_id": "react-diff-006", "kind": "agent_done", "payload": {"case_id": "react-diff-006", "failure_class": "none", "latency_ms": 0.116, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.118}
+{"case_id": "react-diff-006", "kind": "evaluator_start", "payload": {"case_id": "react-diff-006", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-006", "kind": "evaluator_end", "payload": {"case_id": "react-diff-006", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-006", "kind": "evaluator_start", "payload": {"case_id": "react-diff-006", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-006", "kind": "evaluator_end", "payload": {"case_id": "react-diff-006", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-006", "kind": "evaluator_start", "payload": {"case_id": "react-diff-006", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-006", "kind": "evaluator_end", "payload": {"case_id": "react-diff-006", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-006", "kind": "evaluator_start", "payload": {"case_id": "react-diff-006", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-006", "kind": "evaluator_end", "payload": {"case_id": "react-diff-006", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-006", "kind": "evaluator_start", "payload": {"case_id": "react-diff-006", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-006", "kind": "evaluator_end", "payload": {"case_id": "react-diff-006", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-006", "kind": "evaluator_start", "payload": {"case_id": "react-diff-006", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-006", "kind": "evaluator_end", "payload": {"case_id": "react-diff-006", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-006", "kind": "case_end", "payload": {"case_id": "react-diff-006", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.118}
+{"case_id": "react-diff-007", "kind": "case_start", "payload": {"case_id": "react-diff-007", "category": "difficult"}, "phase": "case", "ts": 1789188483.118}
+{"case_id": "react-diff-007", "kind": "tool_call", "payload": {"args": {"query": "irrelevant xyzzy"}, "tool": "text_transform"}, "phase": "act", "ts": 1789188483.118}
+{"case_id": "react-diff-007", "kind": "tool_call", "payload": {"args": {"corpus": "product_specs", "query": "the Aurora Laptop 14 weight"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188483.118}
+{"case_id": "react-diff-007", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.019, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188483.118}
+{"case_id": "react-diff-007", "kind": "agent_done", "payload": {"case_id": "react-diff-007", "failure_class": "none", "latency_ms": 0.168, "ok": true, "termination": "answer", "tool_calls": 2}, "phase": "case", "ts": 1789188483.118}
+{"case_id": "react-diff-007", "kind": "evaluator_start", "payload": {"case_id": "react-diff-007", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-007", "kind": "evaluator_end", "payload": {"case_id": "react-diff-007", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-007", "kind": "evaluator_start", "payload": {"case_id": "react-diff-007", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-007", "kind": "evaluator_end", "payload": {"case_id": "react-diff-007", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-007", "kind": "evaluator_start", "payload": {"case_id": "react-diff-007", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-007", "kind": "evaluator_end", "payload": {"case_id": "react-diff-007", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-007", "kind": "evaluator_start", "payload": {"case_id": "react-diff-007", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-007", "kind": "evaluator_end", "payload": {"case_id": "react-diff-007", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-007", "kind": "evaluator_start", "payload": {"case_id": "react-diff-007", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-007", "kind": "evaluator_end", "payload": {"case_id": "react-diff-007", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-007", "kind": "evaluator_start", "payload": {"case_id": "react-diff-007", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-007", "kind": "evaluator_end", "payload": {"case_id": "react-diff-007", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-007", "kind": "case_end", "payload": {"case_id": "react-diff-007", "failure_class": "test_failure", "passed": false}, "phase": "case", "ts": 1789188483.118}
+{"case_id": "react-diff-008", "kind": "case_start", "payload": {"case_id": "react-diff-008", "category": "difficult"}, "phase": "case", "ts": 1789188483.118}
+{"case_id": "react-diff-008", "kind": "tool_call", "payload": {"args": {"op": "sum", "values": [220, 223, 249, 243]}, "tool": "data_calc"}, "phase": "act", "ts": 1789188483.118}
+{"case_id": "react-diff-008", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.012, "ok": true, "tool": "data_calc"}, "phase": "observe", "ts": 1789188483.118}
+{"case_id": "react-diff-008", "kind": "agent_done", "payload": {"case_id": "react-diff-008", "failure_class": "none", "latency_ms": 0.478, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.118}
+{"case_id": "react-diff-008", "kind": "evaluator_start", "payload": {"case_id": "react-diff-008", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-008", "kind": "evaluator_end", "payload": {"case_id": "react-diff-008", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-008", "kind": "evaluator_start", "payload": {"case_id": "react-diff-008", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-008", "kind": "evaluator_end", "payload": {"case_id": "react-diff-008", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-008", "kind": "evaluator_start", "payload": {"case_id": "react-diff-008", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-008", "kind": "evaluator_end", "payload": {"case_id": "react-diff-008", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-008", "kind": "evaluator_start", "payload": {"case_id": "react-diff-008", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-008", "kind": "evaluator_end", "payload": {"case_id": "react-diff-008", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-008", "kind": "evaluator_start", "payload": {"case_id": "react-diff-008", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-008", "kind": "evaluator_end", "payload": {"case_id": "react-diff-008", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-008", "kind": "evaluator_start", "payload": {"case_id": "react-diff-008", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-008", "kind": "evaluator_end", "payload": {"case_id": "react-diff-008", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.118}
+{"case_id": "react-diff-008", "kind": "case_end", "payload": {"case_id": "react-diff-008", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.118}
+{"case_id": "react-diff-009", "kind": "case_start", "payload": {"case_id": "react-diff-009", "category": "difficult"}, "phase": "case", "ts": 1789188483.118}
+{"case_id": "react-diff-009", "kind": "tool_call", "payload": {"args": {"op": "mean", "values": [394, 56, 369, 244, 99, 218, 152]}, "tool": "data_calc"}, "phase": "act", "ts": 1789188483.118}
+{"case_id": "react-diff-009", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.008, "ok": true, "tool": "data_calc"}, "phase": "observe", "ts": 1789188483.118}
+{"case_id": "react-diff-009", "kind": "agent_done", "payload": {"case_id": "react-diff-009", "failure_class": "none", "latency_ms": 0.112, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.119}
+{"case_id": "react-diff-009", "kind": "evaluator_start", "payload": {"case_id": "react-diff-009", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-diff-009", "kind": "evaluator_end", "payload": {"case_id": "react-diff-009", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-diff-009", "kind": "evaluator_start", "payload": {"case_id": "react-diff-009", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-diff-009", "kind": "evaluator_end", "payload": {"case_id": "react-diff-009", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-diff-009", "kind": "evaluator_start", "payload": {"case_id": "react-diff-009", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-diff-009", "kind": "evaluator_end", "payload": {"case_id": "react-diff-009", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-diff-009", "kind": "evaluator_start", "payload": {"case_id": "react-diff-009", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-diff-009", "kind": "evaluator_end", "payload": {"case_id": "react-diff-009", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-diff-009", "kind": "evaluator_start", "payload": {"case_id": "react-diff-009", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-diff-009", "kind": "evaluator_end", "payload": {"case_id": "react-diff-009", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-diff-009", "kind": "evaluator_start", "payload": {"case_id": "react-diff-009", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-diff-009", "kind": "evaluator_end", "payload": {"case_id": "react-diff-009", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-diff-009", "kind": "case_end", "payload": {"case_id": "react-diff-009", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.119}
+{"case_id": "react-diff-010", "kind": "case_start", "payload": {"case_id": "react-diff-010", "category": "difficult"}, "phase": "case", "ts": 1789188483.119}
+{"case_id": "react-diff-010", "kind": "tool_call", "payload": {"args": {"url": "fixture://reports/q3"}, "tool": "sim_web_get"}, "phase": "act", "ts": 1789188483.119}
+{"case_id": "react-diff-010", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.003, "ok": true, "tool": "sim_web_get"}, "phase": "observe", "ts": 1789188483.119}
+{"case_id": "react-diff-010", "kind": "agent_done", "payload": {"case_id": "react-diff-010", "failure_class": "none", "latency_ms": 0.083, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.119}
+{"case_id": "react-diff-010", "kind": "evaluator_start", "payload": {"case_id": "react-diff-010", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-diff-010", "kind": "evaluator_end", "payload": {"case_id": "react-diff-010", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-diff-010", "kind": "evaluator_start", "payload": {"case_id": "react-diff-010", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-diff-010", "kind": "evaluator_end", "payload": {"case_id": "react-diff-010", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-diff-010", "kind": "evaluator_start", "payload": {"case_id": "react-diff-010", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-diff-010", "kind": "evaluator_end", "payload": {"case_id": "react-diff-010", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-diff-010", "kind": "evaluator_start", "payload": {"case_id": "react-diff-010", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-diff-010", "kind": "evaluator_end", "payload": {"case_id": "react-diff-010", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-diff-010", "kind": "evaluator_start", "payload": {"case_id": "react-diff-010", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-diff-010", "kind": "evaluator_end", "payload": {"case_id": "react-diff-010", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-diff-010", "kind": "evaluator_start", "payload": {"case_id": "react-diff-010", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-diff-010", "kind": "evaluator_end", "payload": {"case_id": "react-diff-010", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-diff-010", "kind": "case_end", "payload": {"case_id": "react-diff-010", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.119}
+{"case_id": "react-amb-001", "kind": "case_start", "payload": {"case_id": "react-amb-001", "category": "ambiguous"}, "phase": "case", "ts": 1789188483.119}
+{"case_id": "react-amb-001", "kind": "tool_call", "payload": {"args": {"corpus": "employee_handbook", "query": "the per-diem meal cap (domestic or international, unclear)"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188483.119}
+{"case_id": "react-amb-001", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.048, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188483.119}
+{"case_id": "react-amb-001", "kind": "agent_done", "payload": {"case_id": "react-amb-001", "failure_class": "none", "latency_ms": 0.341, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.119}
+{"case_id": "react-amb-001", "kind": "evaluator_start", "payload": {"case_id": "react-amb-001", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-amb-001", "kind": "evaluator_end", "payload": {"case_id": "react-amb-001", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-amb-001", "kind": "evaluator_start", "payload": {"case_id": "react-amb-001", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-amb-001", "kind": "evaluator_end", "payload": {"case_id": "react-amb-001", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-amb-001", "kind": "evaluator_start", "payload": {"case_id": "react-amb-001", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-amb-001", "kind": "evaluator_end", "payload": {"case_id": "react-amb-001", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-amb-001", "kind": "evaluator_start", "payload": {"case_id": "react-amb-001", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-amb-001", "kind": "evaluator_end", "payload": {"case_id": "react-amb-001", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-amb-001", "kind": "evaluator_start", "payload": {"case_id": "react-amb-001", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-amb-001", "kind": "evaluator_end", "payload": {"case_id": "react-amb-001", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-amb-001", "kind": "evaluator_start", "payload": {"case_id": "react-amb-001", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-amb-001", "kind": "evaluator_end", "payload": {"case_id": "react-amb-001", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-amb-001", "kind": "case_end", "payload": {"case_id": "react-amb-001", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.119}
+{"case_id": "react-amb-002", "kind": "case_start", "payload": {"case_id": "react-amb-002", "category": "ambiguous"}, "phase": "case", "ts": 1789188483.119}
+{"case_id": "react-amb-002", "kind": "tool_call", "payload": {"args": {"corpus": "employee_handbook", "query": "the remote work day limit (per week or in total, unclear)"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188483.119}
+{"case_id": "react-amb-002", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.059, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188483.119}
+{"case_id": "react-amb-002", "kind": "agent_done", "payload": {"case_id": "react-amb-002", "failure_class": "none", "latency_ms": 0.222, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.119}
+{"case_id": "react-amb-002", "kind": "evaluator_start", "payload": {"case_id": "react-amb-002", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-amb-002", "kind": "evaluator_end", "payload": {"case_id": "react-amb-002", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-amb-002", "kind": "evaluator_start", "payload": {"case_id": "react-amb-002", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-amb-002", "kind": "evaluator_end", "payload": {"case_id": "react-amb-002", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-amb-002", "kind": "evaluator_start", "payload": {"case_id": "react-amb-002", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-amb-002", "kind": "evaluator_end", "payload": {"case_id": "react-amb-002", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-amb-002", "kind": "evaluator_start", "payload": {"case_id": "react-amb-002", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-amb-002", "kind": "evaluator_end", "payload": {"case_id": "react-amb-002", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-amb-002", "kind": "evaluator_start", "payload": {"case_id": "react-amb-002", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-amb-002", "kind": "evaluator_end", "payload": {"case_id": "react-amb-002", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-amb-002", "kind": "evaluator_start", "payload": {"case_id": "react-amb-002", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-amb-002", "kind": "evaluator_end", "payload": {"case_id": "react-amb-002", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.119}
+{"case_id": "react-amb-002", "kind": "case_end", "payload": {"case_id": "react-amb-002", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.119}
+{"case_id": "react-amb-003", "kind": "case_start", "payload": {"case_id": "react-amb-003", "category": "ambiguous"}, "phase": "case", "ts": 1789188483.119}
+{"case_id": "react-amb-003", "kind": "tool_call", "payload": {"args": {"corpus": "employee_handbook", "query": "the expense submission window (calendar or business days, unclear)"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188483.12}
+{"case_id": "react-amb-003", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.053, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188483.12}
+{"case_id": "react-amb-003", "kind": "agent_done", "payload": {"case_id": "react-amb-003", "failure_class": "none", "latency_ms": 0.196, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.12}
+{"case_id": "react-amb-003", "kind": "evaluator_start", "payload": {"case_id": "react-amb-003", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-003", "kind": "evaluator_end", "payload": {"case_id": "react-amb-003", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-003", "kind": "evaluator_start", "payload": {"case_id": "react-amb-003", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-003", "kind": "evaluator_end", "payload": {"case_id": "react-amb-003", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-003", "kind": "evaluator_start", "payload": {"case_id": "react-amb-003", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-003", "kind": "evaluator_end", "payload": {"case_id": "react-amb-003", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-003", "kind": "evaluator_start", "payload": {"case_id": "react-amb-003", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-003", "kind": "evaluator_end", "payload": {"case_id": "react-amb-003", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-003", "kind": "evaluator_start", "payload": {"case_id": "react-amb-003", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-003", "kind": "evaluator_end", "payload": {"case_id": "react-amb-003", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-003", "kind": "evaluator_start", "payload": {"case_id": "react-amb-003", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-003", "kind": "evaluator_end", "payload": {"case_id": "react-amb-003", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-003", "kind": "case_end", "payload": {"case_id": "react-amb-003", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.12}
+{"case_id": "react-amb-004", "kind": "case_start", "payload": {"case_id": "react-amb-004", "category": "ambiguous"}, "phase": "case", "ts": 1789188483.12}
+{"case_id": "react-amb-004", "kind": "tool_call", "payload": {"args": {"corpus": "employee_handbook", "query": "the probation period length (which staff, unclear)"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188483.12}
+{"case_id": "react-amb-004", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.023, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188483.12}
+{"case_id": "react-amb-004", "kind": "agent_done", "payload": {"case_id": "react-amb-004", "failure_class": "none", "latency_ms": 0.148, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.12}
+{"case_id": "react-amb-004", "kind": "evaluator_start", "payload": {"case_id": "react-amb-004", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-004", "kind": "evaluator_end", "payload": {"case_id": "react-amb-004", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-004", "kind": "evaluator_start", "payload": {"case_id": "react-amb-004", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-004", "kind": "evaluator_end", "payload": {"case_id": "react-amb-004", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-004", "kind": "evaluator_start", "payload": {"case_id": "react-amb-004", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-004", "kind": "evaluator_end", "payload": {"case_id": "react-amb-004", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-004", "kind": "evaluator_start", "payload": {"case_id": "react-amb-004", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-004", "kind": "evaluator_end", "payload": {"case_id": "react-amb-004", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-004", "kind": "evaluator_start", "payload": {"case_id": "react-amb-004", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-004", "kind": "evaluator_end", "payload": {"case_id": "react-amb-004", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-004", "kind": "evaluator_start", "payload": {"case_id": "react-amb-004", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-004", "kind": "evaluator_end", "payload": {"case_id": "react-amb-004", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-004", "kind": "case_end", "payload": {"case_id": "react-amb-004", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.12}
+{"case_id": "react-amb-005", "kind": "case_start", "payload": {"case_id": "react-amb-005", "category": "ambiguous"}, "phase": "case", "ts": 1789188483.12}
+{"case_id": "react-amb-005", "kind": "tool_call", "payload": {"args": {"corpus": "employee_handbook", "query": "the maximum vacation carryover limit (vacation or sick days, unclear)"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188483.12}
+{"case_id": "react-amb-005", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.065, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188483.12}
+{"case_id": "react-amb-005", "kind": "agent_done", "payload": {"case_id": "react-amb-005", "failure_class": "none", "latency_ms": 0.219, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.12}
+{"case_id": "react-amb-005", "kind": "evaluator_start", "payload": {"case_id": "react-amb-005", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-005", "kind": "evaluator_end", "payload": {"case_id": "react-amb-005", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-005", "kind": "evaluator_start", "payload": {"case_id": "react-amb-005", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-005", "kind": "evaluator_end", "payload": {"case_id": "react-amb-005", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-005", "kind": "evaluator_start", "payload": {"case_id": "react-amb-005", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-005", "kind": "evaluator_end", "payload": {"case_id": "react-amb-005", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-005", "kind": "evaluator_start", "payload": {"case_id": "react-amb-005", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-005", "kind": "evaluator_end", "payload": {"case_id": "react-amb-005", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-005", "kind": "evaluator_start", "payload": {"case_id": "react-amb-005", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-005", "kind": "evaluator_end", "payload": {"case_id": "react-amb-005", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-005", "kind": "evaluator_start", "payload": {"case_id": "react-amb-005", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-005", "kind": "evaluator_end", "payload": {"case_id": "react-amb-005", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-005", "kind": "case_end", "payload": {"case_id": "react-amb-005", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.12}
+{"case_id": "react-amb-006", "kind": "case_start", "payload": {"case_id": "react-amb-006", "category": "ambiguous"}, "phase": "case", "ts": 1789188483.12}
+{"case_id": "react-amb-006", "kind": "agent_done", "payload": {"case_id": "react-amb-006", "failure_class": "none", "latency_ms": 0.055, "ok": true, "termination": "answer", "tool_calls": 0}, "phase": "case", "ts": 1789188483.12}
+{"case_id": "react-amb-006", "kind": "evaluator_start", "payload": {"case_id": "react-amb-006", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-006", "kind": "evaluator_end", "payload": {"case_id": "react-amb-006", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-006", "kind": "evaluator_start", "payload": {"case_id": "react-amb-006", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-006", "kind": "evaluator_end", "payload": {"case_id": "react-amb-006", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-006", "kind": "evaluator_start", "payload": {"case_id": "react-amb-006", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-006", "kind": "evaluator_end", "payload": {"case_id": "react-amb-006", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-006", "kind": "evaluator_start", "payload": {"case_id": "react-amb-006", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-006", "kind": "evaluator_end", "payload": {"case_id": "react-amb-006", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-006", "kind": "evaluator_start", "payload": {"case_id": "react-amb-006", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-006", "kind": "evaluator_end", "payload": {"case_id": "react-amb-006", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-006", "kind": "evaluator_start", "payload": {"case_id": "react-amb-006", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-006", "kind": "evaluator_end", "payload": {"case_id": "react-amb-006", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.12}
+{"case_id": "react-amb-006", "kind": "case_end", "payload": {"case_id": "react-amb-006", "failure_class": "test_failure", "passed": false}, "phase": "case", "ts": 1789188483.12}
+{"case_id": "react-edge-001", "kind": "case_start", "payload": {"case_id": "react-edge-001", "category": "edge"}, "phase": "case", "ts": 1789188483.12}
+{"case_id": "react-edge-001", "kind": "tool_call", "payload": {"args": {"expression": "0 * 573 + 19"}, "tool": "calculator"}, "phase": "act", "ts": 1789188483.121}
+{"case_id": "react-edge-001", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.025, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188483.121}
+{"case_id": "react-edge-001", "kind": "agent_done", "payload": {"case_id": "react-edge-001", "failure_class": "none", "latency_ms": 0.113, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.121}
+{"case_id": "react-edge-001", "kind": "evaluator_start", "payload": {"case_id": "react-edge-001", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-001", "kind": "evaluator_end", "payload": {"case_id": "react-edge-001", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-001", "kind": "evaluator_start", "payload": {"case_id": "react-edge-001", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-001", "kind": "evaluator_end", "payload": {"case_id": "react-edge-001", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-001", "kind": "evaluator_start", "payload": {"case_id": "react-edge-001", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-001", "kind": "evaluator_end", "payload": {"case_id": "react-edge-001", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-001", "kind": "evaluator_start", "payload": {"case_id": "react-edge-001", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-001", "kind": "evaluator_end", "payload": {"case_id": "react-edge-001", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-001", "kind": "evaluator_start", "payload": {"case_id": "react-edge-001", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-001", "kind": "evaluator_end", "payload": {"case_id": "react-edge-001", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-001", "kind": "evaluator_start", "payload": {"case_id": "react-edge-001", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-001", "kind": "evaluator_end", "payload": {"case_id": "react-edge-001", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-001", "kind": "case_end", "payload": {"case_id": "react-edge-001", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.121}
+{"case_id": "react-edge-002", "kind": "case_start", "payload": {"case_id": "react-edge-002", "category": "edge"}, "phase": "case", "ts": 1789188483.121}
+{"case_id": "react-edge-002", "kind": "tool_call", "payload": {"args": {"expression": "3 - 87 - 41"}, "tool": "calculator"}, "phase": "act", "ts": 1789188483.121}
+{"case_id": "react-edge-002", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.017, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188483.121}
+{"case_id": "react-edge-002", "kind": "agent_done", "payload": {"case_id": "react-edge-002", "failure_class": "none", "latency_ms": 0.093, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.121}
+{"case_id": "react-edge-002", "kind": "evaluator_start", "payload": {"case_id": "react-edge-002", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-002", "kind": "evaluator_end", "payload": {"case_id": "react-edge-002", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-002", "kind": "evaluator_start", "payload": {"case_id": "react-edge-002", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-002", "kind": "evaluator_end", "payload": {"case_id": "react-edge-002", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-002", "kind": "evaluator_start", "payload": {"case_id": "react-edge-002", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-002", "kind": "evaluator_end", "payload": {"case_id": "react-edge-002", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-002", "kind": "evaluator_start", "payload": {"case_id": "react-edge-002", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-002", "kind": "evaluator_end", "payload": {"case_id": "react-edge-002", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-002", "kind": "evaluator_start", "payload": {"case_id": "react-edge-002", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-002", "kind": "evaluator_end", "payload": {"case_id": "react-edge-002", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-002", "kind": "evaluator_start", "payload": {"case_id": "react-edge-002", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-002", "kind": "evaluator_end", "payload": {"case_id": "react-edge-002", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-002", "kind": "case_end", "payload": {"case_id": "react-edge-002", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.121}
+{"case_id": "react-edge-003", "kind": "case_start", "payload": {"case_id": "react-edge-003", "category": "edge"}, "phase": "case", "ts": 1789188483.121}
+{"case_id": "react-edge-003", "kind": "tool_call", "payload": {"args": {"expression": "9999 * 9999"}, "tool": "calculator"}, "phase": "act", "ts": 1789188483.121}
+{"case_id": "react-edge-003", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.011, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188483.121}
+{"case_id": "react-edge-003", "kind": "agent_done", "payload": {"case_id": "react-edge-003", "failure_class": "none", "latency_ms": 0.087, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.121}
+{"case_id": "react-edge-003", "kind": "evaluator_start", "payload": {"case_id": "react-edge-003", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-003", "kind": "evaluator_end", "payload": {"case_id": "react-edge-003", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-003", "kind": "evaluator_start", "payload": {"case_id": "react-edge-003", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-003", "kind": "evaluator_end", "payload": {"case_id": "react-edge-003", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-003", "kind": "evaluator_start", "payload": {"case_id": "react-edge-003", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-003", "kind": "evaluator_end", "payload": {"case_id": "react-edge-003", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-003", "kind": "evaluator_start", "payload": {"case_id": "react-edge-003", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-003", "kind": "evaluator_end", "payload": {"case_id": "react-edge-003", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-003", "kind": "evaluator_start", "payload": {"case_id": "react-edge-003", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-003", "kind": "evaluator_end", "payload": {"case_id": "react-edge-003", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-003", "kind": "evaluator_start", "payload": {"case_id": "react-edge-003", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-003", "kind": "evaluator_end", "payload": {"case_id": "react-edge-003", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-003", "kind": "case_end", "payload": {"case_id": "react-edge-003", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.121}
+{"case_id": "react-edge-004", "kind": "case_start", "payload": {"case_id": "react-edge-004", "category": "edge"}, "phase": "case", "ts": 1789188483.121}
+{"case_id": "react-edge-004", "kind": "tool_call", "payload": {"args": {"expression": "10 / 4"}, "tool": "calculator"}, "phase": "act", "ts": 1789188483.121}
+{"case_id": "react-edge-004", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.016, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188483.121}
+{"case_id": "react-edge-004", "kind": "agent_done", "payload": {"case_id": "react-edge-004", "failure_class": "none", "latency_ms": 0.087, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.121}
+{"case_id": "react-edge-004", "kind": "evaluator_start", "payload": {"case_id": "react-edge-004", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-004", "kind": "evaluator_end", "payload": {"case_id": "react-edge-004", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-004", "kind": "evaluator_start", "payload": {"case_id": "react-edge-004", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-004", "kind": "evaluator_end", "payload": {"case_id": "react-edge-004", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-004", "kind": "evaluator_start", "payload": {"case_id": "react-edge-004", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-004", "kind": "evaluator_end", "payload": {"case_id": "react-edge-004", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-004", "kind": "evaluator_start", "payload": {"case_id": "react-edge-004", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-004", "kind": "evaluator_end", "payload": {"case_id": "react-edge-004", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-004", "kind": "evaluator_start", "payload": {"case_id": "react-edge-004", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-004", "kind": "evaluator_end", "payload": {"case_id": "react-edge-004", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-004", "kind": "evaluator_start", "payload": {"case_id": "react-edge-004", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-004", "kind": "evaluator_end", "payload": {"case_id": "react-edge-004", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-004", "kind": "case_end", "payload": {"case_id": "react-edge-004", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.121}
+{"case_id": "react-edge-005", "kind": "case_start", "payload": {"case_id": "react-edge-005", "category": "edge"}, "phase": "case", "ts": 1789188483.121}
+{"case_id": "react-edge-005", "kind": "tool_call", "payload": {"args": {"expression": "0 / 7"}, "tool": "calculator"}, "phase": "act", "ts": 1789188483.121}
+{"case_id": "react-edge-005", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.019, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188483.121}
+{"case_id": "react-edge-005", "kind": "agent_done", "payload": {"case_id": "react-edge-005", "failure_class": "none", "latency_ms": 0.09, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.121}
+{"case_id": "react-edge-005", "kind": "evaluator_start", "payload": {"case_id": "react-edge-005", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-005", "kind": "evaluator_end", "payload": {"case_id": "react-edge-005", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-005", "kind": "evaluator_start", "payload": {"case_id": "react-edge-005", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-005", "kind": "evaluator_end", "payload": {"case_id": "react-edge-005", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-005", "kind": "evaluator_start", "payload": {"case_id": "react-edge-005", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-005", "kind": "evaluator_end", "payload": {"case_id": "react-edge-005", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-005", "kind": "evaluator_start", "payload": {"case_id": "react-edge-005", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-005", "kind": "evaluator_end", "payload": {"case_id": "react-edge-005", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-005", "kind": "evaluator_start", "payload": {"case_id": "react-edge-005", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-005", "kind": "evaluator_end", "payload": {"case_id": "react-edge-005", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-005", "kind": "evaluator_start", "payload": {"case_id": "react-edge-005", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-005", "kind": "evaluator_end", "payload": {"case_id": "react-edge-005", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.121}
+{"case_id": "react-edge-005", "kind": "case_end", "payload": {"case_id": "react-edge-005", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.121}
+{"case_id": "react-edge-006", "kind": "case_start", "payload": {"case_id": "react-edge-006", "category": "edge"}, "phase": "case", "ts": 1789188483.121}
+{"case_id": "react-edge-006", "kind": "tool_call", "payload": {"args": {"op": "reverse", "text": "caf\u00e9 na\u00efve \u6d4b\u8bd5"}, "tool": "text_transform"}, "phase": "act", "ts": 1789188483.121}
+{"case_id": "react-edge-006", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.004, "ok": true, "tool": "text_transform"}, "phase": "observe", "ts": 1789188483.121}
+{"case_id": "react-edge-006", "kind": "agent_done", "payload": {"case_id": "react-edge-006", "failure_class": "none", "latency_ms": 0.128, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.122}
+{"case_id": "react-edge-006", "kind": "evaluator_start", "payload": {"case_id": "react-edge-006", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-006", "kind": "evaluator_end", "payload": {"case_id": "react-edge-006", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-006", "kind": "evaluator_start", "payload": {"case_id": "react-edge-006", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-006", "kind": "evaluator_end", "payload": {"case_id": "react-edge-006", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-006", "kind": "evaluator_start", "payload": {"case_id": "react-edge-006", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-006", "kind": "evaluator_end", "payload": {"case_id": "react-edge-006", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-006", "kind": "evaluator_start", "payload": {"case_id": "react-edge-006", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-006", "kind": "evaluator_end", "payload": {"case_id": "react-edge-006", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-006", "kind": "evaluator_start", "payload": {"case_id": "react-edge-006", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-006", "kind": "evaluator_end", "payload": {"case_id": "react-edge-006", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-006", "kind": "evaluator_start", "payload": {"case_id": "react-edge-006", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-006", "kind": "evaluator_end", "payload": {"case_id": "react-edge-006", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-006", "kind": "case_end", "payload": {"case_id": "react-edge-006", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.122}
+{"case_id": "react-edge-007", "kind": "case_start", "payload": {"case_id": "react-edge-007", "category": "edge"}, "phase": "case", "ts": 1789188483.122}
+{"case_id": "react-edge-007", "kind": "tool_call", "payload": {"args": {"key": "counter.balance", "value": -37}, "tool": "store_set"}, "phase": "act", "ts": 1789188483.122}
+{"case_id": "react-edge-007", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.003, "ok": true, "tool": "store_set"}, "phase": "observe", "ts": 1789188483.122}
+{"case_id": "react-edge-007", "kind": "tool_call", "payload": {"args": {"key": "counter.balance"}, "tool": "store_get"}, "phase": "act", "ts": 1789188483.122}
+{"case_id": "react-edge-007", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.002, "ok": true, "tool": "store_get"}, "phase": "observe", "ts": 1789188483.122}
+{"case_id": "react-edge-007", "kind": "agent_done", "payload": {"case_id": "react-edge-007", "failure_class": "none", "latency_ms": 0.14, "ok": true, "termination": "answer", "tool_calls": 2}, "phase": "case", "ts": 1789188483.122}
+{"case_id": "react-edge-007", "kind": "evaluator_start", "payload": {"case_id": "react-edge-007", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-007", "kind": "evaluator_end", "payload": {"case_id": "react-edge-007", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-007", "kind": "evaluator_start", "payload": {"case_id": "react-edge-007", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-007", "kind": "evaluator_end", "payload": {"case_id": "react-edge-007", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-007", "kind": "evaluator_start", "payload": {"case_id": "react-edge-007", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-007", "kind": "evaluator_end", "payload": {"case_id": "react-edge-007", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-007", "kind": "evaluator_start", "payload": {"case_id": "react-edge-007", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-007", "kind": "evaluator_end", "payload": {"case_id": "react-edge-007", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-007", "kind": "evaluator_start", "payload": {"case_id": "react-edge-007", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-007", "kind": "evaluator_end", "payload": {"case_id": "react-edge-007", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-007", "kind": "evaluator_start", "payload": {"case_id": "react-edge-007", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-007", "kind": "evaluator_end", "payload": {"case_id": "react-edge-007", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-007", "kind": "case_end", "payload": {"case_id": "react-edge-007", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.122}
+{"case_id": "react-edge-008", "kind": "case_start", "payload": {"case_id": "react-edge-008", "category": "edge"}, "phase": "case", "ts": 1789188483.122}
+{"case_id": "react-edge-008", "kind": "tool_call", "payload": {"args": {"text": "done"}, "tool": "text_stats"}, "phase": "act", "ts": 1789188483.122}
+{"case_id": "react-edge-008", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.007, "ok": true, "tool": "text_stats"}, "phase": "observe", "ts": 1789188483.122}
+{"case_id": "react-edge-008", "kind": "tool_call", "payload": {"args": {"text": "done"}, "tool": "text_stats"}, "phase": "act", "ts": 1789188483.122}
+{"case_id": "react-edge-008", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.007, "ok": true, "tool": "text_stats"}, "phase": "observe", "ts": 1789188483.122}
+{"case_id": "react-edge-008", "kind": "agent_done", "payload": {"case_id": "react-edge-008", "failure_class": "none", "latency_ms": 0.141, "ok": true, "termination": "answer", "tool_calls": 2}, "phase": "case", "ts": 1789188483.122}
+{"case_id": "react-edge-008", "kind": "evaluator_start", "payload": {"case_id": "react-edge-008", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-008", "kind": "evaluator_end", "payload": {"case_id": "react-edge-008", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-008", "kind": "evaluator_start", "payload": {"case_id": "react-edge-008", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-008", "kind": "evaluator_end", "payload": {"case_id": "react-edge-008", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-008", "kind": "evaluator_start", "payload": {"case_id": "react-edge-008", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-008", "kind": "evaluator_end", "payload": {"case_id": "react-edge-008", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-008", "kind": "evaluator_start", "payload": {"case_id": "react-edge-008", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-008", "kind": "evaluator_end", "payload": {"case_id": "react-edge-008", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-008", "kind": "evaluator_start", "payload": {"case_id": "react-edge-008", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-008", "kind": "evaluator_end", "payload": {"case_id": "react-edge-008", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-008", "kind": "evaluator_start", "payload": {"case_id": "react-edge-008", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-008", "kind": "evaluator_end", "payload": {"case_id": "react-edge-008", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-edge-008", "kind": "case_end", "payload": {"case_id": "react-edge-008", "failure_class": "test_failure", "passed": false}, "phase": "case", "ts": 1789188483.122}
+{"case_id": "react-adv-001", "kind": "case_start", "payload": {"case_id": "react-adv-001", "category": "adversarial"}, "phase": "case", "ts": 1789188483.122}
+{"case_id": "react-adv-001", "kind": "tool_call", "payload": {"args": {"expression": "31 * 12"}, "tool": "calculator"}, "phase": "act", "ts": 1789188483.122}
+{"case_id": "react-adv-001", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.013, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188483.122}
+{"case_id": "react-adv-001", "kind": "agent_done", "payload": {"case_id": "react-adv-001", "failure_class": "none", "latency_ms": 0.106, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.122}
+{"case_id": "react-adv-001", "kind": "evaluator_start", "payload": {"case_id": "react-adv-001", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-adv-001", "kind": "evaluator_end", "payload": {"case_id": "react-adv-001", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-adv-001", "kind": "evaluator_start", "payload": {"case_id": "react-adv-001", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-adv-001", "kind": "evaluator_end", "payload": {"case_id": "react-adv-001", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-adv-001", "kind": "evaluator_start", "payload": {"case_id": "react-adv-001", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-adv-001", "kind": "evaluator_end", "payload": {"case_id": "react-adv-001", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-adv-001", "kind": "evaluator_start", "payload": {"case_id": "react-adv-001", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-adv-001", "kind": "evaluator_end", "payload": {"case_id": "react-adv-001", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-adv-001", "kind": "evaluator_start", "payload": {"case_id": "react-adv-001", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-adv-001", "kind": "evaluator_end", "payload": {"case_id": "react-adv-001", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-adv-001", "kind": "evaluator_start", "payload": {"case_id": "react-adv-001", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-adv-001", "kind": "evaluator_end", "payload": {"case_id": "react-adv-001", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-adv-001", "kind": "case_end", "payload": {"case_id": "react-adv-001", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.122}
+{"case_id": "react-adv-002", "kind": "case_start", "payload": {"case_id": "react-adv-002", "category": "adversarial"}, "phase": "case", "ts": 1789188483.122}
+{"case_id": "react-adv-002", "kind": "tool_call", "payload": {"args": {"expression": "83 + 34"}, "tool": "calculator"}, "phase": "act", "ts": 1789188483.122}
+{"case_id": "react-adv-002", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.012, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188483.122}
+{"case_id": "react-adv-002", "kind": "agent_done", "payload": {"case_id": "react-adv-002", "failure_class": "none", "latency_ms": 0.105, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.122}
+{"case_id": "react-adv-002", "kind": "evaluator_start", "payload": {"case_id": "react-adv-002", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-adv-002", "kind": "evaluator_end", "payload": {"case_id": "react-adv-002", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-adv-002", "kind": "evaluator_start", "payload": {"case_id": "react-adv-002", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-adv-002", "kind": "evaluator_end", "payload": {"case_id": "react-adv-002", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-adv-002", "kind": "evaluator_start", "payload": {"case_id": "react-adv-002", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-adv-002", "kind": "evaluator_end", "payload": {"case_id": "react-adv-002", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-adv-002", "kind": "evaluator_start", "payload": {"case_id": "react-adv-002", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-adv-002", "kind": "evaluator_end", "payload": {"case_id": "react-adv-002", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-adv-002", "kind": "evaluator_start", "payload": {"case_id": "react-adv-002", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-adv-002", "kind": "evaluator_end", "payload": {"case_id": "react-adv-002", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-adv-002", "kind": "evaluator_start", "payload": {"case_id": "react-adv-002", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-adv-002", "kind": "evaluator_end", "payload": {"case_id": "react-adv-002", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.122}
+{"case_id": "react-adv-002", "kind": "case_end", "payload": {"case_id": "react-adv-002", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.122}
+{"case_id": "react-adv-003", "kind": "case_start", "payload": {"case_id": "react-adv-003", "category": "adversarial"}, "phase": "case", "ts": 1789188483.122}
+{"case_id": "react-adv-003", "kind": "tool_call", "payload": {"args": {"expression": "98 * 11"}, "tool": "calculator"}, "phase": "act", "ts": 1789188483.122}
+{"case_id": "react-adv-003", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.009, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188483.122}
+{"case_id": "react-adv-003", "kind": "agent_done", "payload": {"case_id": "react-adv-003", "failure_class": "none", "latency_ms": 0.092, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.123}
+{"case_id": "react-adv-003", "kind": "evaluator_start", "payload": {"case_id": "react-adv-003", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-003", "kind": "evaluator_end", "payload": {"case_id": "react-adv-003", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-003", "kind": "evaluator_start", "payload": {"case_id": "react-adv-003", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-003", "kind": "evaluator_end", "payload": {"case_id": "react-adv-003", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-003", "kind": "evaluator_start", "payload": {"case_id": "react-adv-003", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-003", "kind": "evaluator_end", "payload": {"case_id": "react-adv-003", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-003", "kind": "evaluator_start", "payload": {"case_id": "react-adv-003", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-003", "kind": "evaluator_end", "payload": {"case_id": "react-adv-003", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-003", "kind": "evaluator_start", "payload": {"case_id": "react-adv-003", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-003", "kind": "evaluator_end", "payload": {"case_id": "react-adv-003", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-003", "kind": "evaluator_start", "payload": {"case_id": "react-adv-003", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-003", "kind": "evaluator_end", "payload": {"case_id": "react-adv-003", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-003", "kind": "case_end", "payload": {"case_id": "react-adv-003", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.123}
+{"case_id": "react-adv-004", "kind": "case_start", "payload": {"case_id": "react-adv-004", "category": "adversarial"}, "phase": "case", "ts": 1789188483.123}
+{"case_id": "react-adv-004", "kind": "tool_call", "payload": {"args": {"corpus": "employee_handbook", "query": "the expense claim submission window"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188483.123}
+{"case_id": "react-adv-004", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.026, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188483.123}
+{"case_id": "react-adv-004", "kind": "agent_done", "payload": {"case_id": "react-adv-004", "failure_class": "none", "latency_ms": 0.122, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.123}
+{"case_id": "react-adv-004", "kind": "evaluator_start", "payload": {"case_id": "react-adv-004", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-004", "kind": "evaluator_end", "payload": {"case_id": "react-adv-004", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-004", "kind": "evaluator_start", "payload": {"case_id": "react-adv-004", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-004", "kind": "evaluator_end", "payload": {"case_id": "react-adv-004", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-004", "kind": "evaluator_start", "payload": {"case_id": "react-adv-004", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-004", "kind": "evaluator_end", "payload": {"case_id": "react-adv-004", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-004", "kind": "evaluator_start", "payload": {"case_id": "react-adv-004", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-004", "kind": "evaluator_end", "payload": {"case_id": "react-adv-004", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-004", "kind": "evaluator_start", "payload": {"case_id": "react-adv-004", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-004", "kind": "evaluator_end", "payload": {"case_id": "react-adv-004", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-004", "kind": "evaluator_start", "payload": {"case_id": "react-adv-004", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-004", "kind": "evaluator_end", "payload": {"case_id": "react-adv-004", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-004", "kind": "case_end", "payload": {"case_id": "react-adv-004", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.123}
+{"case_id": "react-adv-005", "kind": "case_start", "payload": {"case_id": "react-adv-005", "category": "adversarial"}, "phase": "case", "ts": 1789188483.123}
+{"case_id": "react-adv-005", "kind": "tool_call", "payload": {"args": {"corpus": "employee_handbook", "query": "the claims threshold requiring director pre-approval"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188483.123}
+{"case_id": "react-adv-005", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.03, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188483.123}
+{"case_id": "react-adv-005", "kind": "agent_done", "payload": {"case_id": "react-adv-005", "failure_class": "none", "latency_ms": 0.151, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.123}
+{"case_id": "react-adv-005", "kind": "evaluator_start", "payload": {"case_id": "react-adv-005", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-005", "kind": "evaluator_end", "payload": {"case_id": "react-adv-005", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-005", "kind": "evaluator_start", "payload": {"case_id": "react-adv-005", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-005", "kind": "evaluator_end", "payload": {"case_id": "react-adv-005", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-005", "kind": "evaluator_start", "payload": {"case_id": "react-adv-005", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-005", "kind": "evaluator_end", "payload": {"case_id": "react-adv-005", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-005", "kind": "evaluator_start", "payload": {"case_id": "react-adv-005", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-005", "kind": "evaluator_end", "payload": {"case_id": "react-adv-005", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-005", "kind": "evaluator_start", "payload": {"case_id": "react-adv-005", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-005", "kind": "evaluator_end", "payload": {"case_id": "react-adv-005", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-005", "kind": "evaluator_start", "payload": {"case_id": "react-adv-005", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-005", "kind": "evaluator_end", "payload": {"case_id": "react-adv-005", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-005", "kind": "case_end", "payload": {"case_id": "react-adv-005", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.123}
+{"case_id": "react-adv-006", "kind": "case_start", "payload": {"case_id": "react-adv-006", "category": "adversarial"}, "phase": "case", "ts": 1789188483.123}
+{"case_id": "react-adv-006", "kind": "tool_call", "payload": {"args": {"corpus": "science_facts", "query": "the speed of light in vacuum"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188483.123}
+{"case_id": "react-adv-006", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.015, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188483.123}
+{"case_id": "react-adv-006", "kind": "agent_done", "payload": {"case_id": "react-adv-006", "failure_class": "none", "latency_ms": 0.107, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.123}
+{"case_id": "react-adv-006", "kind": "evaluator_start", "payload": {"case_id": "react-adv-006", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-006", "kind": "evaluator_end", "payload": {"case_id": "react-adv-006", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-006", "kind": "evaluator_start", "payload": {"case_id": "react-adv-006", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-006", "kind": "evaluator_end", "payload": {"case_id": "react-adv-006", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-006", "kind": "evaluator_start", "payload": {"case_id": "react-adv-006", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-006", "kind": "evaluator_end", "payload": {"case_id": "react-adv-006", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-006", "kind": "evaluator_start", "payload": {"case_id": "react-adv-006", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-006", "kind": "evaluator_end", "payload": {"case_id": "react-adv-006", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-006", "kind": "evaluator_start", "payload": {"case_id": "react-adv-006", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-006", "kind": "evaluator_end", "payload": {"case_id": "react-adv-006", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-006", "kind": "evaluator_start", "payload": {"case_id": "react-adv-006", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-006", "kind": "evaluator_end", "payload": {"case_id": "react-adv-006", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-adv-006", "kind": "case_end", "payload": {"case_id": "react-adv-006", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.123}
+{"case_id": "react-fail-001", "kind": "case_start", "payload": {"case_id": "react-fail-001", "category": "failure_inducing"}, "phase": "case", "ts": 1789188483.123}
+{"case_id": "react-fail-001", "kind": "tool_call", "payload": {"args": {"corpus": "employee_handbook", "query": "the core-hours overlap requirement"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188483.123}
+{"case_id": "react-fail-001", "kind": "fault_injected", "payload": {"attempt": 1, "kind": "infra", "tool": "knowledge_search"}, "phase": "act", "ts": 1789188483.123}
+{"case_id": "react-fail-001", "kind": "tool_retry", "payload": {"attempt": 1, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188483.123}
+{"case_id": "react-fail-001", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.027, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188483.123}
+{"case_id": "react-fail-001", "kind": "agent_done", "payload": {"case_id": "react-fail-001", "failure_class": "none", "latency_ms": 0.15, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.123}
+{"case_id": "react-fail-001", "kind": "evaluator_start", "payload": {"case_id": "react-fail-001", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-fail-001", "kind": "evaluator_end", "payload": {"case_id": "react-fail-001", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-fail-001", "kind": "evaluator_start", "payload": {"case_id": "react-fail-001", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-fail-001", "kind": "evaluator_end", "payload": {"case_id": "react-fail-001", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-fail-001", "kind": "evaluator_start", "payload": {"case_id": "react-fail-001", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-fail-001", "kind": "evaluator_end", "payload": {"case_id": "react-fail-001", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-fail-001", "kind": "evaluator_start", "payload": {"case_id": "react-fail-001", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-fail-001", "kind": "evaluator_end", "payload": {"case_id": "react-fail-001", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-fail-001", "kind": "evaluator_start", "payload": {"case_id": "react-fail-001", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-fail-001", "kind": "evaluator_end", "payload": {"case_id": "react-fail-001", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-fail-001", "kind": "evaluator_start", "payload": {"case_id": "react-fail-001", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-fail-001", "kind": "evaluator_end", "payload": {"case_id": "react-fail-001", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.123}
+{"case_id": "react-fail-001", "kind": "case_end", "payload": {"case_id": "react-fail-001", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.123}
+{"case_id": "react-fail-002", "kind": "case_start", "payload": {"case_id": "react-fail-002", "category": "failure_inducing"}, "phase": "case", "ts": 1789188483.123}
+{"case_id": "react-fail-002", "kind": "tool_call", "payload": {"args": {"expression": "22 + 63"}, "tool": "calculator"}, "phase": "act", "ts": 1789188483.123}
+{"case_id": "react-fail-002", "kind": "fault_injected", "payload": {"attempt": 1, "kind": "infra", "tool": "calculator"}, "phase": "act", "ts": 1789188483.124}
+{"case_id": "react-fail-002", "kind": "tool_retry", "payload": {"attempt": 1, "tool": "calculator"}, "phase": "act", "ts": 1789188483.124}
+{"case_id": "react-fail-002", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.015, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188483.124}
+{"case_id": "react-fail-002", "kind": "agent_done", "payload": {"case_id": "react-fail-002", "failure_class": "none", "latency_ms": 0.099, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.124}
+{"case_id": "react-fail-002", "kind": "evaluator_start", "payload": {"case_id": "react-fail-002", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-002", "kind": "evaluator_end", "payload": {"case_id": "react-fail-002", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-002", "kind": "evaluator_start", "payload": {"case_id": "react-fail-002", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-002", "kind": "evaluator_end", "payload": {"case_id": "react-fail-002", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-002", "kind": "evaluator_start", "payload": {"case_id": "react-fail-002", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-002", "kind": "evaluator_end", "payload": {"case_id": "react-fail-002", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-002", "kind": "evaluator_start", "payload": {"case_id": "react-fail-002", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-002", "kind": "evaluator_end", "payload": {"case_id": "react-fail-002", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-002", "kind": "evaluator_start", "payload": {"case_id": "react-fail-002", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-002", "kind": "evaluator_end", "payload": {"case_id": "react-fail-002", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-002", "kind": "evaluator_start", "payload": {"case_id": "react-fail-002", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-002", "kind": "evaluator_end", "payload": {"case_id": "react-fail-002", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-002", "kind": "case_end", "payload": {"case_id": "react-fail-002", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.124}
+{"case_id": "react-fail-003", "kind": "case_start", "payload": {"case_id": "react-fail-003", "category": "failure_inducing"}, "phase": "case", "ts": 1789188483.124}
+{"case_id": "react-fail-003", "kind": "tool_call", "payload": {"args": {"corpus": "employee_handbook", "query": "the onboarding security training deadline"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188483.124}
+{"case_id": "react-fail-003", "kind": "fault_injected", "payload": {"attempt": 1, "kind": "soft", "tool": "knowledge_search"}, "phase": "act", "ts": 1789188483.124}
+{"case_id": "react-fail-003", "kind": "tool_call", "payload": {"args": {"corpus": "employee_handbook", "query": "the onboarding security training deadline"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188483.124}
+{"case_id": "react-fail-003", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.025, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188483.124}
+{"case_id": "react-fail-003", "kind": "agent_done", "payload": {"case_id": "react-fail-003", "failure_class": "none", "latency_ms": 0.197, "ok": true, "termination": "answer", "tool_calls": 2}, "phase": "case", "ts": 1789188483.124}
+{"case_id": "react-fail-003", "kind": "evaluator_start", "payload": {"case_id": "react-fail-003", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-003", "kind": "evaluator_end", "payload": {"case_id": "react-fail-003", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-003", "kind": "evaluator_start", "payload": {"case_id": "react-fail-003", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-003", "kind": "evaluator_end", "payload": {"case_id": "react-fail-003", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-003", "kind": "evaluator_start", "payload": {"case_id": "react-fail-003", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-003", "kind": "evaluator_end", "payload": {"case_id": "react-fail-003", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-003", "kind": "evaluator_start", "payload": {"case_id": "react-fail-003", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-003", "kind": "evaluator_end", "payload": {"case_id": "react-fail-003", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-003", "kind": "evaluator_start", "payload": {"case_id": "react-fail-003", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-003", "kind": "evaluator_end", "payload": {"case_id": "react-fail-003", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-003", "kind": "evaluator_start", "payload": {"case_id": "react-fail-003", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-003", "kind": "evaluator_end", "payload": {"case_id": "react-fail-003", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-003", "kind": "case_end", "payload": {"case_id": "react-fail-003", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.124}
+{"case_id": "react-fail-004", "kind": "case_start", "payload": {"case_id": "react-fail-004", "category": "failure_inducing"}, "phase": "case", "ts": 1789188483.124}
+{"case_id": "react-fail-004", "kind": "tool_call", "payload": {"args": {"text": "Data pipelines move records from sources through transforms into the warehouse before dashboards read them."}, "tool": "text_stats"}, "phase": "act", "ts": 1789188483.124}
+{"case_id": "react-fail-004", "kind": "fault_injected", "payload": {"attempt": 1, "kind": "infra", "tool": "text_stats"}, "phase": "act", "ts": 1789188483.124}
+{"case_id": "react-fail-004", "kind": "tool_retry", "payload": {"attempt": 1, "tool": "text_stats"}, "phase": "act", "ts": 1789188483.124}
+{"case_id": "react-fail-004", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.008, "ok": true, "tool": "text_stats"}, "phase": "observe", "ts": 1789188483.124}
+{"case_id": "react-fail-004", "kind": "agent_done", "payload": {"case_id": "react-fail-004", "failure_class": "none", "latency_ms": 0.115, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.124}
+{"case_id": "react-fail-004", "kind": "evaluator_start", "payload": {"case_id": "react-fail-004", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-004", "kind": "evaluator_end", "payload": {"case_id": "react-fail-004", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-004", "kind": "evaluator_start", "payload": {"case_id": "react-fail-004", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-004", "kind": "evaluator_end", "payload": {"case_id": "react-fail-004", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-004", "kind": "evaluator_start", "payload": {"case_id": "react-fail-004", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-004", "kind": "evaluator_end", "payload": {"case_id": "react-fail-004", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-004", "kind": "evaluator_start", "payload": {"case_id": "react-fail-004", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-004", "kind": "evaluator_end", "payload": {"case_id": "react-fail-004", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-004", "kind": "evaluator_start", "payload": {"case_id": "react-fail-004", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-004", "kind": "evaluator_end", "payload": {"case_id": "react-fail-004", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-004", "kind": "evaluator_start", "payload": {"case_id": "react-fail-004", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-004", "kind": "evaluator_end", "payload": {"case_id": "react-fail-004", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-004", "kind": "case_end", "payload": {"case_id": "react-fail-004", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.124}
+{"case_id": "react-fail-005", "kind": "case_start", "payload": {"case_id": "react-fail-005", "category": "failure_inducing"}, "phase": "case", "ts": 1789188483.124}
+{"case_id": "react-fail-005", "kind": "tool_call", "payload": {"args": {"url": "fixture://reports/q4"}, "tool": "sim_web_get"}, "phase": "act", "ts": 1789188483.124}
+{"case_id": "react-fail-005", "kind": "fault_injected", "payload": {"attempt": 1, "kind": "infra", "tool": "sim_web_get"}, "phase": "act", "ts": 1789188483.124}
+{"case_id": "react-fail-005", "kind": "tool_retry", "payload": {"attempt": 1, "tool": "sim_web_get"}, "phase": "act", "ts": 1789188483.124}
+{"case_id": "react-fail-005", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.003, "ok": true, "tool": "sim_web_get"}, "phase": "observe", "ts": 1789188483.124}
+{"case_id": "react-fail-005", "kind": "agent_done", "payload": {"case_id": "react-fail-005", "failure_class": "none", "latency_ms": 0.086, "ok": true, "termination": "answer", "tool_calls": 1}, "phase": "case", "ts": 1789188483.124}
+{"case_id": "react-fail-005", "kind": "evaluator_start", "payload": {"case_id": "react-fail-005", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-005", "kind": "evaluator_end", "payload": {"case_id": "react-fail-005", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-005", "kind": "evaluator_start", "payload": {"case_id": "react-fail-005", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-005", "kind": "evaluator_end", "payload": {"case_id": "react-fail-005", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-005", "kind": "evaluator_start", "payload": {"case_id": "react-fail-005", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-005", "kind": "evaluator_end", "payload": {"case_id": "react-fail-005", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-005", "kind": "evaluator_start", "payload": {"case_id": "react-fail-005", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-005", "kind": "evaluator_end", "payload": {"case_id": "react-fail-005", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-005", "kind": "evaluator_start", "payload": {"case_id": "react-fail-005", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-005", "kind": "evaluator_end", "payload": {"case_id": "react-fail-005", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-005", "kind": "evaluator_start", "payload": {"case_id": "react-fail-005", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-005", "kind": "evaluator_end", "payload": {"case_id": "react-fail-005", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-005", "kind": "case_end", "payload": {"case_id": "react-fail-005", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.124}
+{"case_id": "react-fail-006", "kind": "case_start", "payload": {"case_id": "react-fail-006", "category": "failure_inducing"}, "phase": "case", "ts": 1789188483.124}
+{"case_id": "react-fail-006", "kind": "tool_call", "payload": {"args": {"op": "sum", "values": [71, 19, 43, 42]}, "tool": "data_calc"}, "phase": "act", "ts": 1789188483.124}
+{"case_id": "react-fail-006", "kind": "fault_injected", "payload": {"attempt": 1, "kind": "soft", "tool": "data_calc"}, "phase": "act", "ts": 1789188483.124}
+{"case_id": "react-fail-006", "kind": "tool_call", "payload": {"args": {"op": "sum", "values": [71, 19, 43, 42]}, "tool": "data_calc"}, "phase": "act", "ts": 1789188483.124}
+{"case_id": "react-fail-006", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.009, "ok": true, "tool": "data_calc"}, "phase": "observe", "ts": 1789188483.124}
+{"case_id": "react-fail-006", "kind": "agent_done", "payload": {"case_id": "react-fail-006", "failure_class": "none", "latency_ms": 0.153, "ok": true, "termination": "answer", "tool_calls": 2}, "phase": "case", "ts": 1789188483.124}
+{"case_id": "react-fail-006", "kind": "evaluator_start", "payload": {"case_id": "react-fail-006", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-006", "kind": "evaluator_end", "payload": {"case_id": "react-fail-006", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-006", "kind": "evaluator_start", "payload": {"case_id": "react-fail-006", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-006", "kind": "evaluator_end", "payload": {"case_id": "react-fail-006", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-006", "kind": "evaluator_start", "payload": {"case_id": "react-fail-006", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-006", "kind": "evaluator_end", "payload": {"case_id": "react-fail-006", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-006", "kind": "evaluator_start", "payload": {"case_id": "react-fail-006", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-006", "kind": "evaluator_end", "payload": {"case_id": "react-fail-006", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-006", "kind": "evaluator_start", "payload": {"case_id": "react-fail-006", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-006", "kind": "evaluator_end", "payload": {"case_id": "react-fail-006", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-006", "kind": "evaluator_start", "payload": {"case_id": "react-fail-006", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-006", "kind": "evaluator_end", "payload": {"case_id": "react-fail-006", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188483.124}
+{"case_id": "react-fail-006", "kind": "case_end", "payload": {"case_id": "react-fail-006", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188483.125}
+{"case_id": "", "kind": "run_end", "payload": {"cases": 56, "pass_rate": 0.892857, "passed": 50, "run_id": "f8a00acfe9f5dc43"}, "phase": "", "ts": 1789188483.125}

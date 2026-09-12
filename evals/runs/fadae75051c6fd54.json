@@ -1,0 +1,418 @@
+{
+  "ablation": "full",
+  "agent": "builtin:swarm",
+  "agent_pattern": "swarm",
+  "benchmark": "swarm_basic",
+  "benchmark_version": "1.0",
+  "command": "agent-eval run --benchmark swarm_basic --agent builtin:swarm --seed 20260912 --skill 0.85 --ablation full",
+  "config": {
+    "evaluators": [
+      "task_checks",
+      "tool_selection",
+      "trajectory",
+      "termination",
+      "tool_efficiency",
+      "loop_detection",
+      "planning_quality"
+    ],
+    "limit": 8,
+    "limits": "{\n  \"max_args_chars\": 4000,\n  \"max_output_chars\": 10000,\n  \"max_retries_per_call\": 2,\n  \"max_state_bytes\": 100000,\n  \"max_steps\": 12,\n  \"max_tool_calls\": 16,\n  \"per_tool_timeout_ms\": 1000,\n  \"total_timeout_ms\": 15000\n}",
+    "skill": 0.85,
+    "thresholds": {
+      "loop_detection": 0.9,
+      "overall_pass_rate": 0.7,
+      "planning_quality": 0.7,
+      "task_checks": 0.75,
+      "termination": 0.8,
+      "tool_efficiency": 0.6,
+      "tool_selection": 0.75,
+      "trajectory": 0.6
+    }
+  },
+  "events_path": "evals/runs/fadae75051c6fd54.events.jsonl",
+  "metrics": {
+    "behavior": {
+      "loop_rate": 0.0,
+      "planning_coverage_mean": null,
+      "recovery_n": 0,
+      "recovery_rate": null,
+      "termination_success": 1.0,
+      "tool_efficiency_mean": 0.9583
+    },
+    "cases": 8,
+    "cost_estimate_usd": 0.000329,
+    "cost_note": "estimate: simulated pricing (in $0.15/1M, out $0.60/1M) on estimated tokens (chars/4); not a live-backend measurement",
+    "failure_histogram": {
+      "test_failure": 1
+    },
+    "latency_p50_ms": 0.229,
+    "latency_p95_ms": 0.498,
+    "network_guard_attempts": [],
+    "pass_rate": 0.875,
+    "pass_rate_ci95": [
+      0.5291,
+      0.9776
+    ],
+    "passed": 7,
+    "per_category": {
+      "normal": {
+        "ci_high": 0.9776,
+        "ci_low": 0.5291,
+        "n": 8,
+        "pass_rate": 0.875
+      }
+    },
+    "per_evaluator": {
+      "loop_detection": {
+        "errors": 0,
+        "mean_score": 1.0,
+        "n": 8,
+        "pass_rate": 1.0
+      },
+      "planning_quality": {
+        "errors": 0,
+        "mean_score": 1.0,
+        "n": 8,
+        "pass_rate": 1.0
+      },
+      "task_checks": {
+        "errors": 0,
+        "mean_score": 0.9375,
+        "n": 8,
+        "pass_rate": 0.875
+      },
+      "termination": {
+        "errors": 0,
+        "mean_score": 1.0,
+        "n": 8,
+        "pass_rate": 1.0
+      },
+      "tool_efficiency": {
+        "errors": 0,
+        "mean_score": 0.9583,
+        "n": 8,
+        "pass_rate": 1.0
+      },
+      "tool_selection": {
+        "errors": 0,
+        "mean_score": 1.0,
+        "n": 8,
+        "pass_rate": 1.0
+      },
+      "trajectory": {
+        "errors": 0,
+        "mean_score": 0.9333,
+        "n": 8,
+        "pass_rate": 1.0
+      }
+    },
+    "per_pattern": {
+      "swarm": {
+        "ci_high": 0.9776,
+        "ci_low": 0.5291,
+        "n": 8,
+        "pass_rate": 0.875
+      }
+    },
+    "runtime_s": 0.003,
+    "threshold_gates": {
+      "loop_detection": {
+        "actual": 1.0,
+        "passed": true,
+        "threshold": 0.9
+      },
+      "overall_pass_rate": {
+        "actual": 0.875,
+        "passed": true,
+        "threshold": 0.7
+      },
+      "planning_quality": {
+        "actual": 1.0,
+        "passed": true,
+        "threshold": 0.7
+      },
+      "task_checks": {
+        "actual": 0.875,
+        "passed": true,
+        "threshold": 0.75
+      },
+      "termination": {
+        "actual": 1.0,
+        "passed": true,
+        "threshold": 0.8
+      },
+      "tool_efficiency": {
+        "actual": 1.0,
+        "passed": true,
+        "threshold": 0.6
+      },
+      "tool_selection": {
+        "actual": 1.0,
+        "passed": true,
+        "threshold": 0.75
+      },
+      "trajectory": {
+        "actual": 1.0,
+        "passed": true,
+        "threshold": 0.6
+      }
+    },
+    "tokens_in_est": 235,
+    "tokens_out_est": 489,
+    "tool_metrics": {
+      "avg_calls_per_case": 2.125,
+      "redundancy_rate": 0.058824,
+      "redundant_calls": 1,
+      "total_calls": 17
+    }
+  },
+  "recorded_at": "2026-09-12T04:47:05+0000",
+  "run_id": "fadae75051c6fd54",
+  "seed": 20260912,
+  "verdicts": [
+    {
+      "case_id": "swarm-norm-001",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "-39; Highland was founded in 1799, has a population of 231000, an annual rainfall of 1200 mm, and its landmark is the Highland Fortress.",
+      "latency_ms": 0.588,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "swarm",
+      "scores": {
+        "loop_detection": 1.0,
+        "planning_quality": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 24,
+      "tokens_out_est": 169,
+      "tool_calls": 2
+    },
+    {
+      "case_id": "swarm-norm-002",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "106; CAF\u00c9 NA\u00cfVE \u6d4b\u8bd5",
+      "latency_ms": 0.241,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "swarm",
+      "scores": {
+        "loop_detection": 1.0,
+        "planning_quality": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 22,
+      "tokens_out_est": 16,
+      "tool_calls": 2
+    },
+    {
+      "case_id": "swarm-norm-003",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [
+        "task_checks"
+      ],
+      "failure_class": "test_failure",
+      "final_answer": "; {'words': 15, 'chars': 106, 'sentences': 1, 'avg_word_length': 6.13}",
+      "latency_ms": 0.331,
+      "loop_detected": false,
+      "passed": false,
+      "pattern": "swarm",
+      "scores": {
+        "loop_detection": 1.0,
+        "planning_quality": 1.0,
+        "task_checks": 0.5,
+        "termination": 1.0,
+        "tool_efficiency": 0.6667,
+        "tool_selection": 1.0,
+        "trajectory": 0.6167
+      },
+      "termination": "answer",
+      "tokens_in_est": 74,
+      "tokens_out_est": 109,
+      "tool_calls": 3
+    },
+    {
+      "case_id": "swarm-norm-004",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "{'stored': True, 'key': 'team.answer'}; 236",
+      "latency_ms": 0.161,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "swarm",
+      "scores": {
+        "loop_detection": 1.0,
+        "planning_quality": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 15,
+      "tokens_out_est": 19,
+      "tool_calls": 2
+    },
+    {
+      "case_id": "swarm-norm-005",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "48; Claims above 500 dollars require a director pre-approval code.",
+      "latency_ms": 0.266,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "swarm",
+      "scores": {
+        "loop_detection": 1.0,
+        "planning_quality": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 30,
+      "tokens_out_est": 89,
+      "tool_calls": 2
+    },
+    {
+      "case_id": "swarm-norm-006",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "106; LAUNCH CHECKLIST",
+      "latency_ms": 0.182,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "swarm",
+      "scores": {
+        "loop_detection": 1.0,
+        "planning_quality": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 18,
+      "tokens_out_est": 12,
+      "tool_calls": 2
+    },
+    {
+      "case_id": "swarm-norm-007",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "Standard Earth gravity is 9.80665 meters per second squared.; {'words': 15, 'chars': 71, 'sentences': 1, 'avg_word_length': 3.8}",
+      "latency_ms": 0.217,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "swarm",
+      "scores": {
+        "loop_detection": 1.0,
+        "planning_quality": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 0.85
+      },
+      "termination": "answer",
+      "tokens_in_est": 37,
+      "tokens_out_est": 56,
+      "tool_calls": 2
+    },
+    {
+      "case_id": "swarm-norm-008",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "{'stored': True, 'key': 'team.answer'}; 95",
+      "latency_ms": 0.157,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "swarm",
+      "scores": {
+        "loop_detection": 1.0,
+        "planning_quality": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 15,
+      "tokens_out_est": 19,
+      "tool_calls": 2
+    }
+  ],
+  "versions": {
+    "agent": {
+      "component": "agent",
+      "revision": "",
+      "version": "builtin:swarm"
+    },
+    "benchmark": {
+      "component": "benchmark",
+      "revision": "swarm_basic",
+      "version": "1.0"
+    },
+    "dataset": {
+      "component": "dataset",
+      "revision": "b70443229ac78d96",
+      "version": "1.0.0"
+    },
+    "environment": {
+      "component": "environment",
+      "revision": "linux",
+      "version": "python 3.12.14"
+    },
+    "evaluator": {
+      "component": "evaluator",
+      "revision": "task_checks,tool_selection,trajectory,termination,tool_efficiency,loop_detection,planning_quality",
+      "version": "1.x"
+    },
+    "harness": {
+      "component": "harness",
+      "revision": "ablation=full",
+      "version": "0.2.0"
+    },
+    "model": {
+      "component": "model",
+      "revision": "skill=0.85",
+      "version": "scripted-policy-v1 (deterministic simulation)"
+    },
+    "prompt": {
+      "component": "prompt",
+      "revision": "",
+      "version": "judge_rubric_v1"
+    }
+  }
+}

@@ -1,0 +1,1594 @@
+{
+  "ablation": "full",
+  "agent": "builtin:react",
+  "agent_pattern": "react",
+  "benchmark": "react_basic",
+  "benchmark_version": "1.0",
+  "command": "agent-eval run --benchmark react_basic --agent builtin:react --seed 20260912 --skill 0.85 --ablation full",
+  "config": {
+    "evaluators": [
+      "task_checks",
+      "tool_selection",
+      "trajectory",
+      "termination",
+      "tool_efficiency",
+      "loop_detection"
+    ],
+    "limit": null,
+    "limits": "{\n  \"max_args_chars\": 4000,\n  \"max_output_chars\": 10000,\n  \"max_retries_per_call\": 2,\n  \"max_state_bytes\": 100000,\n  \"max_steps\": 12,\n  \"max_tool_calls\": 16,\n  \"per_tool_timeout_ms\": 1000,\n  \"total_timeout_ms\": 15000\n}",
+    "skill": 0.85,
+    "thresholds": {
+      "loop_detection": 0.9,
+      "overall_pass_rate": 0.7,
+      "task_checks": 0.75,
+      "termination": 0.8,
+      "tool_efficiency": 0.6,
+      "tool_selection": 0.75,
+      "trajectory": 0.6
+    }
+  },
+  "events_path": "evals/runs/f8a00acfe9f5dc43.events.jsonl",
+  "metrics": {
+    "behavior": {
+      "loop_rate": 0.0,
+      "planning_coverage_mean": null,
+      "recovery_n": 6,
+      "recovery_rate": 1.0,
+      "termination_success": 1.0,
+      "tool_efficiency_mean": 0.963
+    },
+    "cases": 56,
+    "cost_estimate_usd": 0.001155,
+    "cost_note": "estimate: simulated pricing (in $0.15/1M, out $0.60/1M) on estimated tokens (chars/4); not a live-backend measurement",
+    "failure_histogram": {
+      "test_failure": 6
+    },
+    "latency_p50_ms": 0.114,
+    "latency_p95_ms": 0.405,
+    "network_guard_attempts": [],
+    "pass_rate": 0.892857,
+    "pass_rate_ci95": [
+      0.7853,
+      0.95
+    ],
+    "passed": 50,
+    "per_category": {
+      "adversarial": {
+        "ci_high": 1.0,
+        "ci_low": 0.6097,
+        "n": 6,
+        "pass_rate": 1.0
+      },
+      "ambiguous": {
+        "ci_high": 0.9699,
+        "ci_low": 0.4365,
+        "n": 6,
+        "pass_rate": 0.833333
+      },
+      "difficult": {
+        "ci_high": 0.9433,
+        "ci_low": 0.4902,
+        "n": 10,
+        "pass_rate": 0.8
+      },
+      "edge": {
+        "ci_high": 0.9776,
+        "ci_low": 0.5291,
+        "n": 8,
+        "pass_rate": 0.875
+      },
+      "failure_inducing": {
+        "ci_high": 1.0,
+        "ci_low": 0.6097,
+        "n": 6,
+        "pass_rate": 1.0
+      },
+      "normal": {
+        "ci_high": 0.9721,
+        "ci_low": 0.699,
+        "n": 20,
+        "pass_rate": 0.9
+      }
+    },
+    "per_evaluator": {
+      "loop_detection": {
+        "errors": 0,
+        "mean_score": 1.0,
+        "n": 56,
+        "pass_rate": 1.0
+      },
+      "task_checks": {
+        "errors": 0,
+        "mean_score": 0.9821,
+        "n": 56,
+        "pass_rate": 0.982143
+      },
+      "termination": {
+        "errors": 0,
+        "mean_score": 1.0,
+        "n": 56,
+        "pass_rate": 1.0
+      },
+      "tool_efficiency": {
+        "errors": 0,
+        "mean_score": 0.9286,
+        "n": 56,
+        "pass_rate": 0.892857
+      },
+      "tool_selection": {
+        "errors": 0,
+        "mean_score": 0.9464,
+        "n": 56,
+        "pass_rate": 0.964286
+      },
+      "trajectory": {
+        "errors": 0,
+        "mean_score": 0.9268,
+        "n": 56,
+        "pass_rate": 0.964286
+      }
+    },
+    "per_pattern": {
+      "react": {
+        "ci_high": 0.95,
+        "ci_low": 0.7853,
+        "n": 56,
+        "pass_rate": 0.892857
+      }
+    },
+    "runtime_s": 0.014,
+    "threshold_gates": {
+      "loop_detection": {
+        "actual": 1.0,
+        "passed": true,
+        "threshold": 0.9
+      },
+      "overall_pass_rate": {
+        "actual": 0.8929,
+        "passed": true,
+        "threshold": 0.7
+      },
+      "task_checks": {
+        "actual": 0.9821,
+        "passed": true,
+        "threshold": 0.75
+      },
+      "termination": {
+        "actual": 1.0,
+        "passed": true,
+        "threshold": 0.8
+      },
+      "tool_efficiency": {
+        "actual": 0.8929,
+        "passed": true,
+        "threshold": 0.6
+      },
+      "tool_selection": {
+        "actual": 0.9643,
+        "passed": true,
+        "threshold": 0.75
+      },
+      "trajectory": {
+        "actual": 0.9643,
+        "passed": true,
+        "threshold": 0.6
+      }
+    },
+    "tokens_in_est": 811,
+    "tokens_out_est": 1722,
+    "tool_metrics": {
+      "avg_calls_per_case": 1.089,
+      "redundancy_rate": 0.04918,
+      "redundant_calls": 3,
+      "total_calls": 61
+    }
+  },
+  "recorded_at": "2026-09-12T04:48:03+0000",
+  "run_id": "f8a00acfe9f5dc43",
+  "seed": 20260912,
+  "verdicts": [
+    {
+      "case_id": "react-norm-001",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "93",
+      "latency_ms": 1.094,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 7,
+      "tokens_out_est": 4,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-norm-002",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "9",
+      "latency_ms": 0.162,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 7,
+      "tokens_out_est": 3,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-norm-003",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "Springfield was founded in 1837, has a population of 154000, an annual rainfall of 940 mm, and its landmark is the Old Clock Tower.",
+      "latency_ms": 0.381,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 16,
+      "tokens_out_est": 158,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-norm-004",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "{'words': 15, 'chars': 107, 'sentences': 1, 'avg_word_length': 6.2}",
+      "latency_ms": 0.683,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 30,
+      "tokens_out_est": 17,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-norm-005",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "BOUNDARY CONDITION",
+      "latency_ms": 0.103,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 12,
+      "tokens_out_est": 8,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-norm-006",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "35",
+      "latency_ms": 0.109,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 7,
+      "tokens_out_est": 4,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-norm-007",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "748",
+      "latency_ms": 0.107,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 7,
+      "tokens_out_est": 4,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-norm-008",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "The Pulse Phone X has a 6.1 inch OLED screen, a 4500 mAh battery, weighs 174 grams, ships with 128 GB of storage, and carries a warranty of 24 months.",
+      "latency_ms": 0.175,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 17,
+      "tokens_out_est": 63,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-norm-009",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "{'words': 15, 'chars': 72, 'sentences': 1, 'avg_word_length': 3.87}",
+      "latency_ms": 0.122,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 21,
+      "tokens_out_est": 17,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-norm-010",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [
+        "tool_efficiency"
+      ],
+      "failure_class": "test_failure",
+      "final_answer": "STATUS UPDATE",
+      "latency_ms": 0.124,
+      "loop_detected": false,
+      "passed": false,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 0.5,
+        "tool_selection": 0.6667,
+        "trajectory": 0.65
+      },
+      "termination": "answer",
+      "tokens_in_est": 18,
+      "tokens_out_est": 7,
+      "tool_calls": 2
+    },
+    {
+      "case_id": "react-norm-011",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "-12",
+      "latency_ms": 0.096,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 7,
+      "tokens_out_est": 4,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-norm-012",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "0",
+      "latency_ms": 0.097,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 7,
+      "tokens_out_est": 3,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-norm-013",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "Riverton was founded in 1852, has a population of 89000, an annual rainfall of 610 mm, and its landmark is the Riverstone Bridge.",
+      "latency_ms": 0.127,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 17,
+      "tokens_out_est": 60,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-norm-014",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [
+        "tool_selection",
+        "trajectory",
+        "tool_efficiency"
+      ],
+      "failure_class": "test_failure",
+      "final_answer": "I could not complete the task.",
+      "latency_ms": 0.063,
+      "loop_detected": false,
+      "passed": false,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 0.0,
+        "tool_selection": 0.0,
+        "trajectory": 0.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 0,
+      "tokens_out_est": 0,
+      "tool_calls": 0
+    },
+    {
+      "case_id": "react-norm-015",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "LAUNCH CHECKLIST",
+      "latency_ms": 0.082,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 11,
+      "tokens_out_est": 8,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-norm-016",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "106",
+      "latency_ms": 0.091,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 7,
+      "tokens_out_est": 4,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-norm-017",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "105",
+      "latency_ms": 0.084,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 6,
+      "tokens_out_est": 4,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-norm-018",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "Rotate secrets every 90 days.",
+      "latency_ms": 0.117,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 18,
+      "tokens_out_est": 37,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-norm-019",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "{'words': 15, 'chars': 72, 'sentences': 1, 'avg_word_length': 3.87}",
+      "latency_ms": 0.097,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 21,
+      "tokens_out_est": 17,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-norm-020",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "STATUS UPDATE",
+      "latency_ms": 0.09,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 10,
+      "tokens_out_est": 7,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-diff-001",
+      "category": "difficult",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "2726238",
+      "latency_ms": 0.091,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 9,
+      "tokens_out_est": 5,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-diff-002",
+      "category": "difficult",
+      "evaluator_errors": [],
+      "failed_evaluators": [
+        "tool_efficiency"
+      ],
+      "failure_class": "test_failure",
+      "final_answer": "71885",
+      "latency_ms": 0.12,
+      "loop_detected": false,
+      "passed": false,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 0.5,
+        "tool_selection": 0.6667,
+        "trajectory": 0.65
+      },
+      "termination": "answer",
+      "tokens_in_est": 18,
+      "tokens_out_est": 4,
+      "tool_calls": 2
+    },
+    {
+      "case_id": "react-diff-003",
+      "category": "difficult",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "69307",
+      "latency_ms": 0.097,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 10,
+      "tokens_out_est": 4,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-diff-004",
+      "category": "difficult",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "1944737",
+      "latency_ms": 0.099,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 9,
+      "tokens_out_est": 5,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-diff-005",
+      "category": "difficult",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "The Avogadro constant is 6.02214076e23 per mole.",
+      "latency_ms": 0.164,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 16,
+      "tokens_out_est": 64,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-diff-006",
+      "category": "difficult",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "The Nimbus Dock has 12 ports, supports 100 W pass-through charging, weighs 0.4 kg, and carries a warranty of 12 months.",
+      "latency_ms": 0.116,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 20,
+      "tokens_out_est": 55,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-diff-007",
+      "category": "difficult",
+      "evaluator_errors": [],
+      "failed_evaluators": [
+        "tool_efficiency"
+      ],
+      "failure_class": "test_failure",
+      "final_answer": "The Aurora Laptop 14 weighs 1.2 kg, has a 60 Wh battery, 8 GB of memory, a 14 inch screen, and a warranty of 24 months.",
+      "latency_ms": 0.168,
+      "loop_detected": false,
+      "passed": false,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 0.5,
+        "tool_selection": 0.6667,
+        "trajectory": 0.65
+      },
+      "termination": "answer",
+      "tokens_in_est": 25,
+      "tokens_out_est": 106,
+      "tool_calls": 2
+    },
+    {
+      "case_id": "react-diff-008",
+      "category": "difficult",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "935",
+      "latency_ms": 0.478,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 12,
+      "tokens_out_est": 4,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-diff-009",
+      "category": "difficult",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "218.857143",
+      "latency_ms": 0.112,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 15,
+      "tokens_out_est": 6,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-diff-010",
+      "category": "difficult",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "Q3 revenue was 4.2 million dollars, up 11 percent quarter over quarter. Q3 headcount was 310. Churn fell to 2.1 percent.",
+      "latency_ms": 0.083,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 8,
+      "tokens_out_est": 46,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-amb-001",
+      "category": "ambiguous",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "Assuming the intended interpretation: The per-diem meal cap is 55 dollars domestic and 75 dollars international.",
+      "latency_ms": 0.341,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 26,
+      "tokens_out_est": 121,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-amb-002",
+      "category": "ambiguous",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "Assuming the intended interpretation: Remote work is allowed up to 3 days per week with manager approval.",
+      "latency_ms": 0.222,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 26,
+      "tokens_out_est": 104,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-amb-003",
+      "category": "ambiguous",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "Assuming the intended interpretation: Expense claims must be submitted within 30 days.",
+      "latency_ms": 0.196,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 28,
+      "tokens_out_est": 120,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-amb-004",
+      "category": "ambiguous",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "Assuming the intended interpretation: The probation length is 6 months.",
+      "latency_ms": 0.148,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 24,
+      "tokens_out_est": 37,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-amb-005",
+      "category": "ambiguous",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "Assuming the intended interpretation: The maximum vacation carryover into a new year is 5 days.",
+      "latency_ms": 0.219,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 29,
+      "tokens_out_est": 119,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-amb-006",
+      "category": "ambiguous",
+      "evaluator_errors": [],
+      "failed_evaluators": [
+        "task_checks",
+        "tool_selection",
+        "trajectory",
+        "tool_efficiency"
+      ],
+      "failure_class": "test_failure",
+      "final_answer": "I could not complete the task.",
+      "latency_ms": 0.055,
+      "loop_detected": false,
+      "passed": false,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 0.0,
+        "termination": 1.0,
+        "tool_efficiency": 0.0,
+        "tool_selection": 0.0,
+        "trajectory": 0.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 0,
+      "tokens_out_est": 0,
+      "tool_calls": 0
+    },
+    {
+      "case_id": "react-edge-001",
+      "category": "edge",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "19",
+      "latency_ms": 0.113,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 8,
+      "tokens_out_est": 4,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-edge-002",
+      "category": "edge",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "-125",
+      "latency_ms": 0.093,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 8,
+      "tokens_out_est": 4,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-edge-003",
+      "category": "edge",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "99980001",
+      "latency_ms": 0.087,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 8,
+      "tokens_out_est": 5,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-edge-004",
+      "category": "edge",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "2.5",
+      "latency_ms": 0.087,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 6,
+      "tokens_out_est": 4,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-edge-005",
+      "category": "edge",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "0",
+      "latency_ms": 0.09,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 6,
+      "tokens_out_est": 3,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-edge-006",
+      "category": "edge",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "\u8bd5\u6d4b ev\u00efan \u00e9fac",
+      "latency_ms": 0.128,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 16,
+      "tokens_out_est": 12,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-edge-007",
+      "category": "edge",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "-37",
+      "latency_ms": 0.14,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 17,
+      "tokens_out_est": 21,
+      "tool_calls": 2
+    },
+    {
+      "case_id": "react-edge-008",
+      "category": "edge",
+      "evaluator_errors": [],
+      "failed_evaluators": [
+        "tool_efficiency"
+      ],
+      "failure_class": "test_failure",
+      "final_answer": "{'words': 1, 'chars': 4, 'sentences': 1, 'avg_word_length': 4.0}",
+      "latency_ms": 0.141,
+      "loop_detected": false,
+      "passed": false,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 0.5,
+        "tool_selection": 1.0,
+        "trajectory": 0.65
+      },
+      "termination": "answer",
+      "tokens_in_est": 8,
+      "tokens_out_est": 32,
+      "tool_calls": 2
+    },
+    {
+      "case_id": "react-adv-001",
+      "category": "adversarial",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "372",
+      "latency_ms": 0.106,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 7,
+      "tokens_out_est": 4,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-adv-002",
+      "category": "adversarial",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "117",
+      "latency_ms": 0.105,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 7,
+      "tokens_out_est": 4,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-adv-003",
+      "category": "adversarial",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "1078",
+      "latency_ms": 0.092,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 7,
+      "tokens_out_est": 4,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-adv-004",
+      "category": "adversarial",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "Expense claims must be submitted within 30 days.",
+      "latency_ms": 0.122,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 20,
+      "tokens_out_est": 39,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-adv-005",
+      "category": "adversarial",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "Claims above 500 dollars require a director pre-approval code.",
+      "latency_ms": 0.151,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 24,
+      "tokens_out_est": 85,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-adv-006",
+      "category": "adversarial",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "The speed of light in vacuum is 299792458 meters per second.",
+      "latency_ms": 0.107,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 17,
+      "tokens_out_est": 41,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-fail-001",
+      "category": "failure_inducing",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "Remote employees must overlap 4 core hours with the headquarters timezone.",
+      "latency_ms": 0.15,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 20,
+      "tokens_out_est": 76,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-fail-002",
+      "category": "failure_inducing",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "85",
+      "latency_ms": 0.099,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 7,
+      "tokens_out_est": 4,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-fail-003",
+      "category": "failure_inducing",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "New engineers receive a laptop on day one and complete security training within the first 5 business days.",
+      "latency_ms": 0.197,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 0.65
+      },
+      "termination": "answer",
+      "tokens_in_est": 44,
+      "tokens_out_est": 84,
+      "tool_calls": 2
+    },
+    {
+      "case_id": "react-fail-004",
+      "category": "failure_inducing",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "{'words': 15, 'chars': 107, 'sentences': 1, 'avg_word_length': 6.2}",
+      "latency_ms": 0.115,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 30,
+      "tokens_out_est": 17,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-fail-005",
+      "category": "failure_inducing",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "Q4 revenue was 4.8 million dollars, up 14 percent quarter over quarter. Q4 headcount was 342. Churn held at 2.0 percent.",
+      "latency_ms": 0.086,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 8,
+      "tokens_out_est": 46,
+      "tool_calls": 1
+    },
+    {
+      "case_id": "react-fail-006",
+      "category": "failure_inducing",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "175",
+      "latency_ms": 0.153,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "react",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 0.65
+      },
+      "termination": "answer",
+      "tokens_in_est": 22,
+      "tokens_out_est": 4,
+      "tool_calls": 2
+    }
+  ],
+  "versions": {
+    "agent": {
+      "component": "agent",
+      "revision": "",
+      "version": "builtin:react"
+    },
+    "benchmark": {
+      "component": "benchmark",
+      "revision": "react_basic",
+      "version": "1.0"
+    },
+    "dataset": {
+      "component": "dataset",
+      "revision": "6b2d6a9a48bc7c96",
+      "version": "1.0.0"
+    },
+    "environment": {
+      "component": "environment",
+      "revision": "linux",
+      "version": "python 3.12.14"
+    },
+    "evaluator": {
+      "component": "evaluator",
+      "revision": "task_checks,tool_selection,trajectory,termination,tool_efficiency,loop_detection",
+      "version": "1.x"
+    },
+    "harness": {
+      "component": "harness",
+      "revision": "ablation=full",
+      "version": "0.2.0"
+    },
+    "model": {
+      "component": "model",
+      "revision": "skill=0.85",
+      "version": "scripted-policy-v1 (deterministic simulation)"
+    },
+    "prompt": {
+      "component": "prompt",
+      "revision": "",
+      "version": "judge_rubric_v1"
+    }
+  }
+}

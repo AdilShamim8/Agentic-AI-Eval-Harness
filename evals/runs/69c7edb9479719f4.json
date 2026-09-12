@@ -1,0 +1,397 @@
+{
+  "ablation": "full",
+  "agent": "builtin:map_reduce",
+  "agent_pattern": "map_reduce",
+  "benchmark": "map_reduce_basic",
+  "benchmark_version": "1.0",
+  "command": "agent-eval run --benchmark map_reduce_basic --agent builtin:map_reduce --seed 20260912 --skill 0.85 --ablation full",
+  "config": {
+    "evaluators": [
+      "task_checks",
+      "tool_selection",
+      "trajectory",
+      "termination",
+      "tool_efficiency",
+      "loop_detection"
+    ],
+    "limit": 8,
+    "limits": "{\n  \"max_args_chars\": 4000,\n  \"max_output_chars\": 10000,\n  \"max_retries_per_call\": 2,\n  \"max_state_bytes\": 100000,\n  \"max_steps\": 12,\n  \"max_tool_calls\": 16,\n  \"per_tool_timeout_ms\": 1000,\n  \"total_timeout_ms\": 15000\n}",
+    "skill": 0.85,
+    "thresholds": {
+      "loop_detection": 0.9,
+      "overall_pass_rate": 0.7,
+      "task_checks": 0.75,
+      "termination": 0.8,
+      "tool_efficiency": 0.6,
+      "tool_selection": 0.75,
+      "trajectory": 0.6
+    }
+  },
+  "events_path": "evals/runs/69c7edb9479719f4.events.jsonl",
+  "metrics": {
+    "behavior": {
+      "loop_rate": 0.0,
+      "planning_coverage_mean": 0.5,
+      "recovery_n": 0,
+      "recovery_rate": null,
+      "termination_success": 1.0,
+      "tool_efficiency_mean": 0.8833
+    },
+    "cases": 8,
+    "cost_estimate_usd": 0.001908,
+    "cost_note": "estimate: simulated pricing (in $0.15/1M, out $0.60/1M) on estimated tokens (chars/4); not a live-backend measurement",
+    "failure_histogram": {
+      "test_failure": 1
+    },
+    "latency_p50_ms": 0.553,
+    "latency_p95_ms": 0.839,
+    "network_guard_attempts": [],
+    "pass_rate": 0.875,
+    "pass_rate_ci95": [
+      0.5291,
+      0.9776
+    ],
+    "passed": 7,
+    "per_category": {
+      "normal": {
+        "ci_high": 0.9776,
+        "ci_low": 0.5291,
+        "n": 8,
+        "pass_rate": 0.875
+      }
+    },
+    "per_evaluator": {
+      "loop_detection": {
+        "errors": 0,
+        "mean_score": 1.0,
+        "n": 8,
+        "pass_rate": 1.0
+      },
+      "task_checks": {
+        "errors": 0,
+        "mean_score": 0.875,
+        "n": 8,
+        "pass_rate": 0.875
+      },
+      "termination": {
+        "errors": 0,
+        "mean_score": 1.0,
+        "n": 8,
+        "pass_rate": 1.0
+      },
+      "tool_efficiency": {
+        "errors": 0,
+        "mean_score": 0.8833,
+        "n": 8,
+        "pass_rate": 1.0
+      },
+      "tool_selection": {
+        "errors": 0,
+        "mean_score": 0.925,
+        "n": 8,
+        "pass_rate": 1.0
+      },
+      "trajectory": {
+        "errors": 0,
+        "mean_score": 0.8921,
+        "n": 8,
+        "pass_rate": 1.0
+      }
+    },
+    "per_pattern": {
+      "map_reduce": {
+        "ci_high": 0.9776,
+        "ci_low": 0.5291,
+        "n": 8,
+        "pass_rate": 0.875
+      }
+    },
+    "runtime_s": 0.006,
+    "threshold_gates": {
+      "loop_detection": {
+        "actual": 1.0,
+        "passed": true,
+        "threshold": 0.9
+      },
+      "overall_pass_rate": {
+        "actual": 0.875,
+        "passed": true,
+        "threshold": 0.7
+      },
+      "task_checks": {
+        "actual": 0.875,
+        "passed": true,
+        "threshold": 0.75
+      },
+      "termination": {
+        "actual": 1.0,
+        "passed": true,
+        "threshold": 0.8
+      },
+      "tool_efficiency": {
+        "actual": 1.0,
+        "passed": true,
+        "threshold": 0.6
+      },
+      "tool_selection": {
+        "actual": 1.0,
+        "passed": true,
+        "threshold": 0.75
+      },
+      "trajectory": {
+        "actual": 1.0,
+        "passed": true,
+        "threshold": 0.6
+      }
+    },
+    "tokens_in_est": 441,
+    "tokens_out_est": 3070,
+    "tool_metrics": {
+      "avg_calls_per_case": 4.75,
+      "redundancy_rate": 0.026316,
+      "redundant_calls": 1,
+      "total_calls": 38
+    }
+  },
+  "recorded_at": "2026-09-12T04:47:05+0000",
+  "run_id": "69c7edb9479719f4",
+  "seed": 20260912,
+  "verdicts": [
+    {
+      "case_id": "map_reduce-norm-001",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "474000.0",
+      "latency_ms": 0.947,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "map_reduce",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 57,
+      "tokens_out_est": 479,
+      "tool_calls": 4
+    },
+    {
+      "case_id": "map_reduce-norm-002",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "1829.333333",
+      "latency_ms": 0.639,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "map_reduce",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 0.8,
+        "tool_selection": 0.8,
+        "trajectory": 0.86
+      },
+      "termination": "answer",
+      "tokens_in_est": 61,
+      "tokens_out_est": 480,
+      "tool_calls": 5
+    },
+    {
+      "case_id": "map_reduce-norm-003",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "1200.0",
+      "latency_ms": 0.579,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "map_reduce",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 0.8,
+        "tool_selection": 0.8,
+        "trajectory": 0.86
+      },
+      "termination": "answer",
+      "tokens_in_est": 62,
+      "tokens_out_est": 479,
+      "tool_calls": 5
+    },
+    {
+      "case_id": "map_reduce-norm-004",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "39.0",
+      "latency_ms": 0.309,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "map_reduce",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 0.925
+      },
+      "termination": "answer",
+      "tokens_in_est": 30,
+      "tokens_out_est": 16,
+      "tool_calls": 4
+    },
+    {
+      "case_id": "map_reduce-norm-005",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "822.0",
+      "latency_ms": 0.319,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "map_reduce",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 0.94
+      },
+      "termination": "answer",
+      "tokens_in_est": 40,
+      "tokens_out_est": 20,
+      "tool_calls": 5
+    },
+    {
+      "case_id": "map_reduce-norm-006",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "231000.0",
+      "latency_ms": 0.555,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "map_reduce",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 0.6667,
+        "tool_selection": 0.8,
+        "trajectory": 0.7667
+      },
+      "termination": "answer",
+      "tokens_in_est": 73,
+      "tokens_out_est": 479,
+      "tool_calls": 6
+    },
+    {
+      "case_id": "map_reduce-norm-007",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [
+        "task_checks"
+      ],
+      "failure_class": "test_failure",
+      "final_answer": "3689.0",
+      "latency_ms": 0.551,
+      "loop_detected": false,
+      "passed": false,
+      "pattern": "map_reduce",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 0.0,
+        "termination": 1.0,
+        "tool_efficiency": 0.8,
+        "tool_selection": 1.0,
+        "trajectory": 0.785
+      },
+      "termination": "answer",
+      "tokens_in_est": 64,
+      "tokens_out_est": 637,
+      "tool_calls": 5
+    },
+    {
+      "case_id": "map_reduce-norm-008",
+      "category": "normal",
+      "evaluator_errors": [],
+      "failed_evaluators": [],
+      "failure_class": "none",
+      "final_answer": "916.666667",
+      "latency_ms": 0.451,
+      "loop_detected": false,
+      "passed": true,
+      "pattern": "map_reduce",
+      "scores": {
+        "loop_detection": 1.0,
+        "task_checks": 1.0,
+        "termination": 1.0,
+        "tool_efficiency": 1.0,
+        "tool_selection": 1.0,
+        "trajectory": 1.0
+      },
+      "termination": "answer",
+      "tokens_in_est": 54,
+      "tokens_out_est": 480,
+      "tool_calls": 4
+    }
+  ],
+  "versions": {
+    "agent": {
+      "component": "agent",
+      "revision": "",
+      "version": "builtin:map_reduce"
+    },
+    "benchmark": {
+      "component": "benchmark",
+      "revision": "map_reduce_basic",
+      "version": "1.0"
+    },
+    "dataset": {
+      "component": "dataset",
+      "revision": "aa77075b73ac9ed8",
+      "version": "1.0.0"
+    },
+    "environment": {
+      "component": "environment",
+      "revision": "linux",
+      "version": "python 3.12.14"
+    },
+    "evaluator": {
+      "component": "evaluator",
+      "revision": "task_checks,tool_selection,trajectory,termination,tool_efficiency,loop_detection",
+      "version": "1.x"
+    },
+    "harness": {
+      "component": "harness",
+      "revision": "ablation=full",
+      "version": "0.2.0"
+    },
+    "model": {
+      "component": "model",
+      "revision": "skill=0.85",
+      "version": "scripted-policy-v1 (deterministic simulation)"
+    },
+    "prompt": {
+      "component": "prompt",
+      "revision": "",
+      "version": "judge_rubric_v1"
+    }
+  }
+}

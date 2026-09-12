@@ -1,0 +1,194 @@
+{"case_id": "", "kind": "run_start", "payload": {"ablation": "full", "agent": "builtin:map_reduce", "benchmark": "map_reduce_basic", "benchmark_version": "1.0", "cases": 8, "run_id": "69c7edb9479719f4", "seed": 20260912, "skill": 0.85}, "phase": "", "ts": 1789188425.212}
+{"case_id": "map_reduce-norm-001", "kind": "case_start", "payload": {"case_id": "map_reduce-norm-001", "category": "normal"}, "phase": "case", "ts": 1789188425.212}
+{"case_id": "map_reduce-norm-001", "kind": "tool_call", "payload": {"args": {"corpus": "city_data", "query": "Springfield population"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-001", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.027, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-001", "kind": "tool_call", "payload": {"args": {"corpus": "city_data", "query": "Riverton population"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-001", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.022, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-001", "kind": "tool_call", "payload": {"args": {"corpus": "city_data", "query": "Highland population"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-001", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.023, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-001", "kind": "tool_call", "payload": {"args": {"op": "sum", "values": [154000.0, 89000.0, 231000.0]}, "tool": "data_calc"}, "phase": "act", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-001", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.009, "ok": true, "tool": "data_calc"}, "phase": "observe", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-001", "kind": "agent_done", "payload": {"case_id": "map_reduce-norm-001", "failure_class": "none", "latency_ms": 0.947, "ok": true, "termination": "answer", "tool_calls": 4}, "phase": "case", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-001", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-001", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-001", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-001", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-001", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-001", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-001", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-001", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-001", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-001", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-001", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-001", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-001", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-001", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-001", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-001", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-001", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-001", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-001", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-001", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-001", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-001", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-001", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-001", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-001", "kind": "case_end", "payload": {"case_id": "map_reduce-norm-001", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-002", "kind": "case_start", "payload": {"case_id": "map_reduce-norm-002", "category": "normal"}, "phase": "case", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-002", "kind": "tool_call", "payload": {"args": {"corpus": "city_data", "query": "Springfield founded"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-002", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.023, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.213}
+{"case_id": "map_reduce-norm-002", "kind": "tool_call", "payload": {"args": {"query": "irrelevant xyzzy"}, "tool": "text_transform"}, "phase": "act", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-002", "kind": "tool_call", "payload": {"args": {"corpus": "city_data", "query": "Riverton founded"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-002", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.019, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-002", "kind": "tool_call", "payload": {"args": {"corpus": "city_data", "query": "Highland founded"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-002", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.019, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-002", "kind": "tool_call", "payload": {"args": {"op": "mean", "values": [1837.0, 1852.0, 1799.0]}, "tool": "data_calc"}, "phase": "act", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-002", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.008, "ok": true, "tool": "data_calc"}, "phase": "observe", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-002", "kind": "agent_done", "payload": {"case_id": "map_reduce-norm-002", "failure_class": "none", "latency_ms": 0.639, "ok": true, "termination": "answer", "tool_calls": 5}, "phase": "case", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-002", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-002", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-002", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-002", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-002", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-002", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-002", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-002", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-002", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-002", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-002", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-002", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-002", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-002", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-002", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-002", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-002", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-002", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-002", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-002", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-002", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-002", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-002", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-002", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-002", "kind": "case_end", "payload": {"case_id": "map_reduce-norm-002", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-003", "kind": "case_start", "payload": {"case_id": "map_reduce-norm-003", "category": "normal"}, "phase": "case", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-003", "kind": "tool_call", "payload": {"args": {"corpus": "city_data", "query": "Springfield rainfall"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-003", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.018, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-003", "kind": "tool_call", "payload": {"args": {"corpus": "city_data", "query": "Riverton rainfall"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-003", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.018, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.214}
+{"case_id": "map_reduce-norm-003", "kind": "tool_call", "payload": {"args": {"query": "irrelevant xyzzy"}, "tool": "text_transform"}, "phase": "act", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-003", "kind": "tool_call", "payload": {"args": {"corpus": "city_data", "query": "Highland rainfall"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-003", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.019, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-003", "kind": "tool_call", "payload": {"args": {"op": "max", "values": [940.0, 610.0, 1200.0]}, "tool": "data_calc"}, "phase": "act", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-003", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.005, "ok": true, "tool": "data_calc"}, "phase": "observe", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-003", "kind": "agent_done", "payload": {"case_id": "map_reduce-norm-003", "failure_class": "none", "latency_ms": 0.579, "ok": true, "termination": "answer", "tool_calls": 5}, "phase": "case", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-003", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-003", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-003", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-003", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-003", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-003", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-003", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-003", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-003", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-003", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-003", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-003", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-003", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-003", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-003", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-003", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-003", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-003", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-003", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-003", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-003", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-003", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-003", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-003", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-003", "kind": "case_end", "payload": {"case_id": "map_reduce-norm-003", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-004", "kind": "case_start", "payload": {"case_id": "map_reduce-norm-004", "category": "normal"}, "phase": "case", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-004", "kind": "tool_call", "payload": {"args": {"expression": "6 - 91"}, "tool": "calculator"}, "phase": "act", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-004", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.03, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-004", "kind": "tool_call", "payload": {"args": {"expression": "24 * 8"}, "tool": "calculator"}, "phase": "act", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-004", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.011, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-004", "kind": "tool_call", "payload": {"args": {"expression": "5 * 2"}, "tool": "calculator"}, "phase": "act", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-004", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.008, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-004", "kind": "tool_call", "payload": {"args": {"op": "mean", "values": [-85.0, 192.0, 10.0]}, "tool": "data_calc"}, "phase": "act", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-004", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.006, "ok": true, "tool": "data_calc"}, "phase": "observe", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-004", "kind": "agent_done", "payload": {"case_id": "map_reduce-norm-004", "failure_class": "none", "latency_ms": 0.309, "ok": true, "termination": "answer", "tool_calls": 4}, "phase": "case", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-004", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-004", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-004", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-004", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-004", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-004", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-004", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-004", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-004", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-004", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-004", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-004", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-004", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-004", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-004", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-004", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-004", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-004", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-004", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-004", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-004", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-004", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-004", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-004", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-004", "kind": "case_end", "payload": {"case_id": "map_reduce-norm-004", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-005", "kind": "case_start", "payload": {"case_id": "map_reduce-norm-005", "category": "normal"}, "phase": "case", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-005", "kind": "tool_call", "payload": {"args": {"expression": "31 * 10"}, "tool": "calculator"}, "phase": "act", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-005", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.011, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-005", "kind": "tool_call", "payload": {"args": {"expression": "4 + 15"}, "tool": "calculator"}, "phase": "act", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-005", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.009, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-005", "kind": "tool_call", "payload": {"args": {"expression": "38 * 11"}, "tool": "calculator"}, "phase": "act", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-005", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.007, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188425.215}
+{"case_id": "map_reduce-norm-005", "kind": "tool_call", "payload": {"args": {"expression": "19 + 56"}, "tool": "calculator"}, "phase": "act", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-005", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.008, "ok": true, "tool": "calculator"}, "phase": "observe", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-005", "kind": "tool_call", "payload": {"args": {"op": "sum", "values": [310.0, 19.0, 418.0, 75.0]}, "tool": "data_calc"}, "phase": "act", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-005", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.005, "ok": true, "tool": "data_calc"}, "phase": "observe", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-005", "kind": "agent_done", "payload": {"case_id": "map_reduce-norm-005", "failure_class": "none", "latency_ms": 0.319, "ok": true, "termination": "answer", "tool_calls": 5}, "phase": "case", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-005", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-005", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-005", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-005", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-005", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-005", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-005", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-005", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-005", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-005", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-005", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-005", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-005", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-005", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-005", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-005", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-005", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-005", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-005", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-005", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-005", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-005", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-005", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-005", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-005", "kind": "case_end", "payload": {"case_id": "map_reduce-norm-005", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "case_start", "payload": {"case_id": "map_reduce-norm-006", "category": "normal"}, "phase": "case", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "tool_call", "payload": {"args": {"query": "irrelevant xyzzy"}, "tool": "text_transform"}, "phase": "act", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "tool_call", "payload": {"args": {"corpus": "city_data", "query": "Springfield population"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.022, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "tool_call", "payload": {"args": {"query": "irrelevant xyzzy"}, "tool": "text_transform"}, "phase": "act", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "tool_call", "payload": {"args": {"corpus": "city_data", "query": "Riverton population"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.018, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "tool_call", "payload": {"args": {"corpus": "city_data", "query": "Highland population"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.017, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "tool_call", "payload": {"args": {"op": "max", "values": [154000.0, 89000.0, 231000.0]}, "tool": "data_calc"}, "phase": "act", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.005, "ok": true, "tool": "data_calc"}, "phase": "observe", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "agent_done", "payload": {"case_id": "map_reduce-norm-006", "failure_class": "none", "latency_ms": 0.555, "ok": true, "termination": "answer", "tool_calls": 6}, "phase": "case", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-006", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-006", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-006", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-006", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-006", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-006", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-006", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-006", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-006", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-006", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-006", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-006", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-006", "kind": "case_end", "payload": {"case_id": "map_reduce-norm-006", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-007", "kind": "case_start", "payload": {"case_id": "map_reduce-norm-007", "category": "normal"}, "phase": "case", "ts": 1789188425.216}
+{"case_id": "map_reduce-norm-007", "kind": "tool_call", "payload": {"args": {"corpus": "city_data", "query": "Springfield founded"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-007", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.02, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-007", "kind": "tool_call", "payload": {"args": {"corpus": "city_data", "query": "Riverton founded"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-007", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.016, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-007", "kind": "tool_call", "payload": {"args": {"corpus": "city_data", "query": "Highland founded"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-007", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.016, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-007", "kind": "tool_call", "payload": {"args": {"corpus": "city_data", "query": "Highland founded"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-007", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.018, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-007", "kind": "tool_call", "payload": {"args": {"op": "sum", "values": [1837.0, 1852.0]}, "tool": "data_calc"}, "phase": "act", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-007", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.004, "ok": true, "tool": "data_calc"}, "phase": "observe", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-007", "kind": "agent_done", "payload": {"case_id": "map_reduce-norm-007", "failure_class": "none", "latency_ms": 0.551, "ok": true, "termination": "answer", "tool_calls": 5}, "phase": "case", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-007", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-007", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-007", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-007", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-007", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-007", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-007", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-007", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-007", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-007", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-007", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-007", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-007", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-007", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-007", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-007", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-007", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-007", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-007", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-007", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-007", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-007", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-007", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-007", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-007", "kind": "case_end", "payload": {"case_id": "map_reduce-norm-007", "failure_class": "test_failure", "passed": false}, "phase": "case", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-008", "kind": "case_start", "payload": {"case_id": "map_reduce-norm-008", "category": "normal"}, "phase": "case", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-008", "kind": "tool_call", "payload": {"args": {"corpus": "city_data", "query": "Springfield rainfall"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-008", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.017, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-008", "kind": "tool_call", "payload": {"args": {"corpus": "city_data", "query": "Riverton rainfall"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-008", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.016, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-008", "kind": "tool_call", "payload": {"args": {"corpus": "city_data", "query": "Highland rainfall"}, "tool": "knowledge_search"}, "phase": "act", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-008", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.016, "ok": true, "tool": "knowledge_search"}, "phase": "observe", "ts": 1789188425.217}
+{"case_id": "map_reduce-norm-008", "kind": "tool_call", "payload": {"args": {"op": "mean", "values": [940.0, 610.0, 1200.0]}, "tool": "data_calc"}, "phase": "act", "ts": 1789188425.218}
+{"case_id": "map_reduce-norm-008", "kind": "tool_result", "payload": {"error": "", "latency_ms": 0.005, "ok": true, "tool": "data_calc"}, "phase": "observe", "ts": 1789188425.218}
+{"case_id": "map_reduce-norm-008", "kind": "agent_done", "payload": {"case_id": "map_reduce-norm-008", "failure_class": "none", "latency_ms": 0.451, "ok": true, "termination": "answer", "tool_calls": 4}, "phase": "case", "ts": 1789188425.218}
+{"case_id": "map_reduce-norm-008", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-008", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.218}
+{"case_id": "map_reduce-norm-008", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-008", "evaluator": "task_checks"}, "phase": "evaluate", "ts": 1789188425.218}
+{"case_id": "map_reduce-norm-008", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-008", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.218}
+{"case_id": "map_reduce-norm-008", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-008", "evaluator": "tool_selection"}, "phase": "evaluate", "ts": 1789188425.218}
+{"case_id": "map_reduce-norm-008", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-008", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.218}
+{"case_id": "map_reduce-norm-008", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-008", "evaluator": "trajectory"}, "phase": "evaluate", "ts": 1789188425.218}
+{"case_id": "map_reduce-norm-008", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-008", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.218}
+{"case_id": "map_reduce-norm-008", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-008", "evaluator": "termination"}, "phase": "evaluate", "ts": 1789188425.218}
+{"case_id": "map_reduce-norm-008", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-008", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.218}
+{"case_id": "map_reduce-norm-008", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-008", "evaluator": "tool_efficiency"}, "phase": "evaluate", "ts": 1789188425.218}
+{"case_id": "map_reduce-norm-008", "kind": "evaluator_start", "payload": {"case_id": "map_reduce-norm-008", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.218}
+{"case_id": "map_reduce-norm-008", "kind": "evaluator_end", "payload": {"case_id": "map_reduce-norm-008", "evaluator": "loop_detection"}, "phase": "evaluate", "ts": 1789188425.218}
+{"case_id": "map_reduce-norm-008", "kind": "case_end", "payload": {"case_id": "map_reduce-norm-008", "failure_class": "none", "passed": true}, "phase": "case", "ts": 1789188425.218}
+{"case_id": "", "kind": "run_end", "payload": {"cases": 8, "pass_rate": 0.875, "passed": 7, "run_id": "69c7edb9479719f4"}, "phase": "", "ts": 1789188425.218}
