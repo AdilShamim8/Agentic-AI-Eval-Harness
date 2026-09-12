@@ -1,0 +1,32 @@
+benchmark:
+  name: failure_recovery
+  version: "1.0"
+  pattern: react
+  description: Failure-inducing subset across patterns (harness ablation experiment target)
+
+agent: builtin:react
+
+dataset:
+  path: datasets/react/golden.jsonl
+
+evaluators:
+  - task_checks
+  - tool_selection
+  - trajectory
+  - termination
+  - tool_efficiency
+  - loop_detection
+  - recovery
+
+thresholds:
+  overall_pass_rate: 0.6
+  task_checks: 0.6
+  recovery: 0.5
+
+execution:
+  ablation: full
+  categories: [failure_inducing, difficult]
+
+
+gates:
+  pass_rate_max_regression: 0.03

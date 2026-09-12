@@ -1,0 +1,17 @@
+# Model backend defaults for reproducible runs.
+# The scripted backend is the deterministic simulation; skill/fault profile
+# control agent quality. Live backends are configured via environment
+# (see .env.example).
+
+backend: scripted-policy-v1
+default_skill: 0.85
+default_seed: 20260912
+fault_profile:
+  redundancy: 0.05
+  malformed_rate: 0.04
+  early_termination: 0.02
+  loop_tendency: 0.02
+
+run_defaults:
+  ablation: full
+  out_dir: evals/runs

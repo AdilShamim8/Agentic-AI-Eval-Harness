@@ -1,0 +1,40 @@
+{
+  "files": {
+    "map_reduce": {
+      "cases": 56,
+      "path": "datasets/map_reduce/golden.jsonl",
+      "sha256": "aa77075b73ac9ed821d589ed93cbc2113d023bf7115ecdbaa9c3911d72678a79"
+    },
+    "plan_execute": {
+      "cases": 56,
+      "path": "datasets/plan_execute/golden.jsonl",
+      "sha256": "9812526f53d66164039218c83c245af2b34daaceeb7a102412f193841b3d986c"
+    },
+    "react": {
+      "cases": 56,
+      "path": "datasets/react/golden.jsonl",
+      "sha256": "6b2d6a9a48bc7c9658263399aa09c19a55437552ec9947a44e4ff3117e583e4b"
+    },
+    "supervisor": {
+      "cases": 56,
+      "path": "datasets/supervisor/golden.jsonl",
+      "sha256": "112767bef002bac531a2f3ff6314a3b26035053a0ef7422fa6fdb26c5b456c4f"
+    },
+    "swarm": {
+      "cases": 56,
+      "path": "datasets/swarm/golden.jsonl",
+      "sha256": "b70443229ac78d968639285b1085ac372a48818a0296bde26fbfa408c370cede"
+    }
+  },
+  "generated_at": "2026-09-12",
+  "generator_version": "1.0.0",
+  "master_seed": 20260912,
+  "totals": {
+    "all": 280,
+    "map_reduce": 56,
+    "plan_execute": 56,
+    "react": 56,
+    "supervisor": 56,
+    "swarm": 56
+  }
+}

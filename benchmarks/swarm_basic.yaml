@@ -1,0 +1,36 @@
+benchmark:
+  name: swarm_basic
+  version: "1.0"
+  pattern: swarm
+  description: swarm pattern golden benchmark (56 cases, 6 categories)
+
+agent: builtin:swarm
+
+dataset:
+  path: datasets/swarm/golden.jsonl
+
+evaluators:
+  - task_checks
+  - tool_selection
+  - trajectory
+  - termination
+  - tool_efficiency
+  - loop_detection
+  - planning_quality
+
+thresholds:
+  overall_pass_rate: 0.7
+  task_checks: 0.75
+  tool_selection: 0.75
+  trajectory: 0.6
+  termination: 0.8
+  tool_efficiency: 0.6
+  loop_detection: 0.9
+  planning_quality: 0.7
+
+execution:
+  ablation: full
+
+
+gates:
+  pass_rate_max_regression: 0.03

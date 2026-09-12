@@ -1,0 +1,26 @@
+# Quality gates for regression checking.
+# Thresholds are MAXIMUM ALLOWED DROPS (negative numbers).
+# CI blocks when any gated metric drops more than its threshold.
+
+default:
+  pass_rate: -0.03          # overall pass rate may drop at most 3 points
+  min_cases_for_gate: 10    # below this, gates are inconclusive (not failed)
+
+benchmarks:
+  react_basic:
+    pass_rate: -0.03
+    evaluator:task_checks: -0.05
+  plan_execute_basic:
+    pass_rate: -0.05         # more variance in multi-step pattern
+  supervisor_basic:
+    pass_rate: -0.05
+  swarm_basic:
+    pass_rate: -0.05
+  map_reduce_basic:
+    pass_rate: -0.04
+  failure_recovery:
+    pass_rate: -0.10         # ablation experiment target: larger swings expected
+  adversarial:
+    pass_rate: -0.08
+
+pass_on_insufficient: false  # inconclusive gates FAIL closed in CI
