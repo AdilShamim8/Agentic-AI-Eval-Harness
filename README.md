@@ -147,4 +147,5 @@ scripts/                  dataset generator, experiments, demo, release
 - [SECURITY.md](SECURITY.md) + [docs/security/THREAT-MODEL.md](docs/security/THREAT-MODEL.md)
 - [docs/concepts/](docs/concepts/) — 13 concept docs (why/how/trade-offs/failure modes)
 
+
 License: MIT. Python ≥ 3.11. Runtime deps: PyYAML.
