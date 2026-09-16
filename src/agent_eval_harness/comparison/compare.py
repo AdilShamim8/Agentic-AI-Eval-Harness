@@ -53,7 +53,7 @@ def compare_runs(a: RunRecord, b: RunRecord) -> ComparisonResult:
                               if not va[cid].passed and vb[cid].passed]
     res.mcnemar = _mcnemar(b01, c10)
 
-    evals = sorted(set(va[common[0]].scores) if common else set())
+    evals = sorted({ev for cid in common for v in (va[cid], vb[cid]) for ev in v.scores})
     for ev in evals:
         sa = [va[cid].scores.get(ev, 0.0) for cid in common]
         sb = [vb[cid].scores.get(ev, 0.0) for cid in common]

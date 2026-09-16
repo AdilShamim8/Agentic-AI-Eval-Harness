@@ -147,3 +147,35 @@ def test_aggregation_handles_zero_latency_and_none_redundant():
     assert metrics["tool_metrics"]["redundant_calls"] == 2
 
 
+def test_compare_runs_union_evaluators():
+    from agent_eval_harness.comparison.compare import compare_runs
+    from agent_eval_harness.core.errors import FailureClass
+    from agent_eval_harness.core.schemas import CaseVerdict, RunRecord
+
+    v_a1 = CaseVerdict(case_id="c1", pattern="react", category="normal", passed=True,
+                       failure_class=FailureClass.NONE, scores={}, failed_evaluators=[],
+                       evaluator_errors=[])
+    v_a2 = CaseVerdict(case_id="c2", pattern="react", category="normal", passed=True,
+                       failure_class=FailureClass.NONE, scores={"ev2": 0.8}, failed_evaluators=[],
+                       evaluator_errors=[])
+    v_b1 = CaseVerdict(case_id="c1", pattern="react", category="normal", passed=True,
+                       failure_class=FailureClass.NONE, scores={"ev1": 1.0}, failed_evaluators=[],
+                       evaluator_errors=[])
+    v_b2 = CaseVerdict(case_id="c2", pattern="react", category="normal", passed=True,
+                       failure_class=FailureClass.NONE, scores={"ev2": 0.9}, failed_evaluators=[],
+                       evaluator_errors=[])
+
+    def _make_rec(rid, verdicts):
+        return RunRecord(run_id=rid, benchmark="react_basic", benchmark_version="1.0",
+                         agent="builtin:react", agent_pattern="react", seed=1, ablation="full",
+                         versions={}, config={}, verdicts=verdicts,
+                         metrics={"pass_rate": 1.0, "cases": 2}, recorded_at="")
+
+    rec_a = _make_rec("ra", [v_a1, v_a2])
+    rec_b = _make_rec("rb", [v_b1, v_b2])
+    res = compare_runs(rec_a, rec_b)
+    assert "ev1" in res.per_evaluator
+    assert "ev2" in res.per_evaluator
+
+
+
