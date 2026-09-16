@@ -238,3 +238,20 @@ def test_load_run_optional_fields(tmp_path):
     assert run.verdicts[0].case_id == "c1"
     assert run.verdicts[0].passed is True
     assert run.verdicts[0].failure_class.value == "none"
+
+
+def test_export_calibration_sample_flat_path(tmp_path):
+    import os
+    from agent_eval_harness.runner.experiments import export_calibration_sample
+
+    flat_path = "test_sample_flat.csv"
+    try:
+        res = export_calibration_sample("react_basic", sample_n=2, out_path=flat_path,
+                                        run_out_dir=str(tmp_path / "runs"))
+        assert os.path.isfile(flat_path)
+        assert res["exported"] == 2
+    finally:
+        if os.path.isfile(flat_path):
+            os.remove(flat_path)
+
+
