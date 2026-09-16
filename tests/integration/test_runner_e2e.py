@@ -39,7 +39,7 @@ def test_full_dataset_integrity_counts():
     total = 0
     for pattern in ("react", "plan_execute", "supervisor", "swarm", "map_reduce"):
         path = f"datasets/{pattern}/golden.jsonl"
-        cases = [json.loads(l) for l in open(path) if l.strip()]
+        cases = [json.loads(l) for l in open(path, encoding="utf-8") if l.strip()]
         assert len(cases) >= 50, pattern
         total += len(cases)
         cats = {c["category"] for c in cases}

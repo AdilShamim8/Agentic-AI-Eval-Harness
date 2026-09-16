@@ -10,8 +10,10 @@ REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 def cli(*args, cwd=REPO):
     env = dict(os.environ)
     env["PYTHONPATH"] = os.path.join(REPO, "src")
+    env["PYTHONIOENCODING"] = "utf-8"
     return subprocess.run([sys.executable, "-m", "agent_eval_harness.cli.app", *args],
-                          capture_output=True, text=True, env=env, cwd=cwd, timeout=300)
+                          capture_output=True, text=True, encoding="utf-8", errors="replace",
+                          env=env, cwd=cwd, timeout=300)
 
 
 def test_cli_version_and_list():
@@ -46,14 +48,14 @@ def test_cli_run_report_compare_regression(tmp_path):
 
     r = cli("report", run_id, "--runs", out, "--format", "md", "--out", str(tmp_path / "r.md"))
     assert r.returncode == 0
-    md = open(tmp_path / "r.md").read()
+    md = open(tmp_path / "r.md", encoding="utf-8").read()
     assert "Evaluation Run Report" in md
     assert "TEST FAILURE" in md and "EVALUATOR ERROR" in md and \
         "INFRASTRUCTURE FAILURE" in md
     assert "Recommendations" in md and "Not measured" in md
 
     r = cli("report", run_id, "--runs", out, "--format", "json", "--out", str(tmp_path / "r.json"))
-    payload = json.load(open(tmp_path / "r.json"))
+    payload = json.load(open(tmp_path / "r.json", encoding="utf-8"))
     assert payload["kind"] == "agent-eval-harness/report"
     assert payload["run"]["run_id"] == run_id
 

@@ -83,6 +83,7 @@ class FaultSchedule:
 
 @dataclass
 class TestCase:
+    __test__ = False
     id: str
     pattern: str  # react|plan_execute|supervisor|swarm|map_reduce
     category: str  # normal|difficult|ambiguous|edge|adversarial|failure_inducing
