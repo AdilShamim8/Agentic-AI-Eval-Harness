@@ -13,7 +13,6 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
 from urllib.parse import parse_qs, urlparse
 
-from agent_eval_harness.core.schemas import dumps
 from agent_eval_harness.registry.registry import list_benchmarks, load_benchmark
 from agent_eval_harness.runner.runner import BenchmarkRunner, RunConfig
 
@@ -601,9 +600,10 @@ class DashboardHandler(BaseHTTPRequestHandler):
       self._send_json({"runs": runs})
 
     def _handle_get_run(self, run_id: str) -> None:
-      filename = os.path.join(self.runs_dir, f"{run_id}.json")
+      safe_id = os.path.basename(run_id)
+      filename = os.path.join(self.runs_dir, f"{safe_id}.json")
       if not os.path.isfile(filename):
-        self.send_error(HTTPStatus.NOT_FOUND, f"Run {run_id} not found")
+        self.send_error(HTTPStatus.NOT_FOUND, f"Run {safe_id} not found")
         return
       with open(filename, encoding="utf-8") as fh:
         data = json.load(fh)
@@ -630,8 +630,8 @@ class DashboardHandler(BaseHTTPRequestHandler):
 
     def _handle_execute_run(self) -> None:
       try:
-        content_length = int(self.headers.get("Content-Length", 0))
-        body = self.rfile.read(content_length)
+        content_length = int(self.headers.get("Content-Length", 0) or 0)
+        body = self.rfile.read(content_length) if content_length > 0 else b""
         payload = json.loads(body.decode("utf-8")) if body else {}
 
         bench_name = payload.get("benchmark", "react_basic")
@@ -719,7 +719,9 @@ def run_server(
 ) -> None:
   DashboardHandler.runs_dir = runs_dir
   DashboardHandler.baselines_dir = baselines_dir
+  ThreadingHTTPServer.allow_reuse_address = True
   server = ThreadingHTTPServer((host, port), DashboardHandler)
+  server.daemon_threads = True
   print(f"  agent-eval dashboard live at http://{host}:{port}/")
   print("  Press Ctrl+C to terminate.")
   try:
