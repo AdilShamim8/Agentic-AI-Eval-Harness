@@ -102,3 +102,23 @@ def test_summarize_and_clock_invalid_inputs():
     assert not res_clock.ok
     assert "must be an integer" in res_clock.error
 
+
+def test_calculator_overflow_and_nan():
+    res = t.calculator({"expression": "10.0**100 * 10.0**100 * 10.0**100 * 10.0**100"})
+    assert not res.ok
+    assert "overflow or nan" in res.error
+
+
+def test_data_calc_casing_and_alias():
+    assert t.data_calc({"values": [2, 4], "op": " AVG "}).value["value"] == 3
+    assert t.data_calc({"values": [2, 4], "op": "SUM"}).value["value"] == 6
+
+
+def test_repair_args_data_calc():
+    from agent_eval_harness.harness.gateway import _repair_args
+
+    repaired = _repair_args("data_calc", {"values": ["1", "2.5"], "op": "AVERAGE"})
+    assert repaired["op"] == "mean"
+    assert repaired["values"] == [1, 2.5]
+
+
