@@ -163,7 +163,10 @@ class TaskChecks:
                 ok = num is not None and abs(num - float(chk.get("value", 0))) <= float(
                     chk.get("tolerance", 1e-6))
             elif kind == "answer_regex":
-                ok = re.search(str(chk.get("pattern", "")), text) is not None
+                try:
+                    ok = re.search(str(chk.get("pattern", "")), text) is not None
+                except re.error:
+                    ok = False
             elif kind == "answer_min_words":
                 ok = len(text.split()) >= int(chk.get("value", 1))
             elif kind == "assumption_stated":
