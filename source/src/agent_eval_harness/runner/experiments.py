@@ -118,9 +118,15 @@ def export_calibration_sample(benchmark: str, sample_n: int = 60,
     # deterministic subsample
     step = max(1, len(rows) // sample_n) if len(rows) > sample_n else 1
     sample = rows[::step][:sample_n]
-    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    out_dir = os.path.dirname(out_path)
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
     with open(out_path, "w", newline="", encoding="utf-8") as fh:
-        writer = csv.DictWriter(fh, fieldnames=list(sample[0].keys()))
+        fieldnames = list(sample[0].keys()) if sample else [
+            "case_id", "category", "task", "gold_reference", "agent_answer",
+            "judge_pass", "human_pass", "annotator", "notes"
+        ]
+        writer = csv.DictWriter(fh, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(sample)
     return {"sample_path": out_path, "exported": len(sample), "total": len(rows),
