@@ -75,6 +75,8 @@ def banner(title: str, sub: str = "") -> None:
 
 
 def _snap(runs_dir: str) -> dict[str, float]:
+    if not os.path.isdir(runs_dir):
+        return {}
     return {f: os.path.getmtime(os.path.join(runs_dir, f))
             for f in os.listdir(runs_dir) if f.endswith(".json")}
 
@@ -82,7 +84,7 @@ def _snap(runs_dir: str) -> dict[str, float]:
 def latest_run_id(before: dict[str, float]) -> str:
     """Find the run record a command just produced/overwrote (run ids are
     deterministic — same benchmark+seed+skill rewrites the same file)."""
-    runs_dir = os.path.join(REPO, "evals/runs")
+    runs_dir = os.path.join(REPO, "evals", "runs")
     after = _snap(runs_dir)
     changed = [f for f, t in after.items() if before.get(f) != t]
     if not changed:
@@ -103,7 +105,7 @@ def main() -> int:
     banner("ACT 1 · The system, healthy",
            "Full golden-suite run: 56 machine-verified cases, deterministic seed.\n"
            "This is what CI runs on every merge.")
-    before = _snap(os.path.join(REPO, "evals/runs"))
+    before = _snap(os.path.join(REPO, "evals", "runs"))
     code, _ = sh(CLI + ["run", "--benchmark", "react_basic", "--seed", str(SEED)])
     if code != 0:
         return 1
@@ -116,7 +118,7 @@ def main() -> int:
            "worse at its job (--skill 0.60). Nobody notices — unless the gate works.\n"
            "This act shows the failure path deliberately: a demo that never fails\n"
            "reads as untested.")
-    before = _snap(os.path.join(REPO, "evals/runs"))
+    before = _snap(os.path.join(REPO, "evals", "runs"))
     code, _ = sh(CLI + ["run", "--benchmark", "react_basic", "--skill", "0.60",
                         "--seed", str(SEED)], expect_fail=True)
     if code == 0:
@@ -143,7 +145,7 @@ def main() -> int:
     if code != 0:
         return 1
 
-    with open(os.path.join(REPO, "evals/runs", f"{regressed_id}.json"),
+    with open(os.path.join(REPO, "evals", "runs", f"{regressed_id}.json"),
               encoding="utf-8") as fh:
         reg = json.load(fh)
     hist = reg["metrics"]["failure_histogram"]
