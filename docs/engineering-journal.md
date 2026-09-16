@@ -143,3 +143,40 @@ Test count 121 → 126. Version 0.2.0. The FDE layer added ~0 product risk
 (the platform core is untouched) and, per the guide's own framing, converted
 a strong evaluation product into a deployment-shaped portfolio artifact:
 the harness was already the artifact; now the agreement is written down.
+
+## Day 16 (v0.2.1 — Production Hardening, Multi-OS CI, and Web Dashboard)
+
+With v0.2.0 established, the next phase addressed enterprise deployment readiness,
+cross-platform reliability (specifically on Windows environments and containerized
+runtimes), and visual observability for stakeholders:
+
+- **Windows Console Unicode Encoding (INC-9):** Running `agent-eval gate` or `make demo`
+  on Windows shells failed with `UnicodeEncodeError: 'charmap'` when rendering UTF-8
+  symbols (`→`, `κ`, box borders). Fixed by ensuring UTF-8 stream re-encoding in
+  `src/agent_eval_harness/cli/app.py` and `scripts/demo.py`, setting `PYTHONIOENCODING="utf-8"`
+  in CLI subprocess integration tests, and fixing a `pytest` test collection warning on
+  `TestCase` dataclass by marking `__test__ = False`.
+- **Cross-Platform CRLF Dataset Hashing (INC-10):** Git on Windows checked out dataset
+  fixtures with `\r\n` line endings, causing dataset cryptographic SHA-256 verification
+  to mismatch the Linux reference hashes in CI. Fixed root cause with repository-wide
+  `.gitattributes` enforcing `eol=lf`, and added byte-level CRLF normalization
+  (`content.replace(b"\r\n", b"\n")`) in `dataset_sha256()` inside `datasets.py` and
+  `test_runner_e2e.py`. Result: byte-identical cryptographic verification invariant across
+  all operating systems.
+- **Production Containerization:** Created an enterprise-grade multi-stage `Dockerfile`
+  based on `python:3.12-slim`, dropping privileges to a dedicated non-root user `aeh`
+  (UID 10001). Added `docker-compose.yml` with preconfigured profiles for headless batch
+  evaluation (`runner`), CI drift verification (`status`), and interactive browser
+  visualization (`dashboard`). Added Makefile targets `docker-build` and `docker-run`.
+- **Zero-Dependency Web Dashboard (`agent-eval serve`):** Implemented an embedded HTTP
+  service (`src/agent_eval_harness/web/server.py`) using Python's standard library
+  `http.server` (zero extra dependencies). Provides visual pass-rate cards, baseline drift
+  comparisons, failure taxonomy localization, step-by-step observable trajectory replay
+  (think, plan, act, observe, final answer), and a REST API (`/api/status`, `/api/runs`,
+  `/api/benchmarks`, `/api/run`) for triggering evaluations and inspecting raw JSON runs.
+- **Cross-Platform CI Matrix:** Upgraded `.github/workflows/ci.yml` from Ubuntu-only to
+  a dual-OS runner matrix: `ubuntu-latest` and `windows-latest` across Python 3.11 and 3.12.
+  All jobs verified green on GitHub Actions.
+- **Suite Expansion:** Added comprehensive unit tests in `tests/unit/test_web_server.py`.
+  Test count increased from 126 → **132 tests, all passing**.
+
