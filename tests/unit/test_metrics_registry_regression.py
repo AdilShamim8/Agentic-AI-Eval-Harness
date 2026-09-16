@@ -124,3 +124,26 @@ def test_runner_persist_posix_events_path(tmp_path):
     assert "\\" not in rec.events_path
     assert rec.events_path.endswith(f"{rec.run_id}.events.jsonl")
 
+
+def test_aggregation_handles_zero_latency_and_none_redundant():
+    from agent_eval_harness.metrics.aggregation import aggregate
+
+    verdicts = [
+        {"case_id": "c1", "pattern": "react", "category": "normal", "passed": True,
+         "failure_class": "none", "scores": {"s1": 1.0}, "failed_evaluators": [],
+         "evaluator_errors": [], "latency_ms": 0.0, "tool_calls": 1,
+         "loop_detected": False, "termination": "answer"},
+        {"case_id": "c2", "pattern": "react", "category": "normal", "passed": True,
+         "failure_class": "none", "scores": {"s1": 1.0}, "failed_evaluators": [],
+         "evaluator_errors": [], "latency_ms": 10.0, "tool_calls": 1,
+         "loop_detected": False, "termination": "answer"},
+    ]
+    outcomes = [
+        {"redundant": None, "fault_injected": False},
+        {"redundant": 2, "fault_injected": False},
+    ]
+    metrics = aggregate(verdicts, outcomes, runtime_s=0.5, tokens_in=10, tokens_out=10)
+    assert metrics["latency_p50_ms"] == 5.0
+    assert metrics["tool_metrics"]["redundant_calls"] == 2
+
+
