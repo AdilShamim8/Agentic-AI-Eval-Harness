@@ -320,11 +320,12 @@ def save_baseline(record: RunRecord, name: str, notes: str = "",
                   out_dir: str = "evals/baselines") -> str:
     """Persist a run record as a named baseline for regression checking."""
     os.makedirs(out_dir, exist_ok=True)
+    clean_name = name[:-5] if name.endswith(".json") else name
     base = BaselineRecord(
-        name=name, run_id=record.run_id, benchmark=record.benchmark,
+        name=clean_name, run_id=record.run_id, benchmark=record.benchmark,
         created_at=record.recorded_at, metrics=dict(record.metrics),
         versions=dict(record.versions), notes=notes)
-    path = os.path.join(out_dir, f"{name}.json")
+    path = os.path.join(out_dir, f"{clean_name}.json")
     with open(path, "w", encoding="utf-8") as fh:
         fh.write(dumps(base))
-    return path
+    return os.path.normpath(path).replace("\\", "/")

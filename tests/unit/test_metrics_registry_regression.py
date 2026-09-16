@@ -138,6 +138,18 @@ def test_load_baseline_variants(tmp_path):
     assert b3.name == "my_base"
 
 
+def test_save_baseline_with_json_suffix(tmp_path):
+    from agent_eval_harness.runner.runner import save_baseline
+
+    rec = _record(0.88)
+    out_dir = str(tmp_path / "baselines")
+    p = save_baseline(rec, "my_gate.json", out_dir=out_dir)
+    assert p.endswith("my_gate.json")
+    assert not p.endswith("my_gate.json.json")
+    assert "\\" not in p
+
+
+
 
 def test_runner_persist_posix_events_path(tmp_path):
     from agent_eval_harness.runner.runner import BenchmarkRunner, RunConfig

@@ -141,7 +141,8 @@ def cmd_run(args) -> int:
                 sys.stderr.write(f"{msg}\n")
             return 1
     if args.baseline:
-        path = save_baseline(rec, args.baseline)
+        baselines_dir = getattr(args, "baselines", "evals/baselines")
+        path = save_baseline(rec, args.baseline, out_dir=baselines_dir)
         print(f"baseline '{args.baseline}' saved -> {path}")
     return 0
 
@@ -471,6 +472,7 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--out", dest="out_dir", default="evals/runs")
     run.add_argument("--registry", default=None)
     run.add_argument("--baseline", default=None, help="save run as named baseline")
+    run.add_argument("--baselines", default="evals/baselines", help="output directory for saved baselines")
     run.add_argument("--json", action="store_true")
     run.set_defaults(func=cmd_run)
 
