@@ -61,8 +61,10 @@ def test_judge_metadata_records_backend():
 def test_judge_instruction_following():
     ev = RubricJudge("instruction_following")
     c = case(instructions=[{"kind": "state_assumption"},
-                           {"kind": "max_words", "value": 10}])
+                           {"kind": "max_words", "value": 10},
+                           {"kind": "min_words", "value": 2}])
     assert ev.evaluate(c, outcome("assuming five words")).passed
+    assert not ev.evaluate(c, outcome("assuming")).passed
     assert not ev.evaluate(c, outcome("a much longer answer that definitely exceeds ten words total")).passed
 
 

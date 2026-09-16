@@ -159,12 +159,14 @@ class RubricJudge:
                     ok = str(ins.get("value", "")).lower() not in answer.lower()
                 elif kind == "max_words":
                     ok = len(answer.split()) <= int(ins.get("value", 999))
+                elif kind == "min_words":
+                    ok = len(answer.split()) >= int(ins.get("value", 1))
                 elif kind == "state_assumption":
                     ok = "assuming" in answer.lower()
                 else:
                     ok = True
                 items.append({"item": ins, "ok": ok})
-            s = sum(1 for i in items if i["ok"]) / len(items)
+            s = sum(1 for i in items if i["ok"]) / len(items) if items else 1.0
             return {"score": s, "passed": s == 1.0,
                     "rationale": f"{sum(1 for i in items if i['ok'])}/{len(items)} "
                                  "instruction items satisfied",
@@ -188,7 +190,7 @@ class RubricJudge:
         if self.criterion == "synthesis_quality":
             values = case.answer_spec.get("values", [])
             if not values:
-                s = _token_f1(answer, gold) if gold else 0.5
+                s = _token_f1(answer, gold) if gold else (1.0 if answer else 0.0)
                 return {"score": s, "passed": s >= 0.6,
                         "rationale": "single-source synthesis overlap",
                         "confidence": 0.5, "items": []}
@@ -197,7 +199,7 @@ class RubricJudge:
             for v in values:
                 contained = str(v).lower() in low  # containment, calibrated v1.1
                 items.append({"part": str(v)[:60], "present": contained})
-            s = sum(1 for i in items if i["present"]) / len(items)
+            s = sum(1 for i in items if i["present"]) / len(items) if items else 1.0
             return {"score": s, "passed": s >= 0.6,
                     "rationale": f"mean per-part overlap {s:.2f}",
                     "confidence": 0.6, "items": items}
