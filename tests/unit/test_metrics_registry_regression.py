@@ -27,6 +27,8 @@ def test_percentile():
 def test_registry_load_and_validate():
     bm = load_benchmark("react_basic")
     assert bm.name == "react_basic" and bm.evaluators
+    bm_ext = load_benchmark("react_basic.yaml")
+    assert bm_ext.name == "react_basic"
     names = [b["name"] for b in list_benchmarks()]
     assert {"react_basic", "supervisor_basic", "map_reduce_basic",
             "failure_recovery", "adversarial"} <= set(names)

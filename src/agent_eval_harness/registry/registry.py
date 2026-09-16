@@ -103,12 +103,15 @@ def load_benchmark(name_or_path: str,
                    registry_dirs: list[str] | None = None) -> BenchmarkDef:
     dirs = registry_dirs or [os.environ.get("AEH_BENCHMARKS_DIR",
                                             DEFAULT_REGISTRY_DIR)]
-    if name_or_path.endswith((".yaml", ".yml", ".json")):
-        candidates = [name_or_path]
+    candidates: list[str] = []
+    if os.path.isfile(name_or_path):
+        candidates.append(name_or_path)
     else:
-        candidates = [os.path.join(d, f"{name_or_path}.yaml")
-                      for d in dirs] + [os.path.join(d, f"{name_or_path}.json")
-                                        for d in dirs]
+        for d in dirs:
+            candidates.append(os.path.join(d, name_or_path))
+            if not name_or_path.endswith((".yaml", ".yml", ".json")):
+                candidates.append(os.path.join(d, f"{name_or_path}.yaml"))
+                candidates.append(os.path.join(d, f"{name_or_path}.json"))
     for path in candidates:
         if os.path.isfile(path):
             if path.endswith(".json"):
