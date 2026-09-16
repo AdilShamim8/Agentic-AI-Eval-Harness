@@ -169,3 +169,25 @@ from the rebuild session itself:
 
 All v0.2.0 numbers above are reproducible: `make demo` regenerates them
 byte-for-byte (deterministic backend, seed 20260912).
+
+## 11. v0.2.1 addendum — Production Readiness, Web Dashboard, and Cross-Platform CI (2026-09-16)
+
+The v0.2.1 release focused on hardening the platform for multi-platform enterprise deployment,
+cloud containerization, and visual observability:
+
+- **Web Dashboard (new, `agent-eval serve`):** Built-in zero-dependency HTTP server and
+  browser UI providing visual run history, pass rate cards, failure localization splits,
+  step-by-step observable trajectory replay (think/plan/act/observe/final), and on-demand
+  benchmark execution via REST API (`/api/status`, `/api/runs`, `/api/benchmarks`, `/api/run`).
+- **Containerization (new, `Dockerfile` & `docker-compose.yml`):** Multi-stage production
+  Docker image based on `python:3.12-slim` running as non-root user `aeh` (UID 10001).
+  Preconfigured Docker Compose services: `runner` (CLI benchmark runs), `status` (health check),
+  and `dashboard` (persistent web service on port 8000).
+- **Cross-Platform Determinism & Encoding:** Resolved Windows console encoding crashes
+  (`UnicodeEncodeError: 'charmap'`) for unicode symbols (`→`, `κ`, box borders) via UTF-8
+  reconfiguration. Enforced LF line endings via `.gitattributes` and normalized CRLF in
+  dataset hashing, ensuring exact byte-identical SHA-256 signatures across Windows and Linux.
+- **Cross-Platform CI Matrix:** Added `windows-latest` to GitHub Actions alongside
+  `ubuntu-latest` across Python 3.11 and 3.12. All matrix runners verified 100% green.
+- **Test Suite:** 126 → **132 passing tests** (added 6 dedicated web server & API integration tests).
+
