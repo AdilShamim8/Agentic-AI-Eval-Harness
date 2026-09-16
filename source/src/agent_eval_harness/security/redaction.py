@@ -19,6 +19,8 @@ PATTERNS: list[tuple[str, re.Pattern[str]]] = [
 
 def scrub_text(text: str) -> tuple[str, int]:
     """Replace secret-like substrings. Returns (clean_text, redaction_count)."""
+    if not isinstance(text, str):
+        return ("" if text is None else str(text)), 0
     count = 0
     for kind, pattern in PATTERNS:
         def _sub(m: re.Match[str], _kind: str = kind) -> str:

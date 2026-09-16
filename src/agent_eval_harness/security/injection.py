@@ -26,11 +26,15 @@ _INJECTION_PLACEHOLDER = "[INJECTION-FLAGGED]"
 
 def screen_text(text: str) -> list[str]:
     """Return the list of injection pattern ids matched in text."""
+    if not isinstance(text, str):
+        return []
     return [pid for pid, pattern in PATTERNS if pattern.search(text)]
 
 
 def sanitize_text(text: str) -> str:
     """Replace matched injection directives with a placeholder (opt-in)."""
+    if not isinstance(text, str):
+        return "" if text is None else str(text)
     out = text
     for _pid, pattern in PATTERNS:
         out = pattern.sub(_INJECTION_PLACEHOLDER, out)
