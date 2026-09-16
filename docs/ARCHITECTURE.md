@@ -1,7 +1,14 @@
 # Architecture — agent-eval-harness v0.2.1
 
-Diagrams: `diagrams/*.mmd` (Mermaid, render on GitHub). This document is the textual
-source of truth.
+Diagrams in `diagrams/*.mmd` (Mermaid, render natively on GitHub):
+- [`diagrams/architecture.mmd`](../diagrams/architecture.mmd): System components, clients, pipeline, harness layers, and observability.
+- [`diagrams/eval-pipeline.mmd`](../diagrams/eval-pipeline.mmd): Case evaluation flow from benchmark YAML to gates, reports, and web UI.
+- [`diagrams/trace-lifecycle.mmd`](../diagrams/trace-lifecycle.mmd): Sequence diagram of per-case execution, gateway mediation, and UI replay.
+- [`diagrams/deployment-model.mmd`](../diagrams/deployment-model.mmd): Local CLI, enterprise rootless Docker containers, and multi-OS CI matrix.
+- [`diagrams/regression-flow.mmd`](../diagrams/regression-flow.mmd): Decision flow for threshold gating and regression detection (fail closed).
+- [`diagrams/security-model.mmd`](../diagrams/security-model.mmd): Threat boundaries, injection detection, tool permissions, and network guard.
+- [`diagrams/versioning-model.mmd`](../diagrams/versioning-model.mmd): VersionBundle fingerprinting and drift detection across runs.
+
 
 ## 1. Layered view
 
