@@ -1033,7 +1033,7 @@ def main() -> int:
     for pattern, cases in all_cases.items():
         path = os.path.join(args.out, pattern, "golden.jsonl")
         os.makedirs(os.path.dirname(path), exist_ok=True)
-        with open(path, "w", encoding="utf-8") as fh:
+        with open(path, "w", encoding="utf-8", newline="\n") as fh:
             for c in cases:
                 fh.write(json.dumps(c, sort_keys=True, ensure_ascii=False) + "\n")
         sha = hashlib.sha256(open(path, "rb").read()).hexdigest()
@@ -1048,7 +1048,7 @@ def main() -> int:
                     failures.append((c["id"], problems))
     manifest["totals"]["all"] = total
 
-    with open(os.path.join(args.out, "manifest.json"), "w", encoding="utf-8") as fh:
+    with open(os.path.join(args.out, "manifest.json"), "w", encoding="utf-8", newline="\n") as fh:
         json.dump(manifest, fh, indent=2, sort_keys=True)
 
     print(f"Generated {total} cases across {len(all_cases)} patterns")

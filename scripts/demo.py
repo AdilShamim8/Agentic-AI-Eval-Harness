@@ -21,6 +21,17 @@ import sys
 import time
 from datetime import datetime, timezone
 
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+if hasattr(sys.stderr, "reconfigure"):
+    try:
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PYTHON = sys.executable
 CLI = [PYTHON, "-m", "agent_eval_harness.cli.app"]
@@ -37,8 +48,10 @@ def sh(args: list[str], expect_fail: bool = False) -> tuple[int, str]:
     print(f"  $ {' '.join(args[3:])}" if args[:3] == CLI[:3] else f"  $ {' '.join(args)}")
     t0 = time.time()
     env = {**os.environ,
-           "PYTHONPATH": SRC + os.pathsep + os.environ.get("PYTHONPATH", "")}
-    proc = subprocess.run(args, cwd=REPO, capture_output=True, text=True, env=env)
+           "PYTHONPATH": SRC + os.pathsep + os.environ.get("PYTHONPATH", ""),
+           "PYTHONIOENCODING": "utf-8"}
+    proc = subprocess.run(args, cwd=REPO, capture_output=True, text=True,
+                          encoding="utf-8", errors="replace", env=env)
     out = (proc.stdout or "") + (proc.stderr or "")
     print(out.rstrip())
     dt = time.time() - t0
@@ -54,7 +67,11 @@ def sh(args: list[str], expect_fail: bool = False) -> tuple[int, str]:
 
 def banner(title: str, sub: str = "") -> None:
     line = "─" * 74
-    print(f"\n{line}\n{title}\n{sub}\n{line}" if sub else f"\n{line}\n{title}\n{line}")
+    try:
+        print(f"\n{line}\n{title}\n{sub}\n{line}" if sub else f"\n{line}\n{title}\n{line}")
+    except UnicodeEncodeError:
+        ascii_line = "-" * 74
+        print(f"\n{ascii_line}\n{title}\n{sub}\n{ascii_line}" if sub else f"\n{ascii_line}\n{title}\n{ascii_line}")
 
 
 def _snap(runs_dir: str) -> dict[str, float]:
