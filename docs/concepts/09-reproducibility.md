@@ -25,6 +25,9 @@ varied-seed runs quantify genuine sensitivity.
   (journal Day 8); now tested by regeneration hash equality.
 - Wall-clock leakage into records — excluded from the semantic identity
   projection; recorded as metadata only.
+- Cross-platform CRLF line endings altering dataset SHA-256 digests on Windows
+  hosts (INC-10) — resolved by repository `.gitattributes` (`eol=lf`) and byte-level
+  `\r\n` to `\n` normalization during SHA-256 calculation.
 
 ## Experimental evidence
 react ×5 same-seed: 0.0pp spread, semantically identical records; supervisor

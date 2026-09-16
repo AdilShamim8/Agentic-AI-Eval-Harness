@@ -13,10 +13,20 @@ the VersionBundle (8 components) + config + seed + command line for exact
 reproduction. IDs are deterministic (run_id = hash of semantic inputs), so
 correlation needs no database.
 
+For interactive visualization, `agent-eval serve` launches a zero-dependency
+embedded web server on port 8000. It reads committed and local run records,
+rendering pass-rate comparison cards, failure localization taxonomy, and
+observable step-by-step trajectory replay (thought, plan, action, observation,
+and final answer) directly in any modern browser. A REST API (`/api/status`,
+`/api/runs`, `/api/benchmarks`, `/api/run`) enables programmatic query and execution.
+
 ## Trade-offs
 - File-based JSONL vs OTLP/tracing backend: files are git-reviewable and
   replayable; the event schema is deliberately span-like so an OTLP exporter
-  can be added without schema surgery (documented extension, not built).
+  can be added without schema surgery.
+- Embedded zero-dependency HTTP server vs third-party SPA framework: avoids
+  adding Node.js/npm or heavy Python dependencies (FastAPI, uvicorn), preserving
+  instant clean-clone usability while providing rich visual trajectory replay.
 - Event volume vs completeness: per-case events are bounded by step caps.
 
 ## Failure modes
