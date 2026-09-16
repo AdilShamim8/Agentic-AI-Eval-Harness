@@ -154,7 +154,8 @@ def build_markdown(
         ids = buckets.get(bucket, [])
         lines.append(f"| **{bucket}** | {len(ids)}"
                      + (f" — {', '.join(ids[:8])}"
-                        + (" …" if len(ids) > 8 else "") if ids else " |"))
+                        + (" …" if len(ids) > 8 else "") if ids else "")
+                     + " |")
     hist = m.get("failure_histogram", {})
     if hist:
         lines.append("")

@@ -67,3 +67,29 @@ def test_version_bundle_fingerprint_stable():
     assert bundle.fingerprint() != other.fingerprint()
     assert set(bundle.to_dict()) == {"agent", "model", "harness", "benchmark",
                                      "dataset", "evaluator", "prompt", "environment"}
+
+
+def test_build_markdown_table_formatting():
+    from agent_eval_harness.core.errors import FailureClass
+    from agent_eval_harness.core.schemas import CaseVerdict, RunRecord
+    from agent_eval_harness.reporting.reports import build_markdown
+
+    v = CaseVerdict(case_id="c_fail", pattern="react", category="normal", passed=False,
+                    failure_class=FailureClass.TEST_FAILURE, scores={}, failed_evaluators=["task_checks"],
+                    evaluator_errors=[])
+    rec = RunRecord(run_id="r1", benchmark="react_basic", benchmark_version="1.0",
+                    agent="builtin:react", agent_pattern="react", seed=1, ablation="full",
+                    versions={"model": {"version": "1.0", "revision": "0"},
+                              "harness": {"version": "0.2.1", "revision": "0"},
+                              "dataset": {"version": "1.0", "revision": "sha"}},
+                    config={}, verdicts=[v],
+                    metrics={"cases": 1, "passed": 0, "pass_rate": 0.0, "pass_rate_ci95": [0.0, 0.0],
+                             "runtime_s": 0.1, "latency_p50_ms": 1.0, "latency_p95_ms": 1.0,
+                             "tokens_in_est": 1, "tokens_out_est": 1, "cost_estimate_usd": 0.001,
+                             "cost_note": "", "per_evaluator": {}, "threshold_gates": {}},
+                    recorded_at="2026-09-12T00:00:00+0000")
+    md = build_markdown(rec)
+    for line in md.splitlines():
+        if line.startswith("|"):
+            assert line.endswith("|"), f"Markdown table row must end with '|': {line}"
+
