@@ -18,7 +18,7 @@ def cli(*args, cwd=REPO):
 
 def test_cli_version_and_list():
     r = cli("--version")
-    assert r.returncode == 0 and "0.2.0" in r.stdout
+    assert r.returncode == 0 and "0.2.1" in r.stdout
     r = cli("list", "benchmarks")
     assert r.returncode == 0 and "react_basic" in r.stdout
     r = cli("list", "evaluators")

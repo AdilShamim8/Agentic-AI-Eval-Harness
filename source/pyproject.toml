@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "agent-eval-harness"
-version = "0.2.0"
+version = "0.2.1"
 description = "pytest for Agentic AI — evaluation harness, benchmarks, trajectory evaluation, regression gates"
 readme = "README.md"
 requires-python = ">=3.11"

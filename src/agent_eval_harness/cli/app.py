@@ -559,6 +559,12 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     try:
         return int(args.func(args))
+    except KeyboardInterrupt:
+        if ERR is not None:
+            ERR.print("\n[yellow]Interrupted by user.[/yellow]")
+        else:  # pragma: no cover
+            print("\nInterrupted by user.", file=sys.stderr)
+        return 130
     except InfraError as exc:
         if ERR is not None:
             ERR.print(f"[red]error:[/red] {exc}")
