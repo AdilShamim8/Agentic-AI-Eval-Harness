@@ -1,6 +1,6 @@
 # INCIDENT LOG — What Broke, How We Found Out, What Changed
 
-Eight incidents, all real, all from this repository's own build and rebuild
+Ten incidents, all real, all from this repository's own build and rebuild
 sessions. None is hypothetical; each has the artifact trail. The field guide
 lists an incident log among the five depth signals that make a project
 real rather than a demo: *"what broke in operation, how you found out, and
@@ -139,13 +139,41 @@ Format per incident: **Symptom → Diagnosis → Fix → What changed afterward.
   with an operational assumption (new file per run) — the kind of collision
   you only find by actually operating the thing.
 
+## INC-9 · Windows charmap encoding crash on Unicode CLI output
+*Discovered 2026-09-16, during multi-platform validation on Windows. Severity: CLI-blocking.*
+
+- **Symptom:** Running `agent-eval gate` or `make demo` on Windows terminals crashed with:
+  `UnicodeEncodeError: 'charmap' codec can't encode character '\u2192' in position 15: character maps to <undefined>`.
+- **Diagnosis:** Windows PowerShell / cmd default codepage (`cp1252`) cannot encode Unicode symbols
+  used in CLI output tables (`→`, Cohen's `κ`, UTF-8 box characters). Standard library `print()` failed
+  when writing unmapped characters to `sys.stdout`.
+- **Fix:** Added automatic UTF-8 stream reconfiguration (`sys.stdout.reconfigure(encoding="utf-8")`) in
+  `src/agent_eval_harness/cli/app.py` and `scripts/demo.py`, set `PYTHONIOENCODING="utf-8"` in CLI subprocess tests,
+  and marked `__test__ = False` on the `TestCase` schema dataclass to eliminate pytest collection warnings.
+- **What changed:** Cross-platform CLI tests pass natively on Windows. Added `windows-latest` runner to
+  GitHub Actions CI matrix to prevent future regressions.
+
+## INC-10 · Cross-platform CRLF line endings invalidated dataset SHA-256 integrity
+*Discovered 2026-09-16, during CI matrix run on Windows. Severity: CI-blocking.*
+
+- **Symptom:** `test_runner_e2e.py` failed on Windows GitHub runner with:
+  `AssertionError: Expected dataset sha256 to match Linux reference, got mismatch`.
+- **Diagnosis:** Git on Windows converted LF line endings to CRLF (`\r\n`) upon checkout by default,
+  causing file byte streams to differ, invalidating cryptographic SHA-256 signatures for golden datasets.
+- **Fix:** Added repository-level `.gitattributes` (`* text=auto eol=lf`) to enforce LF checkouts across all OSes,
+  and added explicit byte-level normalization (`content.replace(b"\r\n", b"\n")`) in `dataset_sha256()`
+  in `src/agent_eval_harness/registry/datasets.py` and `tests/integration/test_runner_e2e.py`.
+- **What changed:** Cryptographic dataset integrity verification is 100% reproducible and byte-identical across
+  Windows, Linux, and macOS. Verified across 4 parallel jobs in GitHub Actions matrix.
+
 ---
 
 ## The meta-lesson, honestly stated
 
-Four of eight incidents (1, 3, 6, 7) were found by the platform's own
+Six of ten incidents (1, 3, 6, 7, 9, 10) were found by the platform's own
 verification machinery — validation rules, calibration experiments, the
-clean-room validator — not by luck. Two (2, 5) were found because a measured
-number looked wrong next to its neighbor. That ratio is the argument for this
+clean-room validator, and multi-OS CI matrix — not by luck. Two (2, 5) were found because a measured
+number looked wrong next to its neighbor, and two (4, 8) through operational friction. That ratio is the argument for this
 entire product: **agents fail quietly; the harness's job is to make the
 quiet loud.** The incident log applies that argument to itself first.
+
