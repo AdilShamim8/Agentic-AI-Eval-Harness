@@ -85,3 +85,18 @@ def test_no_subprocess_or_network_imports_in_harness():
         stripped = src.replace('mode="eval"', "")
         assert not re.search(r"\beval\s*\(", stripped), f"raw eval() in {mod.__name__}"
         assert not re.search(r"\bexec\s*\(", stripped), f"raw exec() in {mod.__name__}"
+
+
+def test_event_recorder_export_creates_parent_dir(tmp_path):
+    import os
+    from agent_eval_harness.observability.events import EventRecorder
+
+    rec = EventRecorder("nested_run")
+    rec.emit("test_event", {"secret": "sk-1234567890123456"})
+    out_file = str(tmp_path / "deep" / "nested" / "dir" / "events.jsonl")
+    res = rec.export_jsonl(out_file)
+    assert os.path.isfile(out_file)
+    assert res["events"] == 1
+    assert res["redactions"] >= 1
+    assert "\\" not in res["path"]
+
