@@ -7,9 +7,10 @@ quality measurable, debuggable, and regressable — not just scoreboards.
 1. Designed a harness where the harness itself is the experimental subject —
    ablation profiles attribute performance to retry/verification/validation
    capabilities with measured deltas (−12.5pp for retry removal on weak agents).
-2. Caught two silent determinism/correctness bugs with my own verification
-   tooling (process-salted seeding; config-override disabling experiments)
-   and converted both into regression tests.
+2. Caught silent determinism and cross-platform correctness bugs with verification
+   tooling (process-salted seeding, config-override disabling experiments, Windows
+   charmap encoding, CRLF dataset hashing in multi-OS CI) and converted all into
+   automated regression tests.
 3. Ran evaluator calibration honestly: published the failing κ=0.082 result,
    diagnosed 24 false negatives, fixed the rubric, re-measured at κ=1.0.
 4. Statistical discipline: Wilson intervals, exact McNemar, fail-closed gates
@@ -19,4 +20,6 @@ quality measurable, debuggable, and regressable — not just scoreboards.
 **Differentiators vs typical eval work**: failure taxonomy at the schema level;
 deterministic-first philosophy (CI in seconds); security threat-model of the
 instrument itself; framework-agnostic adapter protocol with stub-tested
-honesty about unmeasured integrations.
+honesty about unmeasured integrations; zero-dependency Web Dashboard (`agent-eval serve`)
+for observable trajectory replay; enterprise multi-stage rootless containerization.
+
