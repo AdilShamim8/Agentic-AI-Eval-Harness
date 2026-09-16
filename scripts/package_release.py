@@ -19,7 +19,12 @@ import sys
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RELEASE = os.path.join(REPO, "release")
-ZIP_OUT = "/home/z/my-project/download/production-agentic-ai-eval-harness-v0.2.0-fde.zip"
+DEFAULT_ZIP = (
+    "/home/z/my-project/download/production-agentic-ai-eval-harness-v0.2.1-fde.zip"
+    if os.path.isdir("/home/z/my-project/download")
+    else os.path.join(REPO, "dist", "production-agentic-ai-eval-harness-v0.2.1-fde.zip")
+)
+ZIP_OUT = os.environ.get("RELEASE_ZIP", DEFAULT_ZIP)
 
 
 def copy_tree(src: str, dst: str, ignore=None) -> int:
@@ -46,18 +51,22 @@ def main() -> int:
                    ignore=["__pycache__", "*.egg-info", "py.typed.bak"])
     for f in ("pyproject.toml", "Makefile", ".env.example", "AGENTS.md",
               "README.md", "QUICKSTART.md", "SECURITY.md", "CHANGELOG.md",
-              "RUNBOOK.md", "INCIDENTS.md", "DECISIONS.md"):
-        copy_file(os.path.join(REPO, f), os.path.join(RELEASE, "source", f))
-        n += 1
+              "RUNBOOK.md", "INCIDENTS.md", "DECISIONS.md",
+              "Dockerfile", "docker-compose.yml", ".dockerignore"):
+        if os.path.exists(os.path.join(REPO, f)):
+            copy_file(os.path.join(REPO, f), os.path.join(RELEASE, "source", f))
+            n += 1
     copy_file(os.path.join(REPO, "docs", "ARCHITECTURE.md"),
               os.path.join(RELEASE, "ARCHITECTURE.md"))
     n += 1
 
     # top-level doc copies required by the contract (+ FDE handover artifacts)
     for f in ("README.md", "QUICKSTART.md", "SECURITY.md", "CHANGELOG.md",
-              "RUNBOOK.md", "INCIDENTS.md", "DECISIONS.md"):
-        copy_file(os.path.join(REPO, f), os.path.join(RELEASE, f))
-        n += 1
+              "RUNBOOK.md", "INCIDENTS.md", "DECISIONS.md",
+              "Dockerfile", "docker-compose.yml", ".dockerignore"):
+        if os.path.exists(os.path.join(REPO, f)):
+            copy_file(os.path.join(REPO, f), os.path.join(RELEASE, f))
+            n += 1
     # Makefile at release root so `make demo` works from the extracted zip
     copy_file(os.path.join(REPO, "Makefile"), os.path.join(RELEASE, "Makefile"))
     n += 1
@@ -239,14 +248,17 @@ Completed by `scripts/validate_release.py` against the extracted zip
         for rel in sorted(manifest):
             fh.write(f"{manifest[rel]}  {rel}\n")
 
-    # zip
+    # zip using Python stdlib zipfile for cross-platform portability
+    import zipfile
     os.makedirs(os.path.dirname(ZIP_OUT), exist_ok=True)
     if os.path.exists(ZIP_OUT):
         os.remove(ZIP_OUT)
-    r = subprocess.run(["zip", "-qr", ZIP_OUT, "."], cwd=RELEASE)
-    if r.returncode != 0:
-        print("zip failed", file=sys.stderr)
-        return 1
+    with zipfile.ZipFile(ZIP_OUT, "w", zipfile.ZIP_DEFLATED) as zf:
+        for root, _, files in os.walk(RELEASE):
+            for file in sorted(files):
+                full_path = os.path.join(root, file)
+                rel_path = os.path.relpath(full_path, RELEASE)
+                zf.write(full_path, rel_path)
     size_mb = os.path.getsize(ZIP_OUT) / 1e6
     print(f"release tree: {n} files copied + manifest "
           f"({len(manifest)} hashed)")
