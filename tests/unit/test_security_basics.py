@@ -61,6 +61,16 @@ def test_sanitize_replaces_directives():
     assert "INJECTION-FLAGGED" in out
 
 
+def test_security_functions_handle_none_and_non_strings():
+    assert screen_text(None) == []
+    assert screen_text(12345) == []
+    assert sanitize_text(None) == ""
+    assert sanitize_text(12345) == "12345"
+    assert scrub_text(None) == ("", 0)
+    assert scrub_text(12345) == ("12345", 0)
+
+
+
 def test_network_guard_blocks_socket():
     with network_sandbox() as guard:
         with pytest.raises(SecurityViolation):
