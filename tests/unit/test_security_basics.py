@@ -32,11 +32,21 @@ def test_redaction_leaves_benign_text():
 
 
 def test_redact_payload_recursive():
-    payload = {"task": "x", "env": {"key": "sk-abcdefghijklmnop123456"},  # gitleaks:allow
-               "list": ["bearer ZZZZabcdefghijklmn"]}
+    payload = {
+        "task": "x",
+        "env": {"key": "sk-abcdefghijklmnop123456"},  # gitleaks:allow
+        "list": ["bearer ZZZZabcdefghijklmn"],
+        "set_data": {"sk-abcdefghijklmnop123456"},  # gitleaks:allow
+        "frozenset_data": frozenset({"sk-abcdefghijklmnop123456"}),  # gitleaks:allow
+    }
     clean, n = redact_payload(payload)
-    assert n >= 2
-    assert all("REDACTED" in str(v) for v in [clean["env"]["key"], clean["list"][0]])
+    assert n >= 4
+    assert all("REDACTED" in str(v) for v in [
+        clean["env"]["key"], clean["list"][0],
+        list(clean["set_data"])[0], list(clean["frozenset_data"])[0]
+    ])
+    assert isinstance(clean["set_data"], set)
+    assert isinstance(clean["frozenset_data"], frozenset)
 
 
 def test_injection_screening():

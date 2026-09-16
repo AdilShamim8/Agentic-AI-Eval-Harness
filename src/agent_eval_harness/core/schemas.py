@@ -302,7 +302,13 @@ def to_jsonable(obj: Any) -> Any:
         return {k: to_jsonable(getattr(obj, k)) for k in obj.__dataclass_fields__}
     if isinstance(obj, dict):
         return {str(k): to_jsonable(v) for k, v in obj.items()}
-    if isinstance(obj, (list, tuple, set)):
+    if isinstance(obj, (set, frozenset)):
+        try:
+            sorted_items = sorted(obj)
+        except TypeError:
+            sorted_items = sorted(obj, key=str)
+        return [to_jsonable(v) for v in sorted_items]
+    if isinstance(obj, (list, tuple)):
         return [to_jsonable(v) for v in obj]
     if isinstance(obj, float):
         return round(obj, 6)
