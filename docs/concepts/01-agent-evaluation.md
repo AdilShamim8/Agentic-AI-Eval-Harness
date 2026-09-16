@@ -13,7 +13,9 @@ Four strata, all first-class: **outcome** (task_checks, answer specs),
 termination, recovery, efficiency), **system** (latency, tokens, cost,
 failure taxonomy). Every case verdict carries a granular FailureClass that
 maps to exactly one report bucket: TEST FAILURE / EVALUATOR ERROR /
-INFRASTRUCTURE FAILURE.
+INFRASTRUCTURE FAILURE. Results are surfaced across three primary interfaces:
+terminal CLI (`agent-eval status`, `agent-eval gate`), committed JSON/events logs,
+and an embedded Web Dashboard (`agent-eval serve`) with step-by-step trajectory replay.
 
 ## Trade-offs
 - Outcome-only evaluation is cheapest and most stable; we pay compute and
