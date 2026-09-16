@@ -116,3 +116,14 @@ def test_step_limit_and_termination():
     assert not StepLimit().evaluate(c, outcome(steps=4)).passed
     assert Termination().evaluate(c, outcome(termination="answer")).passed
     assert not Termination().evaluate(c, outcome(termination="step_limit")).passed
+
+
+def test_task_checks_invalid_regex_graceful():
+    from agent_eval_harness.evaluators.deterministic.outcome import TaskChecks
+
+    ev = TaskChecks()
+    c = case(task_checks=[{"kind": "answer_regex", "pattern": "[invalid-regex"}])
+    res = ev.evaluate(c, outcome("test text"))
+    assert not res.passed
+    assert res.score == 0.0
+

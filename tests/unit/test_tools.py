@@ -91,3 +91,14 @@ def test_all_tools_registered():
                  "summarize", "data_calc", "store_set", "store_get", "clock_now",
                  "sim_web_get"):
         assert name in t.TOOLS
+
+
+def test_summarize_and_clock_invalid_inputs():
+    res = t.summarize({"text": "A sentence.", "max_sentences": "invalid"})
+    assert not res.ok
+    assert "must be an integer" in res.error
+
+    res_clock = t.clock_now({"tick": "not-an-int"})
+    assert not res_clock.ok
+    assert "must be an integer" in res_clock.error
+

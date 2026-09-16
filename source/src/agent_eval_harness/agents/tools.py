@@ -268,7 +268,10 @@ def text_transform(args: dict[str, Any]) -> ToolResult:
 
 def summarize(args: dict[str, Any]) -> ToolResult:
     text = str(args.get("text", ""))
-    n = int(args.get("max_sentences", 2))
+    try:
+        n = int(args.get("max_sentences", 2))
+    except (TypeError, ValueError):
+        return _err("max_sentences must be an integer")
     if not 1 <= n <= 10:
         return _err("max_sentences must be 1-10")
     sents = [s.strip() for s in re.split(r"(?<=[.!?]) +", text) if s.strip()]
@@ -331,7 +334,10 @@ def store_get(args: dict[str, Any]) -> ToolResult:
 
 
 def clock_now(args: dict[str, Any]) -> ToolResult:
-    step = int(args.get("tick", 0))
+    try:
+        step = int(args.get("tick", 0) or 0)
+    except (TypeError, ValueError):
+        return _err("tick must be an integer")
     return _ok({"simulated_epoch": 1770000000 + step, "unit": "s"})
 
 
