@@ -30,13 +30,19 @@ import tempfile
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RELEASE = os.path.join(REPO, "release")
-ZIP = "/home/z/my-project/download/production-agentic-ai-eval-harness-v0.2.0-fde.zip"
+DEFAULT_ZIP = (
+    "/home/z/my-project/download/production-agentic-ai-eval-harness-v0.2.1-fde.zip"
+    if os.path.isdir("/home/z/my-project/download")
+    else os.path.join(REPO, "dist", "production-agentic-ai-eval-harness-v0.2.1-fde.zip")
+)
+ZIP = os.environ.get("RELEASE_ZIP", DEFAULT_ZIP)
 WORK = os.path.join(REPO, "release_validation")
 
 REQUIRED = [
     "source/src/agent_eval_harness/core/schemas.py",
     "source/src/agent_eval_harness/agents/model.py",
     "source/src/agent_eval_harness/harness/gateway.py",
+    "source/src/agent_eval_harness/web/server.py",
     "source/src/agent_eval_harness/evaluators/llm_judge/judge.py",
     "source/src/agent_eval_harness/cli/app.py",
     "source/src/agent_eval_harness/pytest_plugin.py",
@@ -113,10 +119,17 @@ def main() -> int:
     extracted = os.path.join(WORK, "production-agentic-ai-eval-harness")
     os.makedirs(extracted)
 
-    # 1. extract
-    r = run(["unzip", "-q", ZIP, "-d", extracted], WORK)
-    step("1. extract zip into clean directory", r.returncode == 0,
-         f"{len(os.listdir(extracted))} top-level entries")
+    # 1. extract using Python zipfile
+    import zipfile
+    extract_ok = False
+    try:
+        with zipfile.ZipFile(ZIP, "r") as zf:
+            zf.extractall(extracted)
+        extract_ok = True
+    except Exception as exc:
+        extract_ok = False
+    step("1. extract zip into clean directory", extract_ok and os.path.isdir(extracted),
+         f"{len(os.listdir(extracted))} top-level entries" if extract_ok else f"failed to extract {ZIP}")
 
     # 2. structure
     missing = [p for p in REQUIRED
@@ -141,7 +154,10 @@ def main() -> int:
          f"{len(bad)} mismatched" if bad else "all hashes match")
 
     # 4. tests from extracted source
-    env = {"PYTHONPATH": os.path.join(extracted, "source", "src")}
+    env = {
+        "PYTHONPATH": os.path.join(extracted, "source", "src"),
+        "PYTHONIOENCODING": "utf-8",
+    }
     r = run([sys.executable, "-m", "pytest", "tests/unit", "tests/integration",
              "tests/failure_injection", "-q", "--tb=no", "-p", "no:warnings"],
             extracted, env=env)
@@ -159,8 +175,7 @@ def main() -> int:
          [l for l in r.stdout.splitlines() if "Pass rate" in l][-1:] or r.stderr[-120:])
 
     # 5b. FDE demo from the extracted tree (also executes the runbook path)
-    r = run([sys.executable, "scripts/demo.py"], extracted,
-            env={"PYTHONPATH": os.path.join(extracted, "source", "src")})
+    r = run([sys.executable, "scripts/demo.py"], extracted, env=env)
     ok = (r.returncode == 0 and "GATE FAIL" in (r.stdout + r.stderr)
           and "McNemar" in (r.stdout + r.stderr)
           and "demo complete" in (r.stdout + r.stderr))
