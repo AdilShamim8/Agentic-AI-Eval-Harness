@@ -306,7 +306,7 @@ INDEX_HTML = """<!DOCTYPE html>
         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
       </svg>
       <span>agent-eval-harness</span>
-      <span class="badge badge-neutral">v0.2.0 production</span>
+      <span class="badge badge-neutral">v0.2.1 production</span>
     </div>
     <div id="live-indicator" class="badge badge-success">● System Operational</div>
   </header>

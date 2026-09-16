@@ -20,7 +20,7 @@ FROM python:3.12-slim AS runner
 
 LABEL org.opencontainers.image.title="agent-eval-harness" \
       org.opencontainers.image.description="A CI gate and evaluation harness for AI agents" \
-      org.opencontainers.image.version="0.2.0" \
+      org.opencontainers.image.version="0.2.1" \
       org.opencontainers.image.licenses="MIT"
 
 ENV PYTHONUNBUFFERED=1 \

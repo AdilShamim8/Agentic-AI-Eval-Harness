@@ -5,7 +5,7 @@ evaluate outcomes AND observable behavior, detect regressions, and produce
 trustworthy engineering evidence.
 """
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 HARNESS_VERSION = __version__
 HARNESS_TITLE = "agent-eval-harness"
