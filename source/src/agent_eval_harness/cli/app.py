@@ -10,6 +10,17 @@ import os
 import sys
 from typing import Any
 
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+if hasattr(sys.stderr, "reconfigure"):
+    try:
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 try:
     from rich.console import Console
     from rich.table import Table
@@ -65,7 +76,11 @@ def _print_table(title: str, headers: list[str], rows: list[list[str]]) -> None:
 
 
 def _load_run(run_id: str, runs_dir: str = "evals/runs"):
-    path = os.path.join(runs_dir, f"{run_id}.json")
+    if os.path.isfile(run_id):
+        path = run_id
+    else:
+        clean_id = run_id[:-5] if run_id.endswith(".json") else run_id
+        path = os.path.join(runs_dir, f"{clean_id}.json")
     if not os.path.isfile(path):
         raise InfraError(f"run '{run_id}' not found at {path}")
     with open(path, encoding="utf-8") as fh:
@@ -296,7 +311,8 @@ def cmd_repro(args) -> int:
 
 
 def cmd_info(args) -> int:
-    rec = _load_run(args.run_id)
+    runs_dir = getattr(args, "runs", "evals/runs")
+    rec = _load_run(args.run_id, runs_dir)
     print(dumps({k: v for k, v in rec.__dict__.items() if k != "verdicts"}
                 if hasattr(rec, "__dict__") else rec))
     m = rec.metrics
@@ -425,6 +441,13 @@ def cmd_status(args) -> int:
     return 0
 
 
+def cmd_serve(args: argparse.Namespace) -> int:
+    from agent_eval_harness.web.server import run_server
+
+    run_server(host=args.host, port=args.port, runs_dir=args.runs, baselines_dir=args.baselines)
+    return 0
+
+
 # ---------------------------------------------------------------------------
 # parser
 # ---------------------------------------------------------------------------
@@ -516,6 +539,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     info = sub.add_parser("info", help="run metadata")
     info.add_argument("run_id")
+    info.add_argument("--runs", default="evals/runs", help="path to runs directory")
     info.set_defaults(func=cmd_info)
 
     status = sub.add_parser(
@@ -525,6 +549,14 @@ def build_parser() -> argparse.ArgumentParser:
     status.add_argument("--baseline", default=None,
                         help="baseline name to compare against (default: main)")
     status.set_defaults(func=cmd_status)
+
+    srv = sub.add_parser(
+        "serve", help="launch interactive web dashboard and API server")
+    srv.add_argument("--host", default="127.0.0.1", help="host address (default: 127.0.0.1)")
+    srv.add_argument("--port", type=int, default=8000, help="port number (default: 8000)")
+    srv.add_argument("--runs", default="evals/runs", help="path to runs directory")
+    srv.add_argument("--baselines", default="evals/baselines", help="path to baselines directory")
+    srv.set_defaults(func=cmd_serve)
     return p
 
 
@@ -533,6 +565,12 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     try:
         return int(args.func(args))
+    except KeyboardInterrupt:
+        if ERR is not None:
+            ERR.print("\n[yellow]Interrupted by user.[/yellow]")
+        else:  # pragma: no cover
+            print("\nInterrupted by user.", file=sys.stderr)
+        return 130
     except InfraError as exc:
         if ERR is not None:
             ERR.print(f"[red]error:[/red] {exc}")

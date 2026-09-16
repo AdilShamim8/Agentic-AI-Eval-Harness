@@ -76,7 +76,11 @@ def _print_table(title: str, headers: list[str], rows: list[list[str]]) -> None:
 
 
 def _load_run(run_id: str, runs_dir: str = "evals/runs"):
-    path = os.path.join(runs_dir, f"{run_id}.json")
+    if os.path.isfile(run_id):
+        path = run_id
+    else:
+        clean_id = run_id[:-5] if run_id.endswith(".json") else run_id
+        path = os.path.join(runs_dir, f"{clean_id}.json")
     if not os.path.isfile(path):
         raise InfraError(f"run '{run_id}' not found at {path}")
     with open(path, encoding="utf-8") as fh:
@@ -307,7 +311,8 @@ def cmd_repro(args) -> int:
 
 
 def cmd_info(args) -> int:
-    rec = _load_run(args.run_id)
+    runs_dir = getattr(args, "runs", "evals/runs")
+    rec = _load_run(args.run_id, runs_dir)
     print(dumps({k: v for k, v in rec.__dict__.items() if k != "verdicts"}
                 if hasattr(rec, "__dict__") else rec))
     m = rec.metrics
@@ -534,6 +539,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     info = sub.add_parser("info", help="run metadata")
     info.add_argument("run_id")
+    info.add_argument("--runs", default="evals/runs", help="path to runs directory")
     info.set_defaults(func=cmd_info)
 
     status = sub.add_parser(

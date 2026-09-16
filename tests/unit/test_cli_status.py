@@ -86,3 +86,47 @@ def test_status_ok_when_matching_baseline(tmp_path, capsys):
     assert rc == 0
     assert "ok" in out
     assert "+0.0pp" in out or "-0.3pp" in out
+
+
+def test_load_run_direct_path_and_suffix(tmp_path, capsys):
+    import argparse
+    from agent_eval_harness.cli.app import _load_run, cmd_info
+
+    runs = str(tmp_path / "runs")
+    os.makedirs(runs)
+    sample_run = {
+        "run_id": "test_run_123",
+        "benchmark": "react_basic",
+        "benchmark_version": "1.0",
+        "agent": "builtin:react",
+        "agent_pattern": "react",
+        "seed": 20260912,
+        "ablation": "full",
+        "versions": {},
+        "config": {},
+        "verdicts": [],
+        "metrics": {"cases": 0, "passed": 0, "pass_rate": 0.0},
+        "recorded_at": "2026-09-12T00:00:00+0000",
+    }
+    json_path = os.path.join(runs, "test_run_123.json")
+    with open(json_path, "w", encoding="utf-8") as fh:
+        json.dump(sample_run, fh)
+
+    # 1. Load by ID
+    r1 = _load_run("test_run_123", runs)
+    assert r1.run_id == "test_run_123"
+
+    # 2. Load with .json suffix
+    r2 = _load_run("test_run_123.json", runs)
+    assert r2.run_id == "test_run_123"
+
+    # 3. Load by direct path
+    r3 = _load_run(json_path)
+    assert r3.run_id == "test_run_123"
+
+    # 4. cmd_info with --runs argument
+    args = argparse.Namespace(run_id="test_run_123", runs=runs)
+    assert cmd_info(args) == 0
+    out = capsys.readouterr().out
+    assert "test_run_123" in out
+
