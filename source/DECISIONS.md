@@ -125,14 +125,33 @@ unless marked superseded. File references are to this repository.
   run-record mtimes, which a `git checkout` could theoretically mask (fresh
   clone → first run always creates → fine).
 
+## D-11 · Zero-dependency built-in HTTP server for Web Dashboard (extends D-07)
+- **Context:** v0.2.1 user feedback requested a visual inspector for trajectory replay and cross-run comparisons, but without adding heavy web dependencies (e.g. FastAPI, Node, React) that would break the zero-dependency clean-clone promise.
+- **Options:** (a) External web framework (FastAPI/Flask/Next.js); (b) Static SPA requiring npm build; (c) Single-module `http.server` with embedded vanilla HTML/CSS/JS dashboard.
+- **Decision:** (c) — embedded HTTP server (`src/agent_eval_harness/web/server.py`) with zero third-party dependencies, invoked via `agent-eval serve --port 8000`.
+- **Accepted cost:** Hand-rolled vanilla JS rendering and manual REST routing instead of high-level web framework features.
+
+## D-12 · Multi-stage rootless Docker containerization
+- **Context:** Enterprise deployments require container images for repeatable execution across heterogeneous cloud clusters and CI platforms.
+- **Options:** (a) Single-stage root-user Dockerfile; (b) Multi-stage build with dedicated non-root user (`aeh`, UID 10001) and explicit volume mounts for persisted `evals/runs/`.
+- **Decision:** (b) — multi-stage `python:3.12-slim` image adhering to least-privilege security standards, paired with `docker-compose.yml` defining `runner`, `status`, and `dashboard` services.
+- **Accepted cost:** Slightly longer initial Docker build due to wheel preparation in builder stage.
+
+## D-13 · Explicit CRLF normalization in dataset integrity verification
+- **Context:** INC-10: On Windows hosts, Git checkout transforms LF line endings to CRLF, altering SHA-256 hashes of golden datasets.
+- **Options:** (a) Require developers to manually configure `git config core.autocrlf false`; (b) Enforce `.gitattributes` (`eol=lf`) AND add runtime byte-level CRLF normalization (`content.replace(b"\r\n", b"\n")`) in `dataset_sha256()`.
+- **Decision:** (b) — defense-in-depth: the repository specifies line endings via `.gitattributes`, and hashing code defensively normalizes newlines before computing cryptographic digests.
+- **Accepted cost:** A single in-memory byte replacement pass during dataset load.
+
 ---
 
 ## Decision density, by the guide's own metric
 
 The field guide's write-up structure asks for "three to five [decisions],
 each one line: the option rejected, the reason, the cost you accepted." This
-file holds ten because the engagement's real trade-off surface was wider
+file holds thirteen because the engagement's real trade-off surface was wider
 than the guide's minimum bar — but every record keeps the same three fields.
 If you read only three, read D-01 (what we refused to fabricate), D-05 (what
-we chose to make annoying), and D-07 (what we declined to build). Those
+we chose to make annoying), and D-11 (what we chose to build with zero dependencies). Those
 three explain the product's shape more than any architecture diagram.
+
