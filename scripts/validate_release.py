@@ -107,11 +107,20 @@ def run(cmd, cwd, env=None, timeout=600):
     e = dict(os.environ)
     if env:
         e.update(env)
+    e.setdefault("PYTHONIOENCODING", "utf-8")
     return subprocess.run(cmd, capture_output=True, text=True, cwd=cwd,
-                          env=e, timeout=timeout)
+                          env=e, timeout=timeout, encoding="utf-8", errors="replace")
+
 
 
 def main() -> int:
+    if hasattr(sys.stdout, "reconfigure"):
+        try:
+            sys.stdout.reconfigure(encoding="utf-8")
+            sys.stderr.reconfigure(encoding="utf-8")
+        except Exception:
+            pass
+
     print(f"== Clean-room validation of {ZIP} ==")
     if os.path.isdir(WORK):
         shutil.rmtree(WORK)
@@ -141,7 +150,7 @@ def main() -> int:
     bad = []
     man_path = os.path.join(extracted, "MANIFEST.sha256")
     if os.path.isfile(man_path):
-        for line in open(man_path):
+        for line in open(man_path, encoding="utf-8"):
             line = line.strip()
             if not line:
                 continue
@@ -171,8 +180,9 @@ def main() -> int:
              "--benchmark", "react_basic", "--limit", "6", "--out",
              os.path.join(WORK, "smoke_runs")], extracted, env=env)
     ok = r.returncode == 0 and "Pass rate" in r.stdout
+    pass_line = [l for l in r.stdout.splitlines() if "Pass rate" in l]
     step("5. evaluation smoke test (react_basic x6)", ok,
-         [l for l in r.stdout.splitlines() if "Pass rate" in l][-1:] or r.stderr[-120:])
+         pass_line[-1].strip() if pass_line else r.stderr[-120:])
 
     # 5b. FDE demo from the extracted tree (also executes the runbook path)
     r = run([sys.executable, "scripts/demo.py"], extracted, env=env)
@@ -193,7 +203,7 @@ def main() -> int:
 
         wfs = ["ci.yml", "eval-gate.yml", "security.yml"]
         parsed = all(yaml.safe_load(open(os.path.join(
-            extracted, "infra", ".github", "workflows", w))) for w in wfs)
+            extracted, "infra", ".github", "workflows", w), encoding="utf-8")) for w in wfs)
     except Exception:
         parsed = False
     step("6. CI workflows parse (ci/eval-gate/security)", parsed,
@@ -203,8 +213,8 @@ def main() -> int:
     consistent = False
     try:
         exp = json.load(open(os.path.join(extracted, "evals", "results",
-                                          "experiments.json")))
-        report = open(os.path.join(extracted, "docs", "final-report.md")).read()
+                                          "experiments.json"), encoding="utf-8"))
+        report = open(os.path.join(extracted, "docs", "final-report.md"), encoding="utf-8").read()
         suite = exp["full_suite"]
         checks = [
             ("react", "89.3%"), ("plan_execute", "73.2%"),
@@ -235,9 +245,9 @@ def main() -> int:
         for pattern in ("react", "plan_execute", "supervisor", "swarm",
                         "map_reduce"):
             a = hashlib.sha256(open(os.path.join(WORK, "regen", pattern,
-                                                 "golden.jsonl"), "rb").read()).hexdigest()
+                                                 "golden.jsonl"), "rb").read().replace(b"\r\n", b"\n")).hexdigest()
             b = hashlib.sha256(open(os.path.join(extracted, "datasets", pattern,
-                                                 "golden.jsonl"), "rb").read()).hexdigest()
+                                                 "golden.jsonl"), "rb").read().replace(b"\r\n", b"\n")).hexdigest()
             if a != b:
                 ok = False
                 break
@@ -252,13 +262,16 @@ def main() -> int:
         lines.append(f"- {'✅' if ok else '❌'} **{name}**"
                      + (f" — {detail}" if detail else ""))
     lines.append(f"- **OVERALL: {'RELEASE VALIDATED' if all_ok else 'VALIDATION FAILED'}**")
-    checklist = """# RELEASE CHECKLIST — v0.2.0
+    checklist = """# RELEASE CHECKLIST — v0.2.1
 
 Executed by `scripts/validate_release.py` against the EXTRACTED zip
 (clean-room: fresh directory, no repo state, PYTHONPATH-only install).
 
 """ + "\n".join(lines) + "\n"
-    with open(os.path.join(RELEASE, "RELEASE_CHECKLIST.md"), "w") as fh:
+    if os.path.isdir(RELEASE):
+        with open(os.path.join(RELEASE, "RELEASE_CHECKLIST.md"), "w", encoding="utf-8") as fh:
+            fh.write(checklist)
+    with open(os.path.join(REPO, "RELEASE_CHECKLIST.md"), "w", encoding="utf-8") as fh:
         fh.write(checklist)
 
     print(f"\nOVERALL: {'RELEASE VALIDATED' if all_ok else 'VALIDATION FAILED'}")

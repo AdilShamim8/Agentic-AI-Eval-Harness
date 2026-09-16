@@ -23,6 +23,7 @@ ENV/
 htmlcov/
 
 # Local validation artifacts
+release/
 release_validation/
 smoke_runs/
 evals/runs/*.json
