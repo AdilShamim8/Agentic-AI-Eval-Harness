@@ -91,8 +91,8 @@ def validate_dataset(path: str) -> list[str]:
 def dataset_sha256(path: str) -> str:
     h = hashlib.sha256()
     with open(path, "rb") as fh:
-        for chunk in iter(lambda: fh.read(65536), b""):
-            h.update(chunk)
+        data = fh.read().replace(b"\r\n", b"\n")
+        h.update(data)
     return h.hexdigest()
 
 

@@ -63,7 +63,8 @@ def test_dataset_regenerates_byte_identical(tmp_path):
                        capture_output=True, text=True, env=env, timeout=300)
     assert r.returncode == 0, r.stderr[-500:]
     for pattern in ("react", "plan_execute", "supervisor", "swarm", "map_reduce"):
-        fresh = hashlib.sha256((out / pattern / "golden.jsonl").read_bytes()).hexdigest()
+        fresh = hashlib.sha256(
+            (out / pattern / "golden.jsonl").read_bytes().replace(b"\r\n", b"\n")).hexdigest()
         committed = hashlib.sha256(
-            open(f"datasets/{pattern}/golden.jsonl", "rb").read()).hexdigest()
+            open(f"datasets/{pattern}/golden.jsonl", "rb").read().replace(b"\r\n", b"\n")).hexdigest()
         assert fresh == committed, f"{pattern} dataset drifted"
