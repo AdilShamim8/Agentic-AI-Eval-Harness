@@ -121,8 +121,8 @@ merge time — is demonstrated live by `make demo`, not asserted.
 
 Applied: [`RUNBOOK.md`](../../RUNBOOK.md) (what ops checks, what to do when
 each alarm fires, where the sharp edges live), [`INCIDENTS.md`](../../INCIDENTS.md)
-(eight real incidents with symptom/diagnosis/fix/what-changed),
-[`DECISIONS.md`](../../DECISIONS.md) (ten decision records in
+(ten real incidents with symptom/diagnosis/fix/what-changed),
+[`DECISIONS.md`](../../DECISIONS.md) (thirteen decision records in
 alternative/reason/accepted-cost form). The runbook has in fact been executed
 by someone other than its author: the clean-room release validator runs the
 same command sequence an operator would.
@@ -239,11 +239,11 @@ the rubric version that produced it, alongside the κ = 0.082 it replaced).
       the clean-room release validator (which unpacks the zip into a fresh
       tree and runs tests)
 - [x] Tests run and pass; the eval suite runs offline on committed fixtures —
-      126 tests, zero network
+      132 tests, zero network
 - [x] No secrets in the git history — `make security` (regex scanner + audit
       test); `.env.example` documents keys without values
-- [x] Decisions documented where a reviewer can find them — `DECISIONS.md`
-- [x] Known issues and past incidents written down — `INCIDENTS.md`
+- [x] Decisions documented where a reviewer can find them — `DECISIONS.md` (13 ADRs)
+- [x] Known issues and past incidents written down — `INCIDENTS.md` (10 real incidents)
 - [x] All data synthetic or licensed — datasets are generated, hash-pinned;
       the customer is a labeled fictional composite
 - [x] License present; dependency versions pinned — MIT; single runtime dep
@@ -276,15 +276,16 @@ Three departures, named rather than hidden:
 The v0.1.0 product was already evaluation-shaped (P4/P5 strong). The FDE
 rebuild added what was missing, each traceable to a guide section:
 
-| Guide teaching | v0.2.0 artifact |
+| Guide teaching | v0.2.0 / v0.2.1 artifact |
 |---|---|
 | P1 ambiguous-brief discipline | `docs/fde/00–03` engagement record |
-| Depth signal: incident log | `INCIDENTS.md` (8 real incidents, incl. 2 found during this rebuild) |
-| Depth signal: decision records | `DECISIONS.md` (10 ADRs) |
+| Depth signal: incident log | `INCIDENTS.md` (10 real incidents, incl. Windows UTF-8 & CRLF fixes) |
+| Depth signal: decision records | `DECISIONS.md` (13 ADRs) |
 | Depth signal: runbook executed by another | `RUNBOOK.md` + clean-room validator path |
 | Demo rules (one command, failure path, dated) | `make demo` → `scripts/demo.py` |
-| "Dashboards someone else checks weekly" | `agent-eval status` command (+5 unit tests) |
+| "Dashboards someone else checks weekly" | `agent-eval status` CLI command + Web Dashboard (`agent-eval serve`) |
 | Cost per day in budget-owner units | cost line in status/demo/report with modeled-daily figure |
+| Containerized deployment & Multi-OS CI | `Dockerfile`, `docker-compose.yml`, Ubuntu + Windows runner matrix |
 | Write-up structure (8 sections) | `docs/fde/WRITE-UP.md` |
 | 90-second interview story | `docs/fde/90-SECOND-STORY.md` |
 | Constraint-simulation checklist | §3 above, six of six, each with verification command |
