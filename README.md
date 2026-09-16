@@ -61,6 +61,7 @@ even without `pip install`.
 
 ```bash
 agent-eval run --benchmark react_basic --agent builtin:react --skill 0.85
+agent-eval serve --port 8000     # launch interactive web dashboard at http://localhost:8000
 agent-eval status               # weekly one-glance: runs vs baseline, datasets, κ
 agent-eval list benchmarks | evaluators | datasets
 agent-eval validate [dataset|benchmark]
@@ -70,6 +71,15 @@ agent-eval regression RUN_ID --baseline main     # CI gate: exit 1 on regression
 agent-eval ablate --benchmark failure_recovery   # harness ablation study
 agent-eval calibrate --labels evals/calibration/hand_labels.csv   # judge κ
 agent-eval repro --benchmark react_basic --repeats 5
+```
+
+## Docker & Container Deployment
+
+Deploy with one command anywhere:
+
+```bash
+docker compose up dashboard             # runs web dashboard on http://localhost:8000
+docker compose run runner run --benchmark react_basic   # execute in container
 ```
 
 ## What's measured (deterministic backend, seed 20260912)
