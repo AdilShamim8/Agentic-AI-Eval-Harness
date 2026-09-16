@@ -44,11 +44,17 @@ def redact_payload(obj: Any) -> tuple[Any, int]:
             total += n1 + n2
             out[ck] = cv
         return out, total
-    if isinstance(obj, (list, tuple)):
+    if isinstance(obj, (list, tuple, set, frozenset)):
         items = []
         for v in obj:
             cv, n = redact_payload(v)
             total += n
             items.append(cv)
-        return (items if isinstance(obj, list) else tuple(items)), total
+        if isinstance(obj, list):
+            return items, total
+        if isinstance(obj, tuple):
+            return tuple(items), total
+        if isinstance(obj, set):
+            return set(items), total
+        return frozenset(items), total
     return obj, 0

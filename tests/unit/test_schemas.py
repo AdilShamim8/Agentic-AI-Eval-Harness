@@ -48,6 +48,8 @@ def test_to_jsonable_roundtrip():
     assert d["id"] == "c1" and d["expected"]["answer"]["value"] == 1
     text = dumps(case)
     assert '"c1"' in text
+    assert to_jsonable({"b", "a", "c"}) == ["a", "b", "c"]
+    assert to_jsonable(frozenset({"y", "x", "z"})) == ["x", "y", "z"]
 
 
 def test_version_bundle_fingerprint_stable():
