@@ -1,0 +1,38 @@
+graph TB
+    subgraph LocalEnv["1. Local Developer Environment"]
+        CLI["CLI / Terminal<br/>agent-eval status / gate"]
+        DEMO["Interactive Demo<br/>make demo (1.3s)"]
+        SERVE["Embedded Web Server<br/>agent-eval serve --port 8000"]
+        PYTEST["Test Runner<br/>pytest -m agent_eval (132 tests)"]
+    end
+
+    subgraph ContainerEnv["2. Enterprise Container Deployment"]
+        DOCKER["Multi-stage Dockerfile<br/>python:3.12-slim (rootless aeh:10001)"]
+        COMPOSE["Docker Compose Services"]
+        SVC_RUN["runner: batch CLI eval"]
+        SVC_STAT["status: health & drift check"]
+        SVC_DASH["dashboard: persistent Web UI (:8000)"]
+        DOCKER --> COMPOSE
+        COMPOSE --> SVC_RUN & SVC_STAT & SVC_DASH
+    end
+
+    subgraph CIEnv["3. Multi-OS CI Matrix (GitHub Actions)"]
+        CI_UBUNTU["ubuntu-latest<br/>Python 3.11 & 3.12"]
+        CI_WINDOWS["windows-latest<br/>Python 3.11 & 3.12"]
+        CI_GATE["eval-gate.yml<br/>(blocking regression gate)"]
+        CI_SEC["security.yml<br/>(secret scan + gitleaks + injection)"]
+    end
+
+    subgraph SharedCore["Platform Engine & Artifacts"]
+        HARNESS["agent_eval_harness core engine"]
+        DATA["Golden Datasets (280 cases)<br/>sha256-verified, LF-normalized"]
+        RUNS["evals/runs/<br/>run records (JSON) + events (JSONL)"]
+    end
+
+    LocalEnv --> HARNESS
+    ContainerEnv --> HARNESS
+    CIEnv --> HARNESS
+    HARNESS --> DATA
+    HARNESS --> RUNS
+    RUNS -.-> SERVE
+    RUNS -.-> SVC_DASH
