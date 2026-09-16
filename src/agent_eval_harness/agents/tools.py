@@ -12,6 +12,7 @@ Safety properties:
 from __future__ import annotations
 
 import ast
+import math
 import operator
 import re
 from dataclasses import dataclass, field
@@ -90,7 +91,7 @@ _UNARY_OPS = {ast.USub: operator.neg, ast.UAdd: operator.pos}
 def _calc_node(node: ast.AST) -> float:
     if isinstance(node, ast.Expression):
         return _calc_node(node.body)
-    if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
+    if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)) and not isinstance(node.value, bool):
         return node.value
     if isinstance(node, ast.BinOp) and type(node.op) in _BIN_OPS:
         left, right = _calc_node(node.left), _calc_node(node.right)
@@ -115,8 +116,10 @@ def calculator(args: dict[str, Any]) -> ToolResult:
     except (ValueError, SyntaxError, OverflowError) as exc:
         return _err(f"invalid expression: {exc}")
     if isinstance(value, float):
+        if math.isinf(value) or math.isnan(value):
+            return _err("calculation result overflow or nan")
         value = round(value, 10)
-        if value == int(value) and abs(value) < 10**15:
+        if abs(value) < 10**15 and value == int(value):
             value = int(value)
     return _ok({"value": value})
 
@@ -282,7 +285,9 @@ def summarize(args: dict[str, Any]) -> ToolResult:
 
 def data_calc(args: dict[str, Any]) -> ToolResult:
     values = args.get("values")
-    op = str(args.get("op", ""))
+    op = str(args.get("op", "")).strip().lower()
+    if op in ("avg", "average"):
+        op = "mean"
     if not isinstance(values, list) or not values:
         return _err("values must be a non-empty list")
     if not all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in values):

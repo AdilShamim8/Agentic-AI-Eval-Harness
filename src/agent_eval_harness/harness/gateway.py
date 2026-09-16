@@ -33,18 +33,35 @@ def _repair_args(name: str, args: dict[str, Any]) -> dict[str, Any]:
     args = dict(args)
     if name == "calculator" and "expression" in args:
         args["expression"] = " ".join(str(args["expression"]).split())
-    if name in ("data_calc",) and isinstance(args.get("values"), str):
-        raw = args["values"].strip("[] ")
-        vals: list[float] = []
-        for piece in raw.split(","):
-            piece = piece.strip()
-            if not piece:
-                continue
-            try:
-                vals.append(float(piece) if "." in piece else int(piece))
-            except ValueError:
-                return args
-        args["values"] = vals
+    if name in ("data_calc",):
+        if "op" in args and isinstance(args["op"], str):
+            op = args["op"].strip().lower()
+            if op in ("avg", "average"):
+                op = "mean"
+            args["op"] = op
+        if isinstance(args.get("values"), str):
+            raw = args["values"].strip("[] ")
+            vals: list[float] = []
+            for piece in raw.split(","):
+                piece = piece.strip()
+                if not piece:
+                    continue
+                try:
+                    vals.append(float(piece) if "." in piece else int(piece))
+                except ValueError:
+                    return args
+            args["values"] = vals
+        elif isinstance(args.get("values"), list):
+            vals = []
+            for v in args["values"]:
+                if isinstance(v, str) and not isinstance(v, bool):
+                    try:
+                        vals.append(float(v) if "." in v else int(v))
+                    except ValueError:
+                        vals.append(v)
+                else:
+                    vals.append(v)
+            args["values"] = vals
     if name in ("summarize", "text_stats", "text_transform", "knowledge_search"):
         for key in ("text", "query"):
             if key in args and not isinstance(args[key], str):
