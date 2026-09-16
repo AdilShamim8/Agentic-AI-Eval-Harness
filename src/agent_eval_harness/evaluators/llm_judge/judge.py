@@ -232,7 +232,14 @@ PROMPT_FILES = {
 def _prompt_path(criterion: str) -> str:
     fname = PROMPT_FILES.get(criterion, "judge_answer_correctness_v1.md")
     root = os.environ.get("AEH_PROMPTS_DIR", "prompts")
-    return os.path.join(root, fname)
+    p = os.path.join(root, fname)
+    if os.path.isfile(p):
+        return p
+    repo_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    alt = os.path.join(repo_root, "prompts", fname)
+    if os.path.isfile(alt):
+        return alt
+    return p
 
 
 class LiveJudge(RubricJudge):
@@ -304,11 +311,16 @@ class LiveJudge(RubricJudge):
                         "REFERENCE: {reference}\nANSWER: {answer}\n"
                         "Respond as JSON: {{score, passed, rationale, confidence}}.")
         tools = ", ".join(outcome.trajectory.tool_names()[:20]) or "(none)"
+        if outcome.trajectory.plan:
+            traj = f"Plan: {' -> '.join(outcome.trajectory.plan[:10])} | Tools: {tools}"
+        else:
+            traj = tools
         return (template
+                .replace("{criterion}", self.criterion)
                 .replace("{task}", case.task[:2000])
                 .replace("{reference}", _gold_reference(case)[:1000])
                 .replace("{answer}", (outcome.final_answer or "")[:2000])
-                .replace("{trajectory}", tools))
+                .replace("{trajectory}", traj))
 
     def _prompt_sha(self) -> str:
         try:
