@@ -310,7 +310,7 @@ class BenchmarkRunner:
         events_path = os.path.join(self.config.out_dir,
                                    f"{record.run_id}.events.jsonl")
         self.events.export_jsonl(events_path)
-        record.events_path = events_path
+        record.events_path = os.path.normpath(events_path).replace("\\", "/")
         with open(path, "w", encoding="utf-8") as fh:  # rewrite with events path
             fh.write(dumps(record))
         return path
