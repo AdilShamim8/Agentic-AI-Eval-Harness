@@ -70,8 +70,25 @@ wall-clock). Threat model documented (docs/security/THREAT-MODEL.md).
 release/ tree + zip + per-file sha256 manifest; clean-room validation script re-runs
 tests + smoke eval from the extracted zip before delivery.
 
+## D10. Web Dashboard & API — stdlib http.server (decided in v0.2.1)
+
+Single-module zero-dependency web service (`src/agent_eval_harness/web/server.py`)
+using standard library `http.server`. Provides an interactive browser UI on port 8000
+with pass-rate metrics, run drift comparisons, failure classification breakdown, and
+step-by-step observable trajectory replay, plus a REST API (`/api/status`, `/api/runs`,
+`/api/benchmarks`, `/api/run`). No external web frameworks (FastAPI/Flask) or npm
+build steps required.
+
+## D11. Containerization — Multi-stage rootless Docker (decided in v0.2.1)
+
+Enterprise-grade multi-stage `Dockerfile` based on `python:3.12-slim` dropping privileges
+to non-root user `aeh` (UID 10001). Pre-configured `docker-compose.yml` defining
+`runner` (batch evaluation), `status` (health check), and `dashboard` (interactive UI).
+
 ## Rejected alternatives
 
 pydantic core (D2), notebook-driven eval (research 01), SaaS dependency (D7),
 SQLite state store (file-based run records are git-reviewable; DB optional later),
-async runner (determinism first; parallelism documented as extension).
+async runner (determinism first; parallelism documented as extension),
+heavy SPA/FastAPI web stack for dashboard (D10, would compromise zero-dep guarantee).
+
