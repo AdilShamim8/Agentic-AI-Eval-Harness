@@ -32,13 +32,18 @@ def _load_gate_config(path: str | None = None) -> dict[str, Any]:
 
 
 def load_baseline(name: str, baselines_dir: str = "evals/baselines") -> BaselineRecord:
-    path = os.path.join(baselines_dir, f"{name}.json")
+    if os.path.isfile(name):
+        path = name
+    else:
+        clean_name = name[:-5] if name.endswith(".json") else name
+        path = os.path.join(baselines_dir, f"{clean_name}.json")
     if not os.path.isfile(path):
         raise FileNotFoundError(f"baseline '{name}' not found at {path}")
     with open(path, encoding="utf-8") as fh:
         d = json.load(fh)
-    return BaselineRecord(name=d["name"], run_id=d["run_id"],
-                          benchmark=d["benchmark"], created_at=d["created_at"],
+    base_name = d.get("name") or os.path.splitext(os.path.basename(path))[0]
+    return BaselineRecord(name=base_name, run_id=d.get("run_id", ""),
+                          benchmark=d.get("benchmark", ""), created_at=d.get("created_at", ""),
                           metrics=d.get("metrics", {}), versions=d.get("versions", {}),
                           notes=d.get("notes", ""))
 

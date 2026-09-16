@@ -116,6 +116,29 @@ def test_regression_insufficient_data():
     assert not gate.passed  # fail-closed by default
 
 
+def test_load_baseline_variants(tmp_path):
+    import json
+    from agent_eval_harness.regression.engine import load_baseline
+
+    bases = tmp_path / "baselines"
+    bases.mkdir()
+    sample = {"benchmark": "react_basic", "metrics": {"pass_rate": 0.85}}
+    file_path = str(bases / "my_base.json")
+    with open(file_path, "w", encoding="utf-8") as fh:
+        json.dump(sample, fh)
+
+    b1 = load_baseline("my_base", str(bases))
+    assert b1.name == "my_base"
+    assert b1.metrics["pass_rate"] == 0.85
+
+    b2 = load_baseline("my_base.json", str(bases))
+    assert b2.name == "my_base"
+
+    b3 = load_baseline(file_path)
+    assert b3.name == "my_base"
+
+
+
 def test_runner_persist_posix_events_path(tmp_path):
     from agent_eval_harness.runner.runner import BenchmarkRunner, RunConfig
 
