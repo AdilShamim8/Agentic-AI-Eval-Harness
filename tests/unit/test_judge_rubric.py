@@ -94,3 +94,23 @@ def test_build_judge_live_falls_back_without_key(monkeypatch):
     ev = build_judge("answer_correctness")  # LiveJudge without key -> rubric note
     res = ev.evaluate(case({"type": "numeric", "value": 1}), outcome("1"))
     assert "no OPENAI_API_KEY" in res.meta.get("fallback", "")
+
+
+def test_live_judge_build_prompt_includes_plan_and_criterion():
+    import os
+    from agent_eval_harness.core.schemas import ToolCallRecord
+    from agent_eval_harness.evaluators.llm_judge.judge import LiveJudge, _prompt_path
+
+    judge = LiveJudge("plan_quality")
+    p_path = _prompt_path("plan_quality")
+    assert os.path.isfile(p_path)
+
+    c = case(task="Solve math task", required_tools=["calculator"])
+    out = outcome("42", plan=["Step 1: calculate"])
+    out.trajectory.tool_calls.append(ToolCallRecord(name="calculator", arguments={}, ok=True))
+    prompt = judge._build_prompt(c, out)
+    assert "Plan: Step 1: calculate" in prompt
+    assert "calculator" in prompt
+
+
+
