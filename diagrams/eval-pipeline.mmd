@@ -14,3 +14,6 @@ flowchart LR
     RG -->|"delta < threshold"| FAIL["CI exit 1"]
     RG -->|"within threshold"| OK2["CI exit 0"]
     M --> REP["Markdown + JSON reports"]
+    REP & T --> DASH["Web Dashboard<br/>agent-eval serve :8000"]
+    DASH --> UI["Interactive Replay<br/>& Case Inspection"]
+
