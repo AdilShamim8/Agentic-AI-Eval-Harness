@@ -210,9 +210,31 @@ def test_compare_runs_union_evaluators():
 
     rec_a = _make_rec("ra", [v_a1, v_a2])
     rec_b = _make_rec("rb", [v_b1, v_b2])
+    rec_a.metrics["per_category"] = {"normal": {"pass_rate": 1.0}}
+    rec_b.metrics["per_category"] = {"normal": {"pass_rate": 0.5}}
     res = compare_runs(rec_a, rec_b)
     assert "ev1" in res.per_evaluator
     assert "ev2" in res.per_evaluator
+    assert "normal" in res.per_category
+    assert res.per_category["normal"]["delta"] == -0.5
 
 
+def test_load_run_optional_fields(tmp_path):
+    import json
+    from agent_eval_harness.cli.app import _load_run
 
+    data = {
+        "run_id": "test_partial",
+        "benchmark": "bench",
+        "verdicts": [
+            {"case_id": "c1", "passed": True}
+        ]
+    }
+    p = tmp_path / "test_partial.json"
+    p.write_text(json.dumps(data), encoding="utf-8")
+    run = _load_run(str(p))
+    assert run.run_id == "test_partial"
+    assert len(run.verdicts) == 1
+    assert run.verdicts[0].case_id == "c1"
+    assert run.verdicts[0].passed is True
+    assert run.verdicts[0].failure_class.value == "none"

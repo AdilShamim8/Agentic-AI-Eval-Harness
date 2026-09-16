@@ -18,6 +18,7 @@ class ComparisonResult:
     delta: float
     per_evaluator: dict[str, dict[str, float]] = field(default_factory=dict)
     per_pattern: dict[str, dict[str, float]] = field(default_factory=dict)
+    per_category: dict[str, dict[str, float]] = field(default_factory=dict)
     flips_pass_to_fail: list[str] = field(default_factory=list)
     flips_fail_to_pass: list[str] = field(default_factory=list)
     mcnemar: dict[str, Any] = field(default_factory=dict)
@@ -71,6 +72,8 @@ def compare_runs(a: RunRecord, b: RunRecord) -> ComparisonResult:
                                         - ga[key].get("pass_rate", 0)), 4)}
         if group == "per_pattern":
             res.per_pattern = out
+        elif group == "per_category":
+            res.per_category = out
     return res
 
 

@@ -89,20 +89,29 @@ def _load_run(run_id: str, runs_dir: str = "evals/runs"):
     from agent_eval_harness.core.errors import FailureClass
 
     verdicts = [CaseVerdict(
-        case_id=v["case_id"], pattern=v["pattern"], category=v["category"],
-        passed=v["passed"], failure_class=FailureClass(v["failure_class"]),
-        scores=v["scores"], failed_evaluators=v["failed_evaluators"],
-        evaluator_errors=v["evaluator_errors"], final_answer=v["final_answer"],
-        latency_ms=v["latency_ms"], tokens_in_est=v["tokens_in_est"],
-        tokens_out_est=v["tokens_out_est"], tool_calls=v["tool_calls"],
-        loop_detected=v["loop_detected"], termination=v["termination"])
-        for v in d["verdicts"]]
+        case_id=v["case_id"],
+        pattern=v.get("pattern", ""),
+        category=v.get("category", ""),
+        passed=v.get("passed", False),
+        failure_class=FailureClass(v.get("failure_class", "none")),
+        scores=v.get("scores", {}),
+        failed_evaluators=v.get("failed_evaluators", []),
+        evaluator_errors=v.get("evaluator_errors", []),
+        final_answer=v.get("final_answer", ""),
+        latency_ms=v.get("latency_ms", 0.0),
+        tokens_in_est=v.get("tokens_in_est", 0),
+        tokens_out_est=v.get("tokens_out_est", 0),
+        tool_calls=v.get("tool_calls", 0),
+        loop_detected=v.get("loop_detected", False),
+        termination=v.get("termination", ""))
+        for v in d.get("verdicts", [])]
     return RunRecord(
-        run_id=d["run_id"], benchmark=d["benchmark"],
-        benchmark_version=d["benchmark_version"], agent=d["agent"],
-        agent_pattern=d["agent_pattern"], seed=d["seed"], ablation=d["ablation"],
-        versions=d["versions"], config=d["config"], verdicts=verdicts,
-        metrics=d["metrics"], recorded_at=d["recorded_at"],
+        run_id=d.get("run_id", ""), benchmark=d.get("benchmark", ""),
+        benchmark_version=d.get("benchmark_version", ""), agent=d.get("agent", ""),
+        agent_pattern=d.get("agent_pattern", ""), seed=d.get("seed", 0),
+        ablation=d.get("ablation", "full"), versions=d.get("versions", {}),
+        config=d.get("config", {}), verdicts=verdicts,
+        metrics=d.get("metrics", {}), recorded_at=d.get("recorded_at", ""),
         events_path=d.get("events_path", ""), command=d.get("command", ""))
 
 
