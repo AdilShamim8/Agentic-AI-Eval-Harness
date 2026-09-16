@@ -8,6 +8,7 @@ later without schema changes.
 from __future__ import annotations
 
 import json
+import os
 import time
 from dataclasses import dataclass, field
 from typing import Any
@@ -63,10 +64,14 @@ class EventRecorder:
     def export_jsonl(self, path: str) -> dict[str, Any]:
         """Write redacted JSONL. Returns {events, redactions, path}."""
         lines = 0
+        parent = os.path.dirname(os.path.abspath(path))
+        if parent:
+            os.makedirs(parent, exist_ok=True)
         with open(path, "w", encoding="utf-8") as fh:
             for e in self.events:
                 clean, n = redact_payload(e.to_dict())
                 self._redaction_count += n
                 fh.write(json.dumps(clean, sort_keys=True, default=str) + "\n")
                 lines += 1
-        return {"events": lines, "redactions": self._redaction_count, "path": path}
+        return {"events": lines, "redactions": self._redaction_count,
+                "path": os.path.normpath(path).replace("\\", "/")}
