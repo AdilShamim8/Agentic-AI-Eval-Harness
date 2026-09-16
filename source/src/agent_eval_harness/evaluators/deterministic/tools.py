@@ -79,7 +79,7 @@ class StepLimit:
         limit = case.max_steps
         steps = outcome.trajectory.step_count()
         passed = steps <= limit
-        score = min(1.0, limit / steps) if steps else 1.0
+        score = max(0.0, min(1.0, limit / steps)) if steps else 1.0
         return _result(case, self.name, self.version, score, passed,
                        {"limit": limit, "steps": steps}, {"deterministic": True})
 

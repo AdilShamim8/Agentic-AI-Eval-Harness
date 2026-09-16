@@ -270,7 +270,10 @@ class LiveJudge(RubricJudge):
                 method="POST")
             with urllib.request.urlopen(req, timeout=self.timeout_s) as resp:
                 data = json.loads(resp.read().decode())
-            content = data["choices"][0]["message"]["content"]
+            content = data["choices"][0]["message"]["content"].strip()
+            if content.startswith("```"):
+                content = re.sub(r"^```(?:json)?\s*", "", content)
+                content = re.sub(r"\s*```$", "", content)
             parsed = json.loads(content)
             latency = round((time.perf_counter() - t0) * 1000, 1)
             score = max(0.0, min(1.0, float(parsed.get("score", 0))))
