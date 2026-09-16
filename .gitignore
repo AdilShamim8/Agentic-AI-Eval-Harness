@@ -25,6 +25,13 @@ htmlcov/
 # Local validation artifacts
 release_validation/
 smoke_runs/
+evals/runs/*.json
+evals/runs/*.events.jsonl
+!evals/runs/20352466ee741b48.*
+!evals/runs/69c7edb9479719f4.*
+!evals/runs/e529fc0d604abcd6.*
+!evals/runs/f8a00acfe9f5dc43.*
+!evals/runs/fadae75051c6fd54.*
 
 # Environment and secrets (keep .env.example tracked)
 .env
