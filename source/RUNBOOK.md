@@ -37,6 +37,8 @@ It is "pytest, but the unit under test is an entire agent."
 | Every merge (CI) | GitHub Actions | `make test-smoke && make gate` | exit 0 |
 | Nightly (CI) | GitHub Actions | `make eval-full && make gate` + full suite | exit 0 |
 | Monday | ops | `make status` | exit 0; anything else → §4 |
+| Visual audit / PR triage | team lead | `make serve` (or `agent-eval serve`) | browser UI at `http://127.0.0.1:8000` |
+| Containerized run | devops / CI | `docker compose up dashboard` (or `make docker-run`) | containerized runner & UI |
 | On incident | on-call | `make demo` (re-fires the path you're about to debug) | 1.3 s |
 | After dataset change | agent lead | `make validate` | `VALID: all benchmarks` |
 | Quarterly | platform | `make experiments` → review `docs/final-report.md` deltas | all metrics within gates |
@@ -136,6 +138,12 @@ then `agent-eval list datasets` for case-count growth.
 6. **No CoT anywhere** — by privacy policy. If you "just add" reasoning
    capture to traces, you are violating the engagement's written constraint,
    not improving observability.
+7. **Windows console encoding** — terminals default to `cp1252`; `agent-eval`
+   automatically reconfigures stdout to UTF-8 (`INCIDENTS.md` #9). If calling via custom
+   scripts or subprocesses, ensure `PYTHONIOENCODING="utf-8"` is set.
+8. **CRLF vs dataset hashes** — golden dataset integrity check asserts strict
+   SHA-256 signatures (`INCIDENTS.md` #10). The repo enforces LF via `.gitattributes`
+   and performs byte-level newline normalization during verification.
 
 ## 6. Where things live
 
@@ -146,6 +154,8 @@ then `agent-eval list datasets` for case-count growth.
 | Gate thresholds (the agreement) | `configs/gates.yaml` |
 | Run records + event logs | `evals/runs/<run_id>.{json,events.jsonl}` |
 | Baselines | `evals/baselines/` |
+| Web Dashboard (zero-dep HTTP server) | `src/agent_eval_harness/web/` (`agent-eval serve`) |
+| Container configuration | `Dockerfile`, `docker-compose.yml`, `.dockerignore` |
 | Experiment results (all measured numbers) | `evals/results/experiments.json` |
 | Hand labels (judge calibration) | `evals/calibration/` |
 | Judge prompts (versioned) | `prompts/` |
