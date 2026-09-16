@@ -148,3 +148,24 @@ Every functional requirement above has a numbered acceptance criterion in
 criterion has a reproduction command. That mapping is the loop closing:
 discovery → requirements → **spec → build → measurement** — with nothing
 asserted that a reviewer cannot re-run.
+
+---
+
+## 7. v0.2.1 Addendum — Web Dashboard, Containerization, and Multi-OS CI (2026-09-16)
+
+Following initial deployment and multi-platform validation, v0.2.1 added:
+
+- **US-8 (visual audit, team lead / reviewer):** "When evaluating an agent's failure
+  modes during a PR review, I can open a web browser to inspect interactive pass-rate
+  cards, compare runs side-by-side, and replay step-by-step observable trajectories
+  without installing any third-party UI dependencies."
+- **FR-11 Zero-dependency Web Dashboard & REST API.** Built-in HTTP server (`agent-eval serve`)
+  powered by standard library `http.server` providing interactive web UI on port 8000
+  and REST API (`/api/status`, `/api/runs`, `/api/benchmarks`, `/api/run`).
+- **FR-12 Containerization & Rootless Packaging.** Multi-stage `Dockerfile` (Python 3.12-slim,
+  non-root user `aeh`, UID 10001) and `docker-compose.yml` defining `runner`, `status`, and
+  `dashboard` services.
+- **FR-13 Cross-platform Determinism & Invariance.** Enforced LF line endings via `.gitattributes`
+  and byte-level CRLF normalization in dataset integrity verification (INC-10). Automated UTF-8
+  stream reconfiguration on Windows consoles (INC-9). Dual-OS CI runner matrix (Ubuntu + Windows).
+
