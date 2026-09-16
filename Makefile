@@ -5,6 +5,7 @@ BENCH ?= react_basic
 
 .PHONY: install dev lint format type test test-fast test-smoke eval-smoke \
         eval-full validate ablate calibrate repro gate experiments demo status \
+        serve docker-build docker-run \
         security package validate-release clean
 
 install:
@@ -62,6 +63,15 @@ demo:
 
 status:
         agent-eval status
+
+serve:
+        agent-eval serve --port 8000
+
+docker-build:
+        docker build -t agent-eval-harness:latest .
+
+docker-run:
+        docker compose up dashboard
 
 security:
         python scripts/scan_secrets.py --strict

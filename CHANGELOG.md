@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.2.1 — 2026-09-16
+
+Production readiness, web dashboard, cross-platform compatibility, and deployment packaging.
+
+### Added
+- `agent-eval serve`: Built-in zero-dependency web dashboard server and REST API for visual benchmark run inspection, per-case trajectory replays, and browser-based benchmark execution.
+- Production containerization: Multi-stage `Dockerfile`, `docker-compose.yml`, non-root user execution, and `.dockerignore`.
+- Cross-platform CI matrix: Added Windows runner (`windows-latest`) alongside Ubuntu in `.github/workflows/ci.yml`.
+- Make targets: `make serve`, `make docker-build`, and `make docker-run`.
+
+### Fixed
+- Cross-platform encoding: Resolved `UnicodeEncodeError: 'charmap'` and UTF-8 console output issues on Windows.
+- Dataset line-ending determinism: Enforced `newline="\n"` on dataset generation for exact SHA-256 byte-matching across all operating systems.
+- Pytest collection warnings: Suppressed `PytestCollectionWarning` on `TestCase` schema dataclass.
+
 ## 0.2.0 — 2026-09-12
 
 FDE rebuild: the platform re-landed against the FDE field guide's portfolio
