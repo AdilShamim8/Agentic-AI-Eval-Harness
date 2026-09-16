@@ -95,14 +95,14 @@ def aggregate(verdicts: list[dict], outcomes: list[dict], runtime_s: float,
         if not v["passed"] or fc != "none":
             failure_hist[fc] = failure_hist.get(fc, 0) + 1
 
-    latencies = [v["latency_ms"] for v in verdicts if v.get("latency_ms")]
+    latencies = [v["latency_ms"] for v in verdicts if v.get("latency_ms") is not None]
     tool_calls_total = sum(v.get("tool_calls", 0) for v in verdicts)
     loops = sum(1 for v in verdicts if v.get("loop_detected"))
     terminated_answer = sum(1 for v in verdicts if v.get("termination") == "answer")
 
     fault_cases = [o for o in outcomes if o.get("fault_injected")]
     recovered = sum(1 for o in fault_cases if o.get("recovered"))
-    redund = sum(o.get("redundant", 0) for o in outcomes)
+    redund = sum((o.get("redundant") or 0) for o in outcomes)
     effs = [o["efficiency"] for o in outcomes if o.get("efficiency") is not None]
     plans = [o["planning"] for o in outcomes if o.get("planning") is not None]
 
