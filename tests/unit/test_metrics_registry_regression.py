@@ -112,3 +112,15 @@ def test_regression_insufficient_data():
     gate = check_regression(_record(0.5, n=5), _baseline(0.84))
     assert any(f.verdict == "insufficient_data" for f in gate.findings)
     assert not gate.passed  # fail-closed by default
+
+
+def test_runner_persist_posix_events_path(tmp_path):
+    from agent_eval_harness.runner.runner import BenchmarkRunner, RunConfig
+
+    bm = load_benchmark("react_basic")
+    runner = BenchmarkRunner(bm, RunConfig(benchmark="react_basic", limit=1,
+                                           out_dir=str(tmp_path)))
+    rec = runner.run()
+    assert "\\" not in rec.events_path
+    assert rec.events_path.endswith(f"{rec.run_id}.events.jsonl")
+
