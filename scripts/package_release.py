@@ -103,7 +103,7 @@ def main() -> int:
     copy_file(os.path.join(REPO, "src", "agent_eval_harness", "evaluators",
                            "llm_judge", "judge.py"),
               os.path.join(RELEASE, "evaluators", "llm_judge.py"))
-    with open(os.path.join(RELEASE, "evaluators", "README.md"), "w") as fh:
+    with open(os.path.join(RELEASE, "evaluators", "README.md"), "w", encoding="utf-8") as fh:
         fh.write("""# Evaluators (release copies)
 
 Reference copies of the evaluator contract surface. The canonical source is
@@ -132,7 +132,7 @@ evaluation logic without walking the package tree.
     if os.path.isfile(exp):
         import json
 
-        suite = json.load(open(exp))["full_suite"]
+        suite = json.load(open(exp, encoding="utf-8"))["full_suite"]
         keep_prefixes = [s["run_id"] for s in suite.values()]
     runs_out = os.path.join(RELEASE, "evals", "runs")
     os.makedirs(runs_out, exist_ok=True)
@@ -142,7 +142,7 @@ evaluation logic without walking the package tree.
             copy_file(os.path.join(REPO, "evals", "runs", fname),
                       os.path.join(runs_out, fname))
             n += 1
-    with open(os.path.join(RELEASE, "evals", "README.md"), "w") as fh:
+    with open(os.path.join(RELEASE, "evals", "README.md"), "w", encoding="utf-8") as fh:
         fh.write("""# Evaluation evidence
 
 - `baselines/main.json` — the CI regression baseline (react_basic, skill .85)
@@ -154,7 +154,7 @@ evaluation logic without walking the package tree.
     n += 1
 
     # infra README
-    with open(os.path.join(RELEASE, "infra", "README.md"), "w") as fh:
+    with open(os.path.join(RELEASE, "infra", "README.md"), "w", encoding="utf-8") as fh:
         fh.write("""# Infra
 
 - `.github/workflows/` — ci.yml (quality matrix), eval-gate.yml (BLOCKING
@@ -164,73 +164,37 @@ evaluation logic without walking the package tree.
 """)
     n += 1
 
-    # release notes
-    notes = """# RELEASE NOTES — v0.2.0 (2026-09-12)
+    notes = """# RELEASE NOTES — v0.2.1 (2026-09-16)
 
-The FDE rebuild: the platform re-landed against the FDE field guide's
-portfolio contract (github.com/AdilShamim8/fde-field-guide). Product core
-unchanged; engagement, handover, demo, and presentation layers added.
+Enterprise hardening, Web Dashboard, and cross-platform CI matrix.
 
-## What's new in v0.2.0
+## What's new in v0.2.1
 
-- `make demo` (python scripts/demo.py) — the two-minute demo: healthy run →
-  deliberately injected regression (−26.8pp) → GATE FAIL exit 1 → per-case
-  diagnosis (15 flips, McNemar p = 6.1e-05, 18/0/0 failure taxonomy).
-  Shows the failure path on purpose; layout-aware (runs from repo tree or
-  this extracted zip); ~1.4 s.
-- `agent-eval status` — operator weekly health view: latest run per
-  benchmark vs baseline drift, golden-dataset sha256s, judge κ state;
-  exits 1 on regression (cron-friendly).
-- Engagement record (docs/fde/): verbatim fictional-composite customer
-  brief, discovery notes, requirements spec, and acceptance criteria with
-  outcome metrics frozen in writing BEFORE the build, results filled from
-  committed artifacts, each with a reproduce command.
-- Handover artifacts at the root: RUNBOOK.md (alarm-by-alarm operations,
-  sharp edges), INCIDENTS.md (8 real incidents), DECISIONS.md (10 ADRs).
-- Portfolio presentation: docs/fde/WRITE-UP.md (the guide's 8-section
-  structure), docs/fde/90-SECOND-STORY.md, docs/fde/FDE-SYNTHESIS.md.
-- Fixed INC-7 (pytest plugin missing on clean clones — raw tree now tests
-  green without install) and INC-8 (deterministic run ids vs demo run
-  discovery). Tests 121 → 126. See CHANGELOG.md.
-
-## Highlights (carried from v0.1.0)
-- 5 agent patterns (ReAct, Plan-Execute, Supervisor, Swarm, Map-Reduce) on a
-  deterministic scripted backend with real tool execution; LangGraph /
-  OpenAI Agents SDK / CrewAI adapters (stub-tested; real frameworks not
-  measured yet).
-- 280 machine-verified golden cases across 6 categories.
-- 20 evaluators incl. LLM-as-judge with calibrated deterministic rubric
-  backend (Cohen's κ = 1.000 on the 56-case hand-labeled sample after the
-  v1.1 fix; the failing v1.0 κ = 0.082 is preserved in docs/final-report.md).
-- Harness ablation attribution (retry −12.5pp on weak agents),
-  reproducibility (0.0pp same-seed, byte-identical records), regression
-  gates with CI exit codes, fail-closed on insufficient data.
-
-## Measured results (deterministic backend)
-react 89.3% · swarm 82.1% · supervisor 80.4% · map-reduce 76.8% ·
-plan-execute 73.2% (n=56 each, Wilson CIs in docs/final-report.md).
-Live-LLM measurements: Not measured yet.
-
-## Known limitations
-- Live judge + framework adapters unmeasured in this environment.
-- In-process agent execution: run untrusted agent code in a container.
-- Cooperative (bounded) timeouts, not preemption.
+- Zero-dependency Web Dashboard (`agent-eval serve --port 8000`) powered by
+  Python standard library `http.server`, with interactive pass rate cards,
+  cross-run diffs, failure localization, and observable trajectory replay.
+- Enterprise containerization: multi-stage `Dockerfile` (python:3.12-slim,
+  non-root user `aeh` UID 10001) and `docker-compose.yml` (`runner`, `status`, `dashboard`).
+- Cross-platform determinism & encoding fixes: Windows UTF-8 stdout reconfiguration
+  (INC-9) and CRLF byte normalization for golden dataset SHA-256 integrity (INC-10).
+- Multi-OS GitHub Actions CI matrix: `ubuntu-latest` and `windows-latest` across Python 3.11/3.12.
+- 132 tests passing (100% green).
 
 ## Quick verify from this zip
 
 ```bash
-unzip production-agentic-ai-eval-harness-v0.2.0-fde.zip -d harness && cd harness
 python scripts/demo.py      # the whole story in ~90 seconds, no install needed
-pip install -e source/.[dev] && make test   # full suite (126 tests)
+pip install -e source/.[dev] && make test   # full suite (132 tests)
+agent-eval serve            # open http://127.0.0.1:8000
 ```
 """
-    with open(os.path.join(RELEASE, "RELEASE_NOTES.md"), "w") as fh:
+    with open(os.path.join(RELEASE, "RELEASE_NOTES.md"), "w", encoding="utf-8") as fh:
         fh.write(notes)
     n += 1
 
     # checklist placeholder (filled by validate_release.py)
-    with open(os.path.join(RELEASE, "RELEASE_CHECKLIST.md"), "w") as fh:
-        fh.write("""# RELEASE CHECKLIST — v0.2.0
+    with open(os.path.join(RELEASE, "RELEASE_CHECKLIST.md"), "w", encoding="utf-8") as fh:
+        fh.write("""# RELEASE CHECKLIST — v0.2.1
 
 Completed by `scripts/validate_release.py` against the extracted zip
 (clean-room). See the bottom of this file for the executed results.
@@ -244,7 +208,7 @@ Completed by `scripts/validate_release.py` against the extracted zip
             path = os.path.join(dirpath, fname)
             rel = os.path.relpath(path, RELEASE)
             manifest[rel] = hashlib.sha256(open(path, "rb").read()).hexdigest()
-    with open(os.path.join(RELEASE, "MANIFEST.sha256"), "w") as fh:
+    with open(os.path.join(RELEASE, "MANIFEST.sha256"), "w", encoding="utf-8") as fh:
         for rel in sorted(manifest):
             fh.write(f"{manifest[rel]}  {rel}\n")
 
