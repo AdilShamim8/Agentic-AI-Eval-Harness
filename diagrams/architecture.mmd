@@ -1,8 +1,10 @@
 graph TB
-    subgraph Clients["Clients"]
+    subgraph Clients["Clients & Interfaces"]
         CLI["agent-eval CLI"]
         PYT["pytest bridge"]
-        CI["GitHub Actions<br/>(ci · eval-gate · security)"]
+        CI["GitHub Actions<br/>(Ubuntu + Windows matrix)"]
+        WEB["Web Dashboard & REST API<br/>agent-eval serve :8000"]
+        DOC["Docker Containers<br/>(runner · status · dashboard)"]
     end
     subgraph Core["Runner pipeline"]
         REG["Benchmark Registry<br/>(YAML, versioned)"]
@@ -26,13 +28,15 @@ graph TB
         TRA["Trajectory + behavioral<br/>alignment · efficiency · loop ·<br/>termination · recovery · planning"]
         JUD["LLM-as-Judge<br/>rubric (measured) · live (interface)"]
     end
-    subgraph Post["Evidence"]
+    subgraph Post["Evidence & Observability"]
         MET["Metrics + Wilson CI"]
         CMP["Comparison + McNemar"]
         REG2["Regression gates"]
         REP["Reports MD/JSON<br/>failure taxonomy"]
+        DASH["Visual Dashboard UI<br/>(pass cards · flips · replay)"]
     end
-    CLI & PYT & CI --> RUN
+    CLI & PYT & CI & DOC --> RUN
+    WEB --> RUN
     RUN --> REG
     RUN --> ENV --> AG & ADP
     AG --> MB
@@ -40,5 +44,8 @@ graph TB
     ENV --> EV
     RUN --> DET & TRA & JUD
     DET & TRA & JUD --> MET --> CMP --> REG2 --> REP
+    REP & EV --> DASH
+    WEB --> DASH
     classDef uut fill:#ffe9b3,stroke:#b8860b
     class AG,ADP,MB uut
+
