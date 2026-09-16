@@ -1,4 +1,4 @@
-# Architecture — agent-eval-harness v0.1
+# Architecture — agent-eval-harness v0.2.1
 
 Diagrams: `diagrams/*.mmd` (Mermaid, render on GitHub). This document is the textual
 source of truth.
@@ -6,9 +6,9 @@ source of truth.
 ## 1. Layered view
 
 ```
-CLI (cli/) ── pytest bridge (pytest_plugin.py)
+CLI (cli/) ── pytest bridge (pytest_plugin.py) ── Web Dashboard (web/server.py)
   │
-Experiments: run / ablate / calibrate / repro / regression / compare
+Operations & Commands: run / ablate / calibrate / repro / regression / compare / status / serve
   │
 Runner (runner/)  ── Benchmark Registry (registry/)  ── Datasets (datasets/*.jsonl)
   │ per case: fresh Environment
@@ -23,8 +23,9 @@ Agents (agents/)  = unit under test
   └─ Adapters (LangGraph / OpenAI Agents SDK / CrewAI)
 Evaluators (evaluators/)  = deterministic + llm_judge + trajectory
 Metrics (metrics/)  →  Comparison (comparison/)  →  Regression engine (regression/)
-Reporting (reporting/)  = Markdown + JSON  ← Observability event stream (observability/)
+Reporting (reporting/)  = Markdown + JSON + Web UI  ← Observability event stream (observability/)
 Security (security/)  = policy, injection screen, redaction, network guard, audit
+Deployment (infra/)  = Dockerfile (multi-stage, non-root) + docker-compose (runner/dashboard/status)
 ```
 
 ## 2. Execution flow per case (the core loop)
@@ -58,6 +59,7 @@ Security (security/)  = policy, injection screen, redaction, network guard, audi
 - Ordered dict serialization (sort_keys=True) for byte-identical run records.
 - run_id = sha256(benchmark|agent|seed|ablation|dataset_sha) — replayable identity.
 - Event timestamps are recorded metadata (excluded from run_id preimage).
+- Cross-platform determinism: .gitattributes enforces LF line endings; dataset hashing normalizes CRLF to LF; stdout reconfigures to UTF-8 on Windows.
 
 ## 5. Security architecture
 
@@ -66,7 +68,7 @@ allowlist + forbidden-arg guards at the gateway; (c) socket guard raises
 SecurityViolation if anything opens a network socket during a run; (d) injection
 screening flags adversarial text in tasks and tool outputs (audit-logged, never
 silently dropped); (e) secret redaction at export; (f) resource caps bound worst
-case; (g) audit JSONL. Arbitrary user agent code is explicitly OUT of the sandbox
+case; (g) audit JSONL; (h) production container runs as non-root user (UID 10001). Arbitrary user agent code is explicitly OUT of the sandbox
 threat boundary in v0.1 (documented in THREAT-MODEL.md §trust boundaries).
 
 ## 6. Extension points
@@ -75,4 +77,5 @@ threat boundary in v0.1 (documented in THREAT-MODEL.md §trust boundaries).
 - New tool: ToolSpec + register; gateway picks up permissions from policy.
 - New agent runtime: implement AgentAdapter (see adapters/ for three worked examples).
 - Live model backend: implement ModelBackend; runner accepts `--model spec`.
+- Web Dashboard & API: custom endpoints in `web/server.py` or consume REST JSON via `/api/runs`.
 - OTLP exporter: subscribe to the event recorder (documented, not implemented).
