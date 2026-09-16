@@ -67,12 +67,14 @@ sequence is executed by the clean-room release validator on every release,
 so it can't silently rot.
 
 **"What broke in operation, and what changed?"**
-Eight incidents, all written down: the ablation experiment silently
+Ten incidents, all written down: the ablation experiment silently
 measuring one config four times (YAML precedence), process-salted `hash()`
 breaking dataset determinism, a judge rubric at κ = 0.082, the pytest
-fixture vanishing on clean clones... Each entry ends with what changed —
-the pattern across them is that four were caught by the platform's own
-verification machinery, which is the product's argument applied to itself.
+fixture vanishing on clean clones, Windows charmap encoding crashes,
+cross-platform CRLF line ending mismatches in dataset hashing... Each entry
+ends with what changed — the pattern across them is that six were caught by
+the platform's own verification machinery and multi-OS CI matrix, which is
+the product's argument applied to itself.
 
 **"What would you do differently?"**
 Hand-label ~150 calibration samples before writing any rubric (56 was the
@@ -87,7 +89,7 @@ so determinism and "new file per run" stop colliding.
   humans before it was allowed to gate anything."
 - *To an engineer:* "Deterministic agent-eval harness: 280 golden cases,
   20 evaluators, McNemar-backed regression gates that fail closed, κ = 1.0
-  judge calibration, 0.0pp same-seed repro, 126 tests, one runtime dep."
+  judge calibration, 0.0pp same-seed repro, 132 tests, zero-dep web dashboard, one runtime dep."
 - *To the guide itself:* brief #12 — "monitoring and eval harness for
   someone else's LLM feature" — walked end to end: the harness is the
   artifact, and the agreement is the deployment.

@@ -70,19 +70,20 @@ Agent → Adapter → Harness (tool gateway: permissions · retry · verificatio
        → Evaluators (10 deterministic · 6 trajectory/behavioral · 4 judge
        criteria, κ-calibrated) → Metrics (Wilson CI · p50/p95 · cost)
        → Baselines → Regression Gates (fail closed) → Reports (3-bucket)
-       → CLI (12 commands) · pytest bridge · CI (blocking) · `make demo`
+       → CLI (13 commands) · Web Dashboard (`agent-eval serve`) · pytest bridge · CI · `make demo`
 ```
 
 Components: 16-package Python library (stdlib-first), 5 deterministic
 reference agents (ReAct / Plan-and-Execute / Supervisor / Swarm /
 Map-Reduce), 3 framework adapters (LangGraph / OpenAI Agents SDK / CrewAI),
-20 evaluators, regression engine with exact McNemar comparison, 126 tests.
+20 evaluators, regression engine with exact McNemar comparison, 132 tests,
+zero-dependency Web Dashboard, and production Docker containerization.
 
 ## 4. Decisions and trade-offs
 
 The guide calls this the section that matters most — "the reason the
 second-best option lost is what proves an engineer was present." Five here;
-all ten in [DECISIONS.md](../../DECISIONS.md):
+all 13 in [DECISIONS.md](../../DECISIONS.md):
 
 1. **Deterministic backend for all measured numbers** — rejected silent
    live-LLM fallback; cost: no live latency/cost/κ figures in this build,
@@ -138,14 +139,13 @@ failures you could not fix.
 ## 6. Deployment and operations
 
 - **Where it runs:** GitHub Actions, as a **blocking** eval-gate job
-  (`.github/workflows/eval-gate.yml`) plus nightly full suite; also runnable
-  anywhere Python 3.11+ runs, from a clean clone, one command
-  (`pip install -e .[dev]` or nothing at all — the raw tree tests green
-  without install).
+  (`.github/workflows/eval-gate.yml`) and dual-OS matrix (Ubuntu + Windows across Python 3.11/3.12);
+  runnable anywhere Python 3.11+ runs, in Docker containers (`docker compose up dashboard`), or from a clean clone.
 - **How it's monitored:** every run writes a deterministic run record +
   JSONL event log; `agent-eval status` is the Monday one-glance view
   (latest run per benchmark, drift vs baseline, dataset hashes, judge
-  calibration) and exits non-zero on regression so cron does the watching.
+  calibration) and exits non-zero on regression so cron does the watching;
+  `agent-eval serve` provides an interactive browser UI for visual PR audits.
 - **What an incident looks like:** the gate fails a PR with a table (metric,
   baseline, new, delta, threshold, verdict) + flipped-case list + McNemar p.
   `make demo` performs a full incident live: inject a −26.8pp regression,
@@ -155,8 +155,8 @@ failures you could not fix.
 - **Runbook:** [RUNBOOK.md](../../RUNBOOK.md) — daily/weekly cadence, alarm-
   by-alarm procedures, sharp edges — and its command sequence is executed by
   the clean-room release validator on every release, so it cannot rot.
-- **Incident log:** [INCIDENTS.md](../../INCIDENTS.md) — 8 real incidents,
-  including two found during the FDE rebuild itself.
+- **Incident log:** [INCIDENTS.md](../../INCIDENTS.md) — 10 real incidents,
+  including Windows UTF-8 console encoding and cross-platform CRLF line ending fixes.
 
 ## 7. Outcomes
 
@@ -207,9 +207,9 @@ Specific and technical, per the guide's ban on "I would plan better":
 ---
 
 *Depth artifacts, per the guide's five signals: rejected problem statements
-(§1) · decision records ([DECISIONS.md](../../DECISIONS.md), 10 ADRs) ·
+(§1) · decision records ([DECISIONS.md](../../DECISIONS.md), 13 ADRs) ·
 evaluation table with dataset size, thresholds, and unfixed failures (§5) ·
-incident log ([INCIDENTS.md](../../INCIDENTS.md), 8 real incidents) ·
+incident log ([INCIDENTS.md](../../INCIDENTS.md), 10 real incidents) ·
 runbook executed by another process ([RUNBOOK.md](../../RUNBOOK.md) +
 clean-room validator). The repo links back: README → this file; this file →
 every artifact it claims.*
