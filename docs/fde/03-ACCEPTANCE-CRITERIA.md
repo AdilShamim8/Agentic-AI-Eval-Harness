@@ -23,7 +23,10 @@ Legend: **AC** = acceptance criterion (the bar) · **OM** = outcome metric
 | AC-7 | Full eval stage ≤ 10 min on a 2-core runner, offline | **Met — exceeded.** Full 5-benchmark suite: seconds (deterministic backend); suite runs with egress blocked | `make experiments` |
 | AC-8 | Zero fabricated numbers: every published number measured by a committed script or labeled *Not measured yet* | **Met.** All numbers in this doc trace to `evals/results/experiments.json` or the demo transcript; unmeasured items listed in §4 | `git log -- evals/results/` |
 | AC-9 | Action-layer traces only (no CoT capture), per privacy counsel | **Met.** Event logs: tool calls, args, results, timings, termination | `agent-eval info <run_id>` + event JSONL |
-| AC-10 | Handover: runbook + incidents + decision records, executable without the author | **Met.** RUNBOOK.md, INCIDENTS.md (8 incidents), DECISIONS.md (10 ADRs); runbook path executed by the clean-room release validator | `python scripts/validate_release.py` |
+| AC-10 | Handover: runbook + incidents + decision records, executable without the author | **Met.** RUNBOOK.md, INCIDENTS.md (10 incidents), DECISIONS.md (13 ADRs); runbook path executed by the clean-room release validator | `python scripts/validate_release.py` |
+| AC-11 | Zero-dependency Web Dashboard (`agent-eval serve`) & REST API with interactive trajectory replay | **Met.** Built-in standard library HTTP server; 6 unit tests passing | `pytest tests/unit/test_web_server.py` |
+| AC-12 | Enterprise containerization: multi-stage rootless Dockerfile (non-root `aeh`) & Docker Compose | **Met.** Multi-stage build, runner/status/dashboard profiles | `docker compose config` |
+| AC-13 | Multi-OS CI runner matrix (Ubuntu + Windows) with invariant cryptographic dataset digests | **Met.** Dual-OS matrix green across Python 3.11/3.12; 132 tests green | `pytest tests/` |
 
 ## 2. Outcome metrics (the customer's definition of "worked")
 
