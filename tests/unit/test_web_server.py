@@ -75,3 +75,25 @@ def test_web_api_execute_run(test_server):
         assert "run_id" in data
         assert data["benchmark"] == "react_basic"
         assert len(data["verdicts"]) == 2
+
+
+def test_web_api_get_run_not_found(test_server):
+    import urllib.error
+    with pytest.raises(urllib.error.HTTPError) as exc_info:
+        urllib.request.urlopen(f"{test_server}/api/runs/nonexistent_run_id_12345")
+    assert exc_info.value.code == 404
+
+
+def test_web_api_path_traversal_sanitized(test_server):
+    import urllib.error
+    with pytest.raises(urllib.error.HTTPError) as exc_info:
+        urllib.request.urlopen(f"{test_server}/api/runs/../../etc/passwd")
+    assert exc_info.value.code == 404
+
+
+def test_web_api_unknown_route(test_server):
+    import urllib.error
+    with pytest.raises(urllib.error.HTTPError) as exc_info:
+        urllib.request.urlopen(f"{test_server}/api/unknown_endpoint")
+    assert exc_info.value.code == 404
+
