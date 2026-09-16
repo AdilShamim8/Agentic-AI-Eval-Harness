@@ -436,6 +436,13 @@ def cmd_status(args) -> int:
     return 0
 
 
+def cmd_serve(args: argparse.Namespace) -> int:
+    from agent_eval_harness.web.server import run_server
+
+    run_server(host=args.host, port=args.port, runs_dir=args.runs, baselines_dir=args.baselines)
+    return 0
+
+
 # ---------------------------------------------------------------------------
 # parser
 # ---------------------------------------------------------------------------
@@ -536,6 +543,14 @@ def build_parser() -> argparse.ArgumentParser:
     status.add_argument("--baseline", default=None,
                         help="baseline name to compare against (default: main)")
     status.set_defaults(func=cmd_status)
+
+    srv = sub.add_parser(
+        "serve", help="launch interactive web dashboard and API server")
+    srv.add_argument("--host", default="127.0.0.1", help="host address (default: 127.0.0.1)")
+    srv.add_argument("--port", type=int, default=8000, help="port number (default: 8000)")
+    srv.add_argument("--runs", default="evals/runs", help="path to runs directory")
+    srv.add_argument("--baselines", default="evals/baselines", help="path to baselines directory")
+    srv.set_defaults(func=cmd_serve)
     return p
 
 
