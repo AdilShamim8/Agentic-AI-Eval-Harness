@@ -1,6 +1,5 @@
-# Product Requirements — agent-eval-harness v0.1
-
-Date: 2026-09-12 · Owner: Principal AI Engineer · Status: approved for build
+# Product Requirements — agent-eval-harness
+Date: 2026-09-16 · Version: v0.2.1 · Owner: Principal AI Engineer · Status: live production
 
 ## 1. Problem
 
@@ -34,6 +33,8 @@ blamed on "the model" without evidence, and evaluation results are not reproduci
   runner, metrics, reports, and gates pick it up by name.
 - US7: As a security reviewer, I read SECURITY.md + THREAT-MODEL.md and verify
   controls with `pytest tests/security`.
+- US8: As an operator or non-CLI stakeholder, I run `agent-eval serve` (or `docker compose up dashboard`)
+  to view run histories, inspect step-by-step trajectories, and trigger runs in a browser.
 
 ## 4. Functional requirements
 
@@ -49,28 +50,32 @@ blamed on "the model" without evidence, and evaluation results are not reproduci
 | FR-8 | Run records (JSON) + event logs (JSONL, redacted) + run manifest with full VersionBundle |
 | FR-9 | Metrics: pass rate + Wilson 95% CI, per-evaluator/pattern/category, latency p50/p95 (measured wall), token & cost estimates (labeled), failure histogram |
 | FR-10 | Comparison + baselines + regression engine with per-benchmark gates and CI exit codes |
-| FR-11 | Reports: Markdown + JSON, distinguishing TEST FAILURE / EVALUATOR ERROR / INFRASTRUCTURE FAILURE |
-| FR-12 | CLI: run / list / validate / compare / report / regression / baseline / ablate / calibrate / repro / info |
+| FR-11 | Reports: Markdown + JSON + Web, distinguishing TEST FAILURE / EVALUATOR ERROR / INFRASTRUCTURE FAILURE |
+| FR-12 | CLI: run / list / validate / compare / report / regression / baseline / ablate / calibrate / repro / info / status / serve |
 | FR-13 | Pytest bridge: `agent_eval` marker, case fixture, smoke suite |
-| FR-14 | CI workflows: ci, eval-gate (blocking), security; Makefile mirrors |
+| FR-14 | CI workflows: ci (Ubuntu + Windows matrix), eval-gate (blocking), security; Makefile mirrors |
 | FR-15 | Experiments executed and recorded: full suite, ablation matrix, judge calibration (kappa), reproducibility (repeats), regression demo |
+| FR-16 | Web Dashboard & REST API: zero-dependency HTTP server (`agent-eval serve`), interactive browser UI, `/api/runs`, `/api/status`, `/api/benchmarks`, `/api/run` |
+| FR-17 | Production containerization: multi-stage Dockerfile (python:3.12-slim, non-root user aeh) and docker-compose.yml services (status, runner, dashboard) |
+| FR-18 | Cross-platform determinism: .gitattributes LF normalization, UTF-8 console output for Windows, multi-OS CI matrix |
 
 ## 5. Non-functional requirements
 
-- Correctness: evaluators unit-tested; runner never conflates failure classes.
+- Correctness: evaluators unit-tested; runner never conflates failure classes (132 passing tests).
 - Reproducibility: same inputs + seed => byte-identical run records (verified by test).
 - Zero network at runtime by default (tools are offline fixtures; socket guard on).
 - Runtime: full 280-case suite < 60 s on the deterministic backend; smoke < 10 s.
 - Extensibility: new evaluator/adapter/tool = one module + registry entry.
 - Observability: every case fully traced; exports redacted.
-- Security: allowlist enforcement, arg guards, injection screening, audit log.
-- DX: `pip install -e .` in seconds (single runtime dep: PyYAML).
+- Security: allowlist enforcement, arg guards, injection screening, audit log, non-root container.
+- DX: `pip install -e .` in seconds (single runtime dep: PyYAML); zero-setup Docker execution.
 
-## 6. Non-goals (v0.1)
+## 6. Non-goals
 
-Web UI/dashboard, SaaS, distributed execution, live production monitoring, OTLP
-export, pairwise A/B judging, human-annotation UIs, model leaderboards, live-LLM
-benchmark scores (interfaces provided; measurements marked Not measured yet).
+SaaS multi-tenant auth, distributed execution clusters, live production streaming telemetry,
+OTLP export, pairwise A/B judging, human-annotation crowd platforms, model leaderboards,
+live-LLM benchmark scores (interfaces provided; measurements marked Not measured yet).
+*(Note: A local lightweight Web UI was delivered in v0.2.1 without violating the zero-external-dependency constraint).*
 
 ## 7. Success criteria
 
