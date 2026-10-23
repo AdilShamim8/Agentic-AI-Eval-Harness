@@ -58,6 +58,33 @@ from agent_eval_harness.runner.runner import BenchmarkRunner, RunConfig, save_ba
 ERR = Console(stderr=True) if RICH else None
 OUT = Console() if RICH else None
 
+# Rich-markup stripper for the rich-less fallback (Python >= 3.11, PyYAML is
+# the ONLY runtime dependency — the CLI must work identically without rich).
+_MARKUP_RE = None
+
+
+def _strip_markup(msg: str) -> str:
+    global _MARKUP_RE
+    import re
+    if _MARKUP_RE is None:
+        _MARKUP_RE = re.compile(r"\[/?[a-zA-Z #][^\]]*\]")
+    return _MARKUP_RE.sub("", msg)
+
+
+def _err(msg: str) -> None:
+    """Print to stderr in rich OR plain mode (never assume rich is present)."""
+    if ERR is not None:
+        ERR.print(msg)
+    else:
+        sys.stderr.write(_strip_markup(msg) + "\n")
+
+
+def _out(msg: str) -> None:
+    if OUT is not None:
+        OUT.print(msg)
+    else:
+        print(_strip_markup(msg))
+
 
 def _print_table(title: str, headers: list[str], rows: list[list[str]]) -> None:
     if RICH:
@@ -143,11 +170,7 @@ def cmd_run(args) -> int:
         failed_gates = [g for g, s in m["threshold_gates"].items()
                         if not s.get("passed")]
         if failed_gates and not args.limit:
-            msg = f"threshold gates FAILED: {', '.join(failed_gates)}"
-            if ERR is not None:
-                ERR.print(f"[red]{msg}[/red]")
-            else:
-                sys.stderr.write(f"{msg}\n")
+            _err(f"[red]threshold gates FAILED: {', '.join(failed_gates)}[/red]")
             return 1
     if args.baseline:
         baselines_dir = getattr(args, "baselines", "evals/baselines")
@@ -191,10 +214,9 @@ def cmd_validate(args) -> int:
             issues += [f"{b['name']}: {i}" for i in validate_dataset(ds)]
         target = "all benchmarks"
     if issues:
-        assert ERR is not None
-        ERR.print("[red]INVALID[/red]")
+        _err("[red]INVALID[/red]")
         for i in issues[:30]:
-            ERR.print(f"  - {i}")
+            _err(f"  - {i}")
         return 1
     print(f"VALID: {target}")
     return 0
@@ -227,8 +249,7 @@ def cmd_compare(args) -> int:
         + [[f"eval:{ev}", f"{s['mean_a']:.3f}", f"{s['mean_b']:.3f}",
             f"{s['delta']:+.3f}"] for ev, s in comp.per_evaluator.items()])
     for w in comp.version_warnings:
-        assert ERR is not None
-        ERR.print(f"[yellow]version drift: {w}[/yellow]")
+        _err(f"[yellow]version drift: {w}[/yellow]")
     return 0
 
 
@@ -440,12 +461,8 @@ def cmd_status(args) -> int:
             pass
     print(f"judge calibration: {cal_note}")
     if degraded:
-        msg = (f"REGRESSION in: {', '.join(degraded)} — "
-               "run `agent-eval regression <run_id> --baseline main` for the gate")
-        if ERR is not None:
-            ERR.print(f"[red]{msg}[/red]")
-        else:
-            print(msg)
+        _err(f"[red]REGRESSION in: {', '.join(degraded)} — "
+             "run `agent-eval regression <run_id> --baseline main` for the gate[/red]")
         return 1
     print("handover: see RUNBOOK.md (operations) · docs/fde/ (engagement record)")
     return 0
@@ -577,22 +594,13 @@ def main(argv: list[str] | None = None) -> int:
     try:
         return int(args.func(args))
     except KeyboardInterrupt:
-        if ERR is not None:
-            ERR.print("\n[yellow]Interrupted by user.[/yellow]")
-        else:  # pragma: no cover
-            print("\nInterrupted by user.", file=sys.stderr)
+        _err("\n[yellow]Interrupted by user.[/yellow]")
         return 130
     except InfraError as exc:
-        if ERR is not None:
-            ERR.print(f"[red]error:[/red] {exc}")
-        else:  # pragma: no cover
-            print(f"error: {exc}", file=sys.stderr)
+        _err(f"[red]error:[/red] {exc}")
         return 2
     except FileNotFoundError as exc:
-        if ERR is not None:
-            ERR.print(f"[red]error:[/red] {exc}")
-        else:  # pragma: no cover
-            print(f"error: {exc}", file=sys.stderr)
+        _err(f"[red]error:[/red] {exc}")
         return 2
 
 

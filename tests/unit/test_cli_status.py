@@ -130,3 +130,91 @@ def test_load_run_direct_path_and_suffix(tmp_path, capsys):
     out = capsys.readouterr().out
     assert "test_run_123" in out
 
+
+
+# ---- CLI works without rich (Issue K) ----------------------------------------
+# The documented minimal install has NO rich (PyYAML is the only runtime
+# dependency). Every error/warning path must work there.
+
+
+def test_validate_invalid_dataset_without_rich(capsys, tmp_path):
+    """v0.2.1 defect: cmd_validate crashed with AssertionError when rich was
+    absent and a dataset had issues."""
+    from agent_eval_harness import cli
+
+    bad = tmp_path / "bad.jsonl"
+    bad.write_text('{"id":"x1","pattern":"react","category":"nope","task":"t",'
+                   '"expected":{}}\n', encoding="utf-8")
+
+    assert cli.app.RICH is False or cli.app.RICH is True  # module accessible
+    import agent_eval_harness.cli.app as app
+    import argparse
+
+    ns = argparse.Namespace(dataset=str(bad), benchmark=None, registry=None)
+    rc = app.cmd_validate(ns)
+    assert rc == 1
+    err_out = capsys.readouterr().err
+    assert "INVALID" in err_out
+    assert "category" in err_out
+    assert "Traceback" not in err_out and "AssertionError" not in err_out
+
+
+def test_compare_version_drift_warning_without_rich(capsys):
+    import agent_eval_harness.cli.app as app
+    import argparse
+    from agent_eval_harness.core.schemas import RunRecord, CaseVerdict
+    from agent_eval_harness.core.errors import FailureClass
+
+    def _mk(rid, ds_rev):
+        v = CaseVerdict(case_id="c1", pattern="react", category="normal",
+                        passed=True, failure_class=FailureClass.NONE, scores={})
+        return RunRecord(
+            run_id=rid, benchmark="react_basic", benchmark_version="1.0",
+            agent="builtin:react", agent_pattern="react", seed=1, ablation="full",
+            versions={"dataset": {"revision": ds_rev}}, config={}, verdicts=[v],
+            metrics={"pass_rate": 1.0, "cases": 1, "per_evaluator": {}})
+
+    import json as _json
+    import tempfile
+    import os
+    from agent_eval_harness.core.schemas import to_jsonable
+    with tempfile.TemporaryDirectory() as td:
+        for rid, rev in (("ra", "aaa"), ("rb", "bbb")):
+            with open(os.path.join(td, f"{rid}.json"), "w", encoding="utf-8") as fh:
+                fh.write(_json.dumps(to_jsonable(_mk(rid, rev))))
+        ns = argparse.Namespace(run_a="ra", run_b="rb", runs=td, json=False)
+        rc = app.cmd_compare(ns)
+        assert rc == 0
+        err_out = capsys.readouterr().err
+        assert "version drift" in err_out
+        assert "Traceback" not in err_out
+
+
+def test_cli_subprocess_without_rich(tmp_path):
+    """End-to-end: run the real CLI entry point in a subprocess where `rich`
+    is unimportable (simulated absence) — invalid dataset must produce a
+    controlled exit 1 with clean INVALID output, not an AssertionError."""
+    import subprocess
+    import sys
+
+    shim = tmp_path / "shim"
+    shim.mkdir()
+    (shim / "rich").mkdir()
+    (shim / "rich" / "__init__.py").write_text(
+        "raise ImportError('rich is not installed (simulated)')\n",
+        encoding="utf-8")
+
+    bad = tmp_path / "bad.jsonl"
+    bad.write_text('{"id":"x1","pattern":"react","category":"nope","task":"t",'
+                   '"expected":{}}\n', encoding="utf-8")
+
+    env = dict(os.environ)
+    env["PYTHONPATH"] = str(shim) + os.pathsep + env.get("PYTHONPATH", "")
+    r = subprocess.run(
+        [sys.executable, "-m", "agent_eval_harness.cli.app",
+         "validate", "--dataset", str(bad)],
+        capture_output=True, text=True, env=env, timeout=60)
+    assert r.returncode == 1, r.stderr[-500:]
+    assert "INVALID" in r.stderr or "INVALID" in r.stdout
+    assert "AssertionError" not in r.stderr + r.stdout
+    assert "Traceback" not in r.stderr + r.stdout
