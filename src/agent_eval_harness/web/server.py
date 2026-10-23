@@ -15,6 +15,7 @@ from typing import Any
 from urllib.parse import parse_qs, urlparse
 
 from agent_eval_harness.core.errors import InfraError
+from agent_eval_harness.core.paths import default_baselines_dir, default_runs_dir
 from agent_eval_harness.registry.registry import list_benchmarks, load_benchmark
 from agent_eval_harness.runner.runner import BenchmarkRunner, RunConfig
 
@@ -819,9 +820,11 @@ class DashboardHandler(BaseHTTPRequestHandler):
 def run_server(
     host: str = "127.0.0.1",
     port: int = 8000,
-    runs_dir: str = "evals/runs",
-    baselines_dir: str = "evals/baselines",
+    runs_dir: str | None = None,
+    baselines_dir: str | None = None,
 ) -> None:
+  runs_dir = runs_dir or default_runs_dir()
+  baselines_dir = baselines_dir or default_baselines_dir()
   DashboardHandler.runs_dir = runs_dir
   DashboardHandler.baselines_dir = baselines_dir
   ThreadingHTTPServer.allow_reuse_address = True

@@ -11,6 +11,7 @@ import json
 import os
 from typing import Any
 
+from agent_eval_harness.core.paths import default_baselines_dir
 from agent_eval_harness.core.schemas import (
     BaselineRecord,
     GateDecision,
@@ -31,7 +32,8 @@ def _load_gate_config(path: str | None = None) -> dict[str, Any]:
         return yaml.safe_load(fh) or {}
 
 
-def load_baseline(name: str, baselines_dir: str = "evals/baselines") -> BaselineRecord:
+def load_baseline(name: str, baselines_dir: str | None = None) -> BaselineRecord:
+    baselines_dir = baselines_dir or default_baselines_dir()
     if os.path.isfile(name):
         path = name
     else:

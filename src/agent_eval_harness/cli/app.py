@@ -32,6 +32,7 @@ except ImportError:  # pragma: no cover
 from agent_eval_harness import __version__
 from agent_eval_harness.comparison.compare import compare_runs
 from agent_eval_harness.core.errors import InfraError
+from agent_eval_harness.core.paths import default_baselines_dir, default_runs_dir
 from agent_eval_harness.core.schemas import dumps
 from agent_eval_harness.evaluators import available_evaluators
 from agent_eval_harness.registry.datasets import (
@@ -102,7 +103,8 @@ def _print_table(title: str, headers: list[str], rows: list[list[str]]) -> None:
             print(" | ".join(row))
 
 
-def _load_run(run_id: str, runs_dir: str = "evals/runs"):
+def _load_run(run_id: str, runs_dir: str | None = None):
+    runs_dir = runs_dir or default_runs_dir()
     if os.path.isfile(run_id):
         path = run_id
     else:
@@ -149,10 +151,11 @@ def _load_run(run_id: str, runs_dir: str = "evals/runs"):
 
 def cmd_run(args) -> int:
     bm = load_benchmark(args.benchmark, args.registry)
+    out_dir = args.out_dir or default_runs_dir()
     runner = BenchmarkRunner(bm, RunConfig(
         benchmark=args.benchmark, agent_spec=args.agent, seed=args.seed,
         ablation=args.ablation, skill=args.skill, limit=args.limit,
-        out_dir=args.out_dir))
+        out_dir=out_dir))
     rec = runner.run()
     m = rec.metrics
     if args.json:
@@ -173,7 +176,8 @@ def cmd_run(args) -> int:
             _err(f"[red]threshold gates FAILED: {', '.join(failed_gates)}[/red]")
             return 1
     if args.baseline:
-        baselines_dir = getattr(args, "baselines", "evals/baselines")
+        baselines_dir = (getattr(args, "baselines", None)
+                         or default_baselines_dir())
         path = save_baseline(rec, args.baseline, out_dir=baselines_dir)
         print(f"baseline '{args.baseline}' saved -> {path}")
     return 0
@@ -231,8 +235,8 @@ def _resolve_dataset(path: str) -> str:
 
 
 def cmd_compare(args) -> int:
-    a = _load_run(args.run_a, args.runs)
-    b = _load_run(args.run_b, args.runs)
+    a = _load_run(args.run_a, args.runs or default_runs_dir())
+    b = _load_run(args.run_b, args.runs or default_runs_dir())
     comp = compare_runs(a, b)
     if args.json:
         print(dumps(comp))
@@ -254,12 +258,15 @@ def cmd_compare(args) -> int:
 
 
 def cmd_report(args) -> int:
-    rec = _load_run(args.run_id, args.runs)
+    rec = _load_run(args.run_id, args.runs or default_runs_dir())
     comparison = gate = None
     if args.compare:
-        comparison = compare_runs(_load_run(args.compare, args.runs), rec)
+        comparison = compare_runs(
+            _load_run(args.compare, args.runs or default_runs_dir()), rec)
     if args.baseline:
-        gate = check_regression(rec, load_baseline(args.baseline, args.baselines))
+        gate = check_regression(
+            rec, load_baseline(args.baseline,
+                               args.baselines or default_baselines_dir()))
     if args.format == "json":
         text = build_json_report(rec, comparison, gate)
     else:
@@ -274,8 +281,8 @@ def cmd_report(args) -> int:
 
 
 def cmd_regression(args) -> int:
-    rec = _load_run(args.run_id, args.runs)
-    base = load_baseline(args.baseline, args.baselines)
+    rec = _load_run(args.run_id, args.runs or default_runs_dir())
+    base = load_baseline(args.baseline, args.baselines or default_baselines_dir())
     gate = check_regression(rec, base, args.gates)
     if args.json:
         print(dumps(gate))
@@ -342,7 +349,7 @@ def cmd_repro(args) -> int:
 
 
 def cmd_info(args) -> int:
-    runs_dir = getattr(args, "runs", "evals/runs")
+    runs_dir = getattr(args, "runs", None) or default_runs_dir()
     rec = _load_run(args.run_id, runs_dir)
     print(dumps({k: v for k, v in rec.__dict__.items() if k != "verdicts"}
                 if hasattr(rec, "__dict__") else rec))
@@ -384,9 +391,9 @@ def _scan_runs(runs_dir: str) -> dict[str, dict]:
 
 
 def cmd_status(args) -> int:
-    runs = _scan_runs(args.runs)
+    runs = _scan_runs(args.runs or default_runs_dir())
     baselines: dict[str, dict] = {}
-    if os.path.isdir(args.baselines):
+    if os.path.isdir(args.baselines or default_baselines_dir()):
         for fname in os.listdir(args.baselines):
             if not fname.endswith(".json"):
                 continue
@@ -400,6 +407,8 @@ def cmd_status(args) -> int:
 
     base_name = args.baseline or "main"
     base = baselines.get(base_name)
+    if base is None and not os.path.isdir(args.baselines or default_baselines_dir()):
+        pass  # baselines listing already tolerant
     bm_names = set(runs)
     try:
         bm_names |= {b["name"] for b in list_benchmarks(None)}
@@ -495,10 +504,11 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--ablation", default=None,
                      help="override benchmark ablation profile")
     run.add_argument("--limit", type=int, default=None)
-    run.add_argument("--out", dest="out_dir", default="evals/runs")
+    run.add_argument("--out", dest="out_dir", default=None,
+                     help="runs directory (default: $AEH_RUNS_DIR or evals/runs)")
     run.add_argument("--registry", default=None)
     run.add_argument("--baseline", default=None, help="save run as named baseline")
-    run.add_argument("--baselines", default="evals/baselines", help="output directory for saved baselines")
+    run.add_argument("--baselines", default=None, help="output directory for saved baselines (default: $AEH_BASELINES_DIR or evals/baselines)")
     run.add_argument("--json", action="store_true")
     run.set_defaults(func=cmd_run)
 
@@ -516,7 +526,7 @@ def build_parser() -> argparse.ArgumentParser:
     cmp_ = sub.add_parser("compare", help="compare two runs")
     cmp_.add_argument("run_a")
     cmp_.add_argument("run_b")
-    cmp_.add_argument("--runs", default="evals/runs")
+    cmp_.add_argument("--runs", default=None)
     cmp_.add_argument("--json", action="store_true")
     cmp_.set_defaults(func=cmd_compare)
 
@@ -526,15 +536,15 @@ def build_parser() -> argparse.ArgumentParser:
     rep.add_argument("--out", default=None)
     rep.add_argument("--compare", default=None, help="baseline run id for comparison")
     rep.add_argument("--baseline", default=None, help="named baseline for gate section")
-    rep.add_argument("--baselines", default="evals/baselines")
-    rep.add_argument("--runs", default="evals/runs")
+    rep.add_argument("--baselines", default=None)
+    rep.add_argument("--runs", default=None)
     rep.set_defaults(func=cmd_report)
 
     reg = sub.add_parser("regression", help="check a run against a baseline gate")
     reg.add_argument("run_id")
     reg.add_argument("--baseline", required=True)
-    reg.add_argument("--baselines", default="evals/baselines")
-    reg.add_argument("--runs", default="evals/runs")
+    reg.add_argument("--baselines", default=None)
+    reg.add_argument("--runs", default=None)
     reg.add_argument("--gates", default=None)
     reg.add_argument("--json", action="store_true")
     reg.set_defaults(func=cmd_regression)
@@ -567,13 +577,13 @@ def build_parser() -> argparse.ArgumentParser:
 
     info = sub.add_parser("info", help="run metadata")
     info.add_argument("run_id")
-    info.add_argument("--runs", default="evals/runs", help="path to runs directory")
+    info.add_argument("--runs", default=None, help="path to runs directory")
     info.set_defaults(func=cmd_info)
 
     status = sub.add_parser(
         "status", help="operator health view: latest runs vs baseline, datasets, judge")
-    status.add_argument("--runs", default="evals/runs")
-    status.add_argument("--baselines", default="evals/baselines")
+    status.add_argument("--runs", default=None)
+    status.add_argument("--baselines", default=None)
     status.add_argument("--baseline", default=None,
                         help="baseline name to compare against (default: main)")
     status.set_defaults(func=cmd_status)
@@ -582,8 +592,8 @@ def build_parser() -> argparse.ArgumentParser:
         "serve", help="launch interactive web dashboard and API server")
     srv.add_argument("--host", default="127.0.0.1", help="host address (default: 127.0.0.1)")
     srv.add_argument("--port", type=int, default=8000, help="port number (default: 8000)")
-    srv.add_argument("--runs", default="evals/runs", help="path to runs directory")
-    srv.add_argument("--baselines", default="evals/baselines", help="path to baselines directory")
+    srv.add_argument("--runs", default=None, help="path to runs directory")
+    srv.add_argument("--baselines", default=None, help="path to baselines directory")
     srv.set_defaults(func=cmd_serve)
     return p
 

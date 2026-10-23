@@ -27,6 +27,10 @@ from agent_eval_harness.core.ids import (
     run_id as make_run_id,
     short_hash,
 )
+from agent_eval_harness.core.paths import (
+    default_baselines_dir,
+    default_runs_dir,
+)
 from agent_eval_harness.core.schemas import (
     BaselineRecord,
     CaseVerdict,
@@ -60,7 +64,7 @@ class RunConfig:
     ablation: str | None = None  # explicit override wins over benchmark default
     skill: float = 0.85
     limit: int | None = None
-    out_dir: str = "evals/runs"
+    out_dir: str = field(default_factory=default_runs_dir)
     model_config: ScriptedModelConfig | None = None
     extra: dict[str, Any] = field(default_factory=dict)
 
@@ -386,8 +390,9 @@ class BenchmarkRunner:
 
 
 def save_baseline(record: RunRecord, name: str, notes: str = "",
-                  out_dir: str = "evals/baselines") -> str:
+                  out_dir: str | None = None) -> str:
     """Persist a run record as a named baseline for regression checking."""
+    out_dir = out_dir or default_baselines_dir()
     os.makedirs(out_dir, exist_ok=True)
     clean_name = name[:-5] if name.endswith(".json") else name
     metrics = dict(record.metrics)

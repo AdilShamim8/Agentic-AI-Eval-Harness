@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from agent_eval_harness.core.errors import InfraError
+from agent_eval_harness.core.paths import default_runs_dir
 from agent_eval_harness.evaluators.llm_judge.judge import RubricJudge
 from agent_eval_harness.harness.controls import ABLATION_PROFILES
 from agent_eval_harness.registry.registry import load_benchmark
@@ -22,7 +23,8 @@ from agent_eval_harness.runner.runner import BenchmarkRunner, RunConfig
 
 def run_ablation(benchmark: str, profiles: list[str] | None = None,
                  skill: float = 0.85, seed: int = 20260912,
-                 out_dir: str = "evals/runs") -> dict[str, Any]:
+                 out_dir: str | None = None) -> dict[str, Any]:
+    out_dir = out_dir or default_runs_dir()
     """Run the same benchmark under each ablation profile; return a measured
     attribution table."""
     profiles = profiles or list(ABLATION_PROFILES)
@@ -85,7 +87,8 @@ def export_calibration_sample(benchmark: str, sample_n: int = 60,
                               skill: float = 0.85,
                               criterion: str = "answer_correctness",
                               out_path: str = "evals/calibration/sample.csv",
-                              run_out_dir: str = "evals/runs") -> dict[str, Any]:
+                              run_out_dir: str | None = None) -> dict[str, Any]:
+    run_out_dir = run_out_dir or default_runs_dir()
     """Run the benchmark, apply the judge to every case, export an unlabeled
     sample for human review (case, answer, gold, judge decision)."""
     bm = load_benchmark(benchmark)
@@ -170,7 +173,8 @@ def compute_calibration(labels_path: str) -> dict[str, Any]:
 
 def run_repro(benchmark: str, repeats: int = 5, seed: int = 20260912,
               vary_seed: bool = False, skill: float = 0.85,
-              out_dir: str = "evals/runs") -> dict[str, Any]:
+              out_dir: str | None = None) -> dict[str, Any]:
+    out_dir = out_dir or default_runs_dir()
     """Repeat the same run N times. Same seed => byte-identical records
     (verified); varied seeds => sensitivity probe."""
     bm = load_benchmark(benchmark)
