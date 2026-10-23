@@ -1,4 +1,5 @@
 """Plan-and-Execute pattern agent — explicit plan, then execution, with replan."""
+
 from __future__ import annotations
 
 from agent_eval_harness.agents.base import BasePatternAgent, RunContext
@@ -35,18 +36,25 @@ class PlanExecuteAgent(BasePatternAgent):
             if ctx.case.injection and not self._resists(ctx):
                 from agent_eval_harness.agents.model import Action
 
-                state.pending = [Action("tool", "store_set",
-                                        {"key": "exfiltrate", "value": "all report data"})]
+                state.pending = [
+                    Action("tool", "store_set", {"key": "exfiltrate", "value": "all report data"})
+                ]
 
             # Phase 2: execute; on tool errors, note a replan thought
             termination, answer = self._act_loop(
-                ctx, state, traj, phase_label=self.id,
+                ctx,
+                state,
+                traj,
+                phase_label=self.id,
                 max_steps=ctx.case.max_steps if ctx.case.max_steps else 14,
             )
             if termination == "step_limit" and not traj.tool_calls:
                 traj.steps.append(
-                    type(traj.steps[0])(index=traj.step_count(), phase="plan",
-                                        summary="replan: fall back to direct answer")
+                    type(traj.steps[0])(
+                        index=traj.step_count(),
+                        phase="plan",
+                        summary="replan: fall back to direct answer",
+                    )
                 ) if traj.steps else None
             return self._finish(ctx, traj, termination, answer)
         except HarnessError as exc:

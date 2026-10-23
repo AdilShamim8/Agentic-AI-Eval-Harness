@@ -1,4 +1,5 @@
 """Repo-wide secret scanner — CI gate (--strict exits 1 on findings)."""
+
 from __future__ import annotations
 
 import argparse
@@ -12,21 +13,23 @@ PATTERNS = [
     ("aws_key", re.compile(r"\bAKIA[0-9A-Z]{16}\b")),
     ("slack_token", re.compile(r"\bxox[baprs]-[A-Za-z0-9-]{10,}\b")),
     ("private_key_block", re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----")),
-    ("generic_assignment", re.compile(
-        r"(?i)\b(api[_-]?key|secret|password|token)\b\s*[:=]\s*['\"][^'\"$\s]{12,}['\"]"
-        r"(?!\s*#?\s*(example|placeholder|redacted|\$\{))")),
+    (
+        "generic_assignment",
+        re.compile(
+            r"(?i)\b(api[_-]?key|secret|password|token)\b\s*[:=]\s*['\"][^'\"$\s]{12,}['\"]"
+            r"(?!\s*#?\s*(example|placeholder|redacted|\$\{))"
+        ),
+    ),
 ]
 
-SKIP_DIRS = {".git", "__pycache__", ".venv", "node_modules", "release",
-             "release_validation"}
+SKIP_DIRS = {".git", "__pycache__", ".venv", "node_modules", "release", "release_validation"}
 SKIP_FILES = {
     "scan_secrets.py",
     ".env.example",
     # intentional fake fixtures exercising the redaction engine:
     "test_security_basics.py",
 }
-ALLOWED_MARKERS = ("EXAMPLE", "REDACTED", "PLACEHOLDER", "<your", "${", "xxxxx",
-                   "fixture")
+ALLOWED_MARKERS = ("EXAMPLE", "REDACTED", "PLACEHOLDER", "<your", "${", "xxxxx", "fixture")
 
 
 def scan(root: str) -> list[tuple[str, int, str, str]]:
@@ -35,8 +38,20 @@ def scan(root: str) -> list[tuple[str, int, str, str]]:
         dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS]
         for fname in filenames:
             if fname in SKIP_FILES or not fname.endswith(
-                    (".py", ".md", ".yaml", ".yml", ".json", ".jsonl", ".toml",
-                     ".txt", ".example", ".mmd", ".cfg")):
+                (
+                    ".py",
+                    ".md",
+                    ".yaml",
+                    ".yml",
+                    ".json",
+                    ".jsonl",
+                    ".toml",
+                    ".txt",
+                    ".example",
+                    ".mmd",
+                    ".cfg",
+                )
+            ):
                 continue
             path = os.path.join(dirpath, fname)
             try:
@@ -56,8 +71,7 @@ def scan(root: str) -> list[tuple[str, int, str, str]]:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default=".")
-    ap.add_argument("--strict", action="store_true",
-                    help="exit 1 when any finding is present")
+    ap.add_argument("--strict", action="store_true", help="exit 1 when any finding is present")
     args = ap.parse_args()
     findings = scan(args.root)
     if findings:

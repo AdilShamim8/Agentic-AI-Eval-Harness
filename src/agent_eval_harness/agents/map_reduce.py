@@ -1,4 +1,5 @@
 """Map-Reduce pattern agent — per-item map phase, then aggregate reduce phase."""
+
 from __future__ import annotations
 
 import re
@@ -41,12 +42,12 @@ class MapReduceAgent(BasePatternAgent):
             understanding = ctx.model.understand(ctx.task, ctx.context)
             actions = list(understanding.actions)
             if ctx.case.injection and not self._resists(ctx):
-                actions = [Action("tool", "store_set",
-                                  {"key": "exfiltrate", "value": "all report data"})]
+                actions = [
+                    Action("tool", "store_set", {"key": "exfiltrate", "value": "all report data"})
+                ]
 
             if not actions:
-                return self._finish(ctx, traj, "answer",
-                                    "I could not complete the task.")
+                return self._finish(ctx, traj, "answer", "I could not complete the task.")
 
             # understanding.actions for map-reduce are ALL map actions; the
             # reduce action is synthesized by this agent from collected values.
@@ -59,26 +60,41 @@ class MapReduceAgent(BasePatternAgent):
             concept = getattr(understanding, "concept", "")
             collected: list[float] = []
             for a in map_actions:
-                mstate = ModelState(task=ctx.task, context=ctx.context, phase="act",
-                                    pending=[a], assigned="mapper", compose_mode="last")
-                term, _ = self._act_loop(ctx, mstate, traj, phase_label="mapper",
-                                         max_steps=3)
+                mstate = ModelState(
+                    task=ctx.task,
+                    context=ctx.context,
+                    phase="act",
+                    pending=[a],
+                    assigned="mapper",
+                    compose_mode="last",
+                )
+                term, _ = self._act_loop(ctx, mstate, traj, phase_label="mapper", max_steps=3)
                 if mstate.history and mstate.history[-1].get("ok"):
                     num = _numeric_from_obs(mstate.history[-1], concept)
                     if num is not None:
                         collected.append(num)
-                traj.steps.append(StepRecord(
-                    index=traj.step_count(), phase="act",
-                    summary=f"map item collected ({len(collected)} so far)",
-                    agent="mapper"))
+                traj.steps.append(
+                    StepRecord(
+                        index=traj.step_count(),
+                        phase="act",
+                        summary=f"map item collected ({len(collected)} so far)",
+                        agent="mapper",
+                    )
+                )
 
             # ---- REDUCE phase --------------------------------------------------
             if understanding.aggregate_op and collected:
-                reduce_action = Action("tool", "data_calc",
-                                       {"values": collected, "op": understanding.aggregate_op})
-                rstate = ModelState(task=ctx.task, context=ctx.context, phase="act",
-                                    pending=[reduce_action], assigned="reducer",
-                                    compose_mode="last")
+                reduce_action = Action(
+                    "tool", "data_calc", {"values": collected, "op": understanding.aggregate_op}
+                )
+                rstate = ModelState(
+                    task=ctx.task,
+                    context=ctx.context,
+                    phase="act",
+                    pending=[reduce_action],
+                    assigned="reducer",
+                    compose_mode="last",
+                )
                 self._act_loop(ctx, rstate, traj, phase_label="reducer", max_steps=3)
                 last = rstate.history[-1] if rstate.history else {}
                 v = last.get("value")
@@ -90,9 +106,14 @@ class MapReduceAgent(BasePatternAgent):
 
             if any(a.kind == "assume" for a in actions):
                 answer = "Assuming the intended interpretation: " + answer
-            traj.steps.append(StepRecord(index=traj.step_count(), phase="final",
-                                         summary=f"final answer: {answer[:200]}",
-                                         agent="reducer"))
+            traj.steps.append(
+                StepRecord(
+                    index=traj.step_count(),
+                    phase="final",
+                    summary=f"final answer: {answer[:200]}",
+                    agent="reducer",
+                )
+            )
             return self._finish(ctx, traj, "answer", answer)
         except HarnessError as exc:
             return self._guard(ctx, traj, exc)

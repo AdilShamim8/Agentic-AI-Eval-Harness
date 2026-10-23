@@ -1,4 +1,5 @@
 """Deterministic evaluators — tool use, step budget, termination."""
+
 from __future__ import annotations
 
 from typing import Any
@@ -21,16 +22,25 @@ class ToolSelection:
         inter = called & required if required else set()
         precision = len(inter) / len(called) if called else (1.0 if not required else 0.0)
         recall = len(inter) / len(required) if required else 1.0
-        f1 = (2 * precision * recall / (precision + recall)
-              if precision + recall else 0.0)
+        f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
         passed = recall == 1.0 and not forbidden_hits and bool(called or not required)
         score = 0.0 if forbidden_hits else f1
         return _result(
-            case, self.name, self.version, score, passed,
-            {"required": sorted(required), "called": sorted(called),
-             "precision": round(precision, 3), "recall": round(recall, 3),
-             "f1": round(f1, 3), "forbidden_hits": forbidden_hits},
-            {"deterministic": True})
+            case,
+            self.name,
+            self.version,
+            score,
+            passed,
+            {
+                "required": sorted(required),
+                "called": sorted(called),
+                "precision": round(precision, 3),
+                "recall": round(recall, 3),
+                "f1": round(f1, 3),
+                "forbidden_hits": forbidden_hits,
+            },
+            {"deterministic": True},
+        )
 
 
 class ToolArguments:
@@ -41,8 +51,9 @@ class ToolArguments:
     def evaluate(self, case: TestCase, outcome: AgentRunOutcome) -> EvaluationResult:
         checks = case.expected.get("tool_args", [])
         if not checks:
-            return _result(case, self.name, self.version, 1.0, True,
-                           {"note": "no tool_args specified"})
+            return _result(
+                case, self.name, self.version, 1.0, True, {"note": "no tool_args specified"}
+            )
         calls = outcome.trajectory.tool_calls
         results: list[dict[str, Any]] = []
         ok_count = 0
@@ -60,7 +71,8 @@ class ToolArguments:
                 elif "approx" in chk:
                     try:
                         satisfied = abs(float(val) - float(chk["approx"])) <= float(
-                            chk.get("tolerance", 1e-6))
+                            chk.get("tolerance", 1e-6)
+                        )
                     except (TypeError, ValueError):
                         satisfied = False
                 if satisfied:
@@ -68,8 +80,15 @@ class ToolArguments:
             results.append({"tool": tool, "arg": arg, "ok": satisfied})
             ok_count += int(satisfied)
         score = ok_count / len(checks)
-        return _result(case, self.name, self.version, score, ok_count == len(checks),
-                       {"checks": results}, {"deterministic": True})
+        return _result(
+            case,
+            self.name,
+            self.version,
+            score,
+            ok_count == len(checks),
+            {"checks": results},
+            {"deterministic": True},
+        )
 
 
 class StepLimit:
@@ -80,8 +99,15 @@ class StepLimit:
         steps = outcome.trajectory.step_count()
         passed = steps <= limit
         score = max(0.0, min(1.0, limit / steps)) if steps else 1.0
-        return _result(case, self.name, self.version, score, passed,
-                       {"limit": limit, "steps": steps}, {"deterministic": True})
+        return _result(
+            case,
+            self.name,
+            self.version,
+            score,
+            passed,
+            {"limit": limit, "steps": steps},
+            {"deterministic": True},
+        )
 
 
 class Termination:
@@ -92,6 +118,12 @@ class Termination:
     def evaluate(self, case: TestCase, outcome: AgentRunOutcome) -> EvaluationResult:
         term = outcome.trajectory.termination
         passed = term == "answer"
-        return _result(case, self.name, self.version, 1.0 if passed else 0.0, passed,
-                       {"termination": term, "error": outcome.error[:200]},
-                       {"deterministic": True})
+        return _result(
+            case,
+            self.name,
+            self.version,
+            1.0 if passed else 0.0,
+            passed,
+            {"termination": term, "error": outcome.error[:200]},
+            {"deterministic": True},
+        )

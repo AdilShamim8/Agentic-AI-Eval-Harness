@@ -4,6 +4,7 @@ EVALUATOR ERROR, and INFRASTRUCTURE FAILURE (plus granular classes).
 This taxonomy is the platform's backbone: when an evaluation fails we must know
 *which layer* failed before blaming the model.
 """
+
 from __future__ import annotations
 
 from enum import Enum
@@ -14,15 +15,15 @@ class FailureClass(str, Enum):
 
     NONE = "none"
     # Agent-side failures (the unit under test misbehaved in some way).
-    TEST_FAILURE = "test_failure"            # checks evaluated -> not passed
-    AGENT_ERROR = "agent_error"              # agent code raised
-    TIMEOUT = "timeout"                      # wall-clock budget exhausted
-    STEP_LIMIT = "step_limit"                # harness step cap hit
-    TOOL_LIMIT = "tool_limit"                # harness tool-call cap hit
-    LOOP_DETECTED = "loop_detected"          # identical calls repeated
+    TEST_FAILURE = "test_failure"  # checks evaluated -> not passed
+    AGENT_ERROR = "agent_error"  # agent code raised
+    TIMEOUT = "timeout"  # wall-clock budget exhausted
+    STEP_LIMIT = "step_limit"  # harness step cap hit
+    TOOL_LIMIT = "tool_limit"  # harness tool-call cap hit
+    LOOP_DETECTED = "loop_detected"  # identical calls repeated
     SECURITY_VIOLATION = "security_violation"  # policy violation (denied/flagged)
     # Evaluation-machinery failures.
-    EVALUATOR_ERROR = "evaluator_error"      # an evaluator crashed
+    EVALUATOR_ERROR = "evaluator_error"  # an evaluator crashed
     INFRASTRUCTURE_FAILURE = "infrastructure_failure"  # harness/env broke
 
 

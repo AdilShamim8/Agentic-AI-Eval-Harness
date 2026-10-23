@@ -1,4 +1,5 @@
 """Security unit tests: redaction, injection screening, sandbox, static imports."""
+
 import re
 import socket
 
@@ -41,10 +42,15 @@ def test_redact_payload_recursive():
     }
     clean, n = redact_payload(payload)
     assert n >= 4
-    assert all("REDACTED" in str(v) for v in [
-        clean["env"]["key"], clean["list"][0],
-        list(clean["set_data"])[0], list(clean["frozenset_data"])[0]
-    ])
+    assert all(
+        "REDACTED" in str(v)
+        for v in [
+            clean["env"]["key"],
+            clean["list"][0],
+            list(clean["set_data"])[0],
+            list(clean["frozenset_data"])[0],
+        ]
+    )
     assert isinstance(clean["set_data"], set)
     assert isinstance(clean["frozenset_data"], frozenset)
 
@@ -68,7 +74,6 @@ def test_security_functions_handle_none_and_non_strings():
     assert sanitize_text(12345) == "12345"
     assert scrub_text(None) == ("", 0)
     assert scrub_text(12345) == ("12345", 0)
-
 
 
 def test_network_guard_blocks_socket():
@@ -109,7 +114,6 @@ def test_event_recorder_export_creates_parent_dir(tmp_path):
     assert res["events"] == 1
     assert res["redactions"] >= 1
     assert "\\" not in res["path"]
-
 
 
 # ---- sandbox scoping: blocked for agents, allowed window for trusted code ----
@@ -166,7 +170,6 @@ def test_guard_allows_existing_fd_wrap_for_accept():
             pass
 
     srv = http.server.ThreadingHTTPServer(("127.0.0.1", 0), _Quiet)
-    import threading
     t = threading.Thread(target=srv.serve_forever, daemon=True)
     t.start()
     addr = srv.server_address
@@ -203,20 +206,22 @@ def test_permission_policy_from_dict_partial_block_keeps_secure_defaults():
     """v0.2.1 defect: from_dict raised AttributeError for ANY permissions dict
     (dataclass default_factory fields have no class attributes) — the feature
     was unusable. Now a partial block works and keeps the secure defaults."""
-    from agent_eval_harness.harness.controls import (
-        _DEFAULT_FORBIDDEN_ARG_KEYS, PermissionPolicy)
+    from agent_eval_harness.harness.controls import _DEFAULT_FORBIDDEN_ARG_KEYS, PermissionPolicy
 
     p = PermissionPolicy.from_dict({"allowed_tools": ["calculator"]})
     assert p.allowed_tools == {"calculator"}
-    assert p.forbidden_arg_keys == set(_DEFAULT_FORBIDDEN_ARG_KEYS), \
+    assert p.forbidden_arg_keys == set(_DEFAULT_FORBIDDEN_ARG_KEYS), (
         "default forbidden-arg set must never be silently dropped"
+    )
     assert p.max_denials_before_violation == 3
 
-    p2 = PermissionPolicy.from_dict({
-        "denied_tools": ["sim_web_get"],
-        "forbidden_arg_keys": ["payload"],
-        "max_denials_before_violation": 5,
-    })
+    p2 = PermissionPolicy.from_dict(
+        {
+            "denied_tools": ["sim_web_get"],
+            "forbidden_arg_keys": ["payload"],
+            "max_denials_before_violation": 5,
+        }
+    )
     assert p2.denied_tools == {"sim_web_get"}
     assert p2.forbidden_arg_keys == {"payload"}
     assert p2.max_denials_before_violation == 5
@@ -238,23 +243,27 @@ def test_benchmark_with_permissions_block_loads_and_runs(tmp_path):
 
     registry = tmp_path / "benchmarks"
     registry.mkdir()
-    (registry / "perm_probe.yaml").write_text(yaml.safe_dump({
-        "benchmark": {"name": "perm_probe", "version": "1.0", "pattern": "react"},
-        "dataset": {"path": "datasets/react/golden.jsonl"},
-        "evaluators": ["task_checks"],
-        "thresholds": {"overall_pass_rate": 0.5},
-        "execution": {
-            "limit": 2,
-            "permissions": {
-                "allowed_tools": ["calculator", "knowledge_search"],
-                "denied_tools": ["sim_web_get"],
-            },
-        },
-    }), encoding="utf-8")
+    (registry / "perm_probe.yaml").write_text(
+        yaml.safe_dump(
+            {
+                "benchmark": {"name": "perm_probe", "version": "1.0", "pattern": "react"},
+                "dataset": {"path": "datasets/react/golden.jsonl"},
+                "evaluators": ["task_checks"],
+                "thresholds": {"overall_pass_rate": 0.5},
+                "execution": {
+                    "limit": 2,
+                    "permissions": {
+                        "allowed_tools": ["calculator", "knowledge_search"],
+                        "denied_tools": ["sim_web_get"],
+                    },
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
 
     bm = load_benchmark("perm_probe", registry_dirs=[str(registry), "benchmarks"])
-    runner = BenchmarkRunner(bm, RunConfig(benchmark="perm_probe",
-                                           out_dir=str(tmp_path / "runs")))
+    runner = BenchmarkRunner(bm, RunConfig(benchmark="perm_probe", out_dir=str(tmp_path / "runs")))
     rec = runner.run()  # used to raise AttributeError here
     assert rec.metrics["cases"] == 2
 
@@ -264,10 +273,14 @@ def test_benchmark_with_permissions_block_loads_and_runs(tmp_path):
     from agent_eval_harness.core.schemas import TestCase
     from agent_eval_harness.observability.events import EventRecorder
 
-    case = TestCase(id="pc1", pattern="react", category="normal", task="t",
-                    expected={"answer": {"type": "numeric", "value": 1}})
-    gw = ToolGateway(case, ExecutionLimits(), runner.policy, runner.ablation,
-                     EventRecorder("t"))
+    case = TestCase(
+        id="pc1",
+        pattern="react",
+        category="normal",
+        task="t",
+        expected={"answer": {"type": "numeric", "value": 1}},
+    )
+    gw = ToolGateway(case, ExecutionLimits(), runner.policy, runner.ablation, EventRecorder("t"))
     res = gw.call("calculator", {"expression": "1+1", "cmd": "rm -rf /"})
     assert not res.ok
     assert "forbidden by policy" in res.error

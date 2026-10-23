@@ -1,4 +1,5 @@
 """Integration: runner end-to-end on every pattern (small slices)."""
+
 import json
 import os
 
@@ -7,16 +8,21 @@ import pytest
 from agent_eval_harness.registry.registry import load_benchmark
 from agent_eval_harness.runner.runner import BenchmarkRunner, RunConfig
 
-PATTERNS = ["react_basic", "plan_execute_basic", "supervisor_basic",
-            "swarm_basic", "map_reduce_basic"]
+PATTERNS = [
+    "react_basic",
+    "plan_execute_basic",
+    "supervisor_basic",
+    "swarm_basic",
+    "map_reduce_basic",
+]
 
 
 @pytest.mark.parametrize("benchmark", PATTERNS)
 def test_runner_produces_valid_record(tmp_path, benchmark):
     bm = load_benchmark(benchmark)
-    runner = BenchmarkRunner(bm, RunConfig(benchmark=benchmark, skill=0.9,
-                                           seed=99, limit=6,
-                                           out_dir=str(tmp_path)))
+    runner = BenchmarkRunner(
+        bm, RunConfig(benchmark=benchmark, skill=0.9, seed=99, limit=6, out_dir=str(tmp_path))
+    )
     rec = runner.run()
     assert 0 < len(rec.verdicts) <= 6
     assert rec.metrics["cases"] == len(rec.verdicts)
@@ -43,8 +49,14 @@ def test_full_dataset_integrity_counts():
         assert len(cases) >= 50, pattern
         total += len(cases)
         cats = {c["category"] for c in cases}
-        assert cats == {"normal", "difficult", "ambiguous", "edge",
-                        "adversarial", "failure_inducing"}
+        assert cats == {
+            "normal",
+            "difficult",
+            "ambiguous",
+            "edge",
+            "adversarial",
+            "failure_inducing",
+        }
         ids = [c["id"] for c in cases]
         assert len(ids) == len(set(ids))
     assert total >= 250
@@ -58,15 +70,21 @@ def test_dataset_regenerates_byte_identical(tmp_path):
 
     env = dict(os.environ)
     out = tmp_path / "ds"
-    r = subprocess.run([sys.executable, "scripts/generate_datasets.py",
-                        "--no-verify", "--out", str(out)],
-                       capture_output=True, text=True, env=env, timeout=300)
+    r = subprocess.run(
+        [sys.executable, "scripts/generate_datasets.py", "--no-verify", "--out", str(out)],
+        capture_output=True,
+        text=True,
+        env=env,
+        timeout=300,
+    )
     assert r.returncode == 0, r.stderr[-500:]
     for pattern in ("react", "plan_execute", "supervisor", "swarm", "map_reduce"):
         fresh = hashlib.sha256(
-            (out / pattern / "golden.jsonl").read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+            (out / pattern / "golden.jsonl").read_bytes().replace(b"\r\n", b"\n")
+        ).hexdigest()
         committed = hashlib.sha256(
-            open(f"datasets/{pattern}/golden.jsonl", "rb").read().replace(b"\r\n", b"\n")).hexdigest()
+            open(f"datasets/{pattern}/golden.jsonl", "rb").read().replace(b"\r\n", b"\n")
+        ).hexdigest()
         assert fresh == committed, f"{pattern} dataset drifted"
 
 
@@ -82,37 +100,41 @@ def test_live_judge_fallbacks_are_counted_and_visible(tmp_path, monkeypatch):
 
     registry = tmp_path / "benchmarks"
     registry.mkdir()
-    (registry / "live_probe.yaml").write_text(yaml.safe_dump({
-        "benchmark": {"name": "live_probe", "version": "1.0", "pattern": "react"},
-        "dataset": {"path": "datasets/react/golden.jsonl"},
-        "evaluators": ["llm_answer_correctness", "task_checks"],
-        "thresholds": {"overall_pass_rate": 0.5},
-        "execution": {"limit": 3},
-    }), encoding="utf-8")
+    (registry / "live_probe.yaml").write_text(
+        yaml.safe_dump(
+            {
+                "benchmark": {"name": "live_probe", "version": "1.0", "pattern": "react"},
+                "dataset": {"path": "datasets/react/golden.jsonl"},
+                "evaluators": ["llm_answer_correctness", "task_checks"],
+                "thresholds": {"overall_pass_rate": 0.5},
+                "execution": {"limit": 3},
+            }
+        ),
+        encoding="utf-8",
+    )
 
     monkeypatch.setenv("AEH_JUDGE_BACKEND", "live")
     monkeypatch.setenv("OPENAI_API_KEY", "test-key-not-real")
     monkeypatch.setenv("AEH_PROMPTS_DIR", "prompts")
 
     def fake_urlopen(req, timeout=None):  # noqa: ARG001
-        raise urllib.error.HTTPError("url", 429, "Too Many Requests",
-                                     hdrs=None, fp=None)
+        raise urllib.error.HTTPError("url", 429, "Too Many Requests", hdrs=None, fp=None)
 
     monkeypatch.setattr(
-        "agent_eval_harness.evaluators.llm_judge.judge.urllib.request.urlopen",
-        fake_urlopen)
+        "agent_eval_harness.evaluators.llm_judge.judge.urllib.request.urlopen", fake_urlopen
+    )
 
     bm = load_benchmark("live_probe", registry_dirs=[str(registry), "benchmarks"])
-    runner = BenchmarkRunner(bm, RunConfig(benchmark="live_probe",
-                                           out_dir=str(tmp_path / "runs")))
+    runner = BenchmarkRunner(bm, RunConfig(benchmark="live_probe", out_dir=str(tmp_path / "runs")))
     rec = runner.run()
 
     # every judged case fell back — and it is RECORDED, not silent
     assert rec.metrics.get("judge_fallbacks", {}).get("llm_answer_correctness") == 3
     # deterministic evaluators (task_checks) are NOT fallbacks and NOT errors
     assert "task_checks" not in rec.metrics.get("judge_fallbacks", {})
-    assert all("llm_answer_correctness" not in v.evaluator_errors
-               for v in rec.verdicts), "fallback must not be an evaluator error"
+    assert all("llm_answer_correctness" not in v.evaluator_errors for v in rec.verdicts), (
+        "fallback must not be an evaluator error"
+    )
     # verdicts still carry rubric scores as evidence
     assert all("llm_answer_correctness" in v.scores for v in rec.verdicts)
     # event log carries per-case fallback evidence
@@ -125,8 +147,7 @@ def test_live_judge_fallbacks_are_counted_and_visible(tmp_path, monkeypatch):
     assert data["metrics"]["judge_fallbacks"]["llm_answer_correctness"] == 3
 
 
-def test_live_judge_reaches_local_endpoint_during_sandboxed_run(
-        tmp_path, monkeypatch):
+def test_live_judge_reaches_local_endpoint_during_sandboxed_run(tmp_path, monkeypatch):
     """Issue D regression: a live judge must be able to perform its AUTHORIZED
     HTTP evaluation while the benchmark run's network sandbox is active.
 
@@ -146,9 +167,24 @@ def test_live_judge_reaches_local_endpoint_during_sandboxed_run(
             length = int(self.headers.get("Content-Length", 0) or 0)
             body = self.rfile.read(length)
             served.append((self.path, body))
-            payload = _json.dumps({"choices": [{"message": {"content": _json.dumps(
-                {"score": 0.95, "passed": True, "rationale": "live double",
-                 "confidence": 0.9})}}]}).encode()
+            payload = _json.dumps(
+                {
+                    "choices": [
+                        {
+                            "message": {
+                                "content": _json.dumps(
+                                    {
+                                        "score": 0.95,
+                                        "passed": True,
+                                        "rationale": "live double",
+                                        "confidence": 0.9,
+                                    }
+                                )
+                            }
+                        }
+                    ]
+                }
+            ).encode()
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
             self.send_header("Content-Length", str(len(payload)))
@@ -162,25 +198,31 @@ def test_live_judge_reaches_local_endpoint_during_sandboxed_run(
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     try:
         import yaml
+
         registry = tmp_path / "benchmarks"
         registry.mkdir(exist_ok=True)
-        (registry / "live_probe2.yaml").write_text(yaml.safe_dump({
-            "benchmark": {"name": "live_probe2", "version": "1.0", "pattern": "react"},
-            "dataset": {"path": "datasets/react/golden.jsonl"},
-            "evaluators": ["llm_answer_correctness"],
-            "thresholds": {"overall_pass_rate": 0.5},
-            "execution": {"limit": 3},
-        }), encoding="utf-8")
+        (registry / "live_probe2.yaml").write_text(
+            yaml.safe_dump(
+                {
+                    "benchmark": {"name": "live_probe2", "version": "1.0", "pattern": "react"},
+                    "dataset": {"path": "datasets/react/golden.jsonl"},
+                    "evaluators": ["llm_answer_correctness"],
+                    "thresholds": {"overall_pass_rate": 0.5},
+                    "execution": {"limit": 3},
+                }
+            ),
+            encoding="utf-8",
+        )
 
         monkeypatch.setenv("AEH_JUDGE_BACKEND", "live")
         monkeypatch.setenv("OPENAI_API_KEY", "test-key-not-real")
-        monkeypatch.setenv("OPENAI_BASE_URL",
-                            f"http://127.0.0.1:{srv.server_address[1]}/v1")
+        monkeypatch.setenv("OPENAI_BASE_URL", f"http://127.0.0.1:{srv.server_address[1]}/v1")
         monkeypatch.setenv("AEH_PROMPTS_DIR", "prompts")
 
         bm = load_benchmark("live_probe2", registry_dirs=[str(registry), "benchmarks"])
-        runner = BenchmarkRunner(bm, RunConfig(benchmark="live_probe2",
-                                               out_dir=str(tmp_path / "runs")))
+        runner = BenchmarkRunner(
+            bm, RunConfig(benchmark="live_probe2", out_dir=str(tmp_path / "runs"))
+        )
         rec = runner.run()
 
         # the judge served every case over HTTP DURING the sandboxed run
@@ -189,8 +231,7 @@ def test_live_judge_reaches_local_endpoint_during_sandboxed_run(
         # no fallback occurred (all live responses valid)
         assert "judge_fallbacks" not in rec.metrics
         # live scores came from the double (0.95), not the rubric
-        assert all(v.scores["llm_answer_correctness"] == 0.95
-                   for v in rec.verdicts)
+        assert all(v.scores["llm_answer_correctness"] == 0.95 for v in rec.verdicts)
         # and agent-side network creation was blocked the whole time — the
         # guard stayed installed for the run (no attempts by the built-in
         # agent, which is offline by construction)

@@ -5,6 +5,7 @@ table for live-equivalent comparison and is labeled `estimate` in reports.
 Latency is real measured wall-clock (on the deterministic backend it is NOT
 representative of live-LLM latency — reports say so explicitly).
 """
+
 from __future__ import annotations
 
 import math
@@ -41,8 +42,9 @@ def _rate(num: int, den: int) -> float:
     return round(num / den, 6) if den else 0.0
 
 
-def aggregate(verdicts: list[dict], outcomes: list[dict], runtime_s: float,
-              tokens_in: int, tokens_out: int) -> dict[str, Any]:
+def aggregate(
+    verdicts: list[dict], outcomes: list[dict], runtime_s: float, tokens_in: int, tokens_out: int
+) -> dict[str, Any]:
     """Build the metrics block of a run record from per-case dicts.
 
     verdicts: {case_id, pattern, category, passed, failure_class, scores,
@@ -60,8 +62,7 @@ def aggregate(verdicts: list[dict], outcomes: list[dict], runtime_s: float,
         failed = set(v.get("failed_evaluators") or [])
         errored = set(v.get("evaluator_errors") or [])
         for name, score in v.get("scores", {}).items():
-            slot = per_evaluator.setdefault(
-                name, {"sum": 0.0, "n": 0, "pass": 0, "err": 0})
+            slot = per_evaluator.setdefault(name, {"sum": 0.0, "n": 0, "pass": 0, "err": 0})
             slot["sum"] += score
             slot["n"] += 1
             if name in errored:
@@ -85,8 +86,12 @@ def aggregate(verdicts: list[dict], outcomes: list[dict], runtime_s: float,
         for gname, items in groups.items():
             gpass = sum(1 for i in items if i["passed"])
             lo, hi = wilson_ci(gpass, len(items))
-            out[gname] = {"pass_rate": _rate(gpass, len(items)), "n": len(items),
-                          "ci_low": round(lo, 4), "ci_high": round(hi, 4)}
+            out[gname] = {
+                "pass_rate": _rate(gpass, len(items)),
+                "n": len(items),
+                "ci_low": round(lo, 4),
+                "ci_high": round(hi, 4),
+            }
         return out
 
     failure_hist: dict[str, int] = {}
@@ -137,6 +142,6 @@ def aggregate(verdicts: list[dict], outcomes: list[dict], runtime_s: float,
         "tokens_out_est": tokens_out,
         "cost_estimate_usd": round(cost, 6),
         "cost_note": "estimate: simulated pricing (in $0.15/1M, out $0.60/1M) on "
-                     "estimated tokens (chars/4); not a live-backend measurement",
+        "estimated tokens (chars/4); not a live-backend measurement",
         "runtime_s": round(runtime_s, 3),
     }

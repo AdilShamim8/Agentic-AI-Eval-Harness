@@ -1,5 +1,6 @@
 """Experiments: harness ablations, judge calibration (Cohen's kappa),
 reproducibility repeats. Every function MEASURES — nothing is assumed."""
+
 from __future__ import annotations
 
 import csv
@@ -21,9 +22,13 @@ from agent_eval_harness.runner.runner import BenchmarkRunner, RunConfig
 # ---------------------------------------------------------------------------
 
 
-def run_ablation(benchmark: str, profiles: list[str] | None = None,
-                 skill: float = 0.85, seed: int = 20260912,
-                 out_dir: str | None = None) -> dict[str, Any]:
+def run_ablation(
+    benchmark: str,
+    profiles: list[str] | None = None,
+    skill: float = 0.85,
+    seed: int = 20260912,
+    out_dir: str | None = None,
+) -> dict[str, Any]:
     out_dir = out_dir or default_runs_dir()
     """Run the same benchmark under each ablation profile; return a measured
     attribution table."""
@@ -34,17 +39,21 @@ def run_ablation(benchmark: str, profiles: list[str] | None = None,
     bm = load_benchmark(benchmark)
     rows: dict[str, dict[str, Any]] = {}
     for profile in profiles:
-        runner = BenchmarkRunner(bm, RunConfig(
-            benchmark=benchmark, skill=skill, seed=seed, ablation=profile,
-            out_dir=out_dir))
+        runner = BenchmarkRunner(
+            bm,
+            RunConfig(
+                benchmark=benchmark, skill=skill, seed=seed, ablation=profile, out_dir=out_dir
+            ),
+        )
         rec = runner.run()
         m = rec.metrics
         rows[profile] = {
             "run_id": rec.run_id,
             "cases": m["cases"],
             "pass_rate": m["pass_rate"],
-            "recovery_rate": (m["behavior"].get("recovery_rate")
-                              if m["behavior"].get("recovery_n") else None),
+            "recovery_rate": (
+                m["behavior"].get("recovery_rate") if m["behavior"].get("recovery_n") else None
+            ),
             "tool_efficiency": m["behavior"].get("tool_efficiency_mean"),
             "loop_rate": m["behavior"]["loop_rate"],
             "termination_success": m["behavior"]["termination_success"],
@@ -57,8 +66,7 @@ def run_ablation(benchmark: str, profiles: list[str] | None = None,
                 continue
             attribution[profile] = {
                 "pass_rate_delta": round(row["pass_rate"] - baseline["pass_rate"], 4),
-                "note": f"pass-rate change when harness capability is REMOVED "
-                        f"({profile} vs full)",
+                "note": f"pass-rate change when harness capability is REMOVED ({profile} vs full)",
             }
     return {"benchmark": benchmark, "profiles": rows, "attribution": attribution}
 
@@ -82,42 +90,49 @@ def cohen_kappa(a: list[int], b: list[int]) -> float:
     return (po - pe) / (1 - pe)
 
 
-def export_calibration_sample(benchmark: str, sample_n: int = 60,
-                              seed: int = 20260912,
-                              skill: float = 0.85,
-                              criterion: str = "answer_correctness",
-                              out_path: str = "evals/calibration/sample.csv",
-                              run_out_dir: str | None = None) -> dict[str, Any]:
+def export_calibration_sample(
+    benchmark: str,
+    sample_n: int = 60,
+    seed: int = 20260912,
+    skill: float = 0.85,
+    criterion: str = "answer_correctness",
+    out_path: str = "evals/calibration/sample.csv",
+    run_out_dir: str | None = None,
+) -> dict[str, Any]:
     run_out_dir = run_out_dir or default_runs_dir()
     """Run the benchmark, apply the judge to every case, export an unlabeled
     sample for human review (case, answer, gold, judge decision)."""
     bm = load_benchmark(benchmark)
-    runner = BenchmarkRunner(bm, RunConfig(benchmark=benchmark, skill=skill,
-                                           seed=seed, out_dir=run_out_dir))
+    runner = BenchmarkRunner(
+        bm, RunConfig(benchmark=benchmark, skill=skill, seed=seed, out_dir=run_out_dir)
+    )
     record = runner.run()
     judge = RubricJudge(criterion)
     rows: list[dict[str, Any]] = []
     from agent_eval_harness.registry.datasets import load_dataset
     from agent_eval_harness.evaluators.llm_judge.judge import _gold_reference
-    cases = {c.id: c for c in load_dataset(
-        runner._resolve(bm.dataset_path))}
+
+    cases = {c.id: c for c in load_dataset(runner._resolve(bm.dataset_path))}
     for v in record.verdicts:
         case = cases[v.case_id]
         # re-derive the judge decision for the sample (deterministic judge)
         from agent_eval_harness.core.schemas import AgentRunOutcome
-        outcome = AgentRunOutcome(case_id=v.case_id, ok=v.passed,
-                                  final_answer=v.final_answer)
+
+        outcome = AgentRunOutcome(case_id=v.case_id, ok=v.passed, final_answer=v.final_answer)
         res = judge.evaluate(case, outcome)
-        rows.append({
-            "case_id": v.case_id, "category": v.category,
-            "task": case.task[:160],
-            "gold_reference": _gold_reference(case)[:160],
-            "agent_answer": v.final_answer[:200],
-            "judge_pass": 1 if res.passed else 0,
-            "human_pass": "",  # <- filled by the annotator
-            "annotator": "",
-            "notes": "",
-        })
+        rows.append(
+            {
+                "case_id": v.case_id,
+                "category": v.category,
+                "task": case.task[:160],
+                "gold_reference": _gold_reference(case)[:160],
+                "agent_answer": v.final_answer[:200],
+                "judge_pass": 1 if res.passed else 0,
+                "human_pass": "",  # <- filled by the annotator
+                "annotator": "",
+                "notes": "",
+            }
+        )
     # deterministic subsample
     step = max(1, len(rows) // sample_n) if len(rows) > sample_n else 1
     sample = rows[::step][:sample_n]
@@ -125,15 +140,30 @@ def export_calibration_sample(benchmark: str, sample_n: int = 60,
     if out_dir:
         os.makedirs(out_dir, exist_ok=True)
     with open(out_path, "w", newline="", encoding="utf-8") as fh:
-        fieldnames = list(sample[0].keys()) if sample else [
-            "case_id", "category", "task", "gold_reference", "agent_answer",
-            "judge_pass", "human_pass", "annotator", "notes"
-        ]
+        fieldnames = (
+            list(sample[0].keys())
+            if sample
+            else [
+                "case_id",
+                "category",
+                "task",
+                "gold_reference",
+                "agent_answer",
+                "judge_pass",
+                "human_pass",
+                "annotator",
+                "notes",
+            ]
+        )
         writer = csv.DictWriter(fh, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(sample)
-    return {"sample_path": out_path, "exported": len(sample), "total": len(rows),
-            "benchmark": benchmark}
+    return {
+        "sample_path": out_path,
+        "exported": len(sample),
+        "total": len(rows),
+        "benchmark": benchmark,
+    }
 
 
 def compute_calibration(labels_path: str) -> dict[str, Any]:
@@ -161,8 +191,9 @@ def compute_calibration(labels_path: str) -> dict[str, Any]:
         "judge_false_negatives": fn,
         "judge_pass_rate": round(sum(judge) / len(rows), 4),
         "human_pass_rate": round(sum(human) / len(rows), 4),
-        "limitation": "single annotator" if len(annotators) == 1 else
-                      f"{len(annotators)} annotators (majority vote not applied)",
+        "limitation": "single annotator"
+        if len(annotators) == 1
+        else f"{len(annotators)} annotators (majority vote not applied)",
     }
 
 
@@ -171,9 +202,14 @@ def compute_calibration(labels_path: str) -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 
 
-def run_repro(benchmark: str, repeats: int = 5, seed: int = 20260912,
-              vary_seed: bool = False, skill: float = 0.85,
-              out_dir: str | None = None) -> dict[str, Any]:
+def run_repro(
+    benchmark: str,
+    repeats: int = 5,
+    seed: int = 20260912,
+    vary_seed: bool = False,
+    skill: float = 0.85,
+    out_dir: str | None = None,
+) -> dict[str, Any]:
     out_dir = out_dir or default_runs_dir()
     """Repeat the same run N times. Same seed => byte-identical records
     (verified); varied seeds => sensitivity probe."""
@@ -183,8 +219,9 @@ def run_repro(benchmark: str, repeats: int = 5, seed: int = 20260912,
     records: list[Any] = []
     for i in range(repeats):
         s = seed + i if vary_seed else seed
-        runner = BenchmarkRunner(bm, RunConfig(benchmark=benchmark, skill=skill,
-                                               seed=s, out_dir=out_dir))
+        runner = BenchmarkRunner(
+            bm, RunConfig(benchmark=benchmark, skill=skill, seed=s, out_dir=out_dir)
+        )
         rec = runner.run()
         rates.append(rec.pass_rate)
         run_ids.append(rec.run_id)
@@ -192,9 +229,11 @@ def run_repro(benchmark: str, repeats: int = 5, seed: int = 20260912,
     spread = round(max(rates) - min(rates), 6)
     byte_identical = None
     if not vary_seed and repeats >= 2:
-        byte_identical = (_semantic(records[0]) == _semantic(records[1]))
+        byte_identical = _semantic(records[0]) == _semantic(records[1])
     return {
-        "benchmark": benchmark, "repeats": repeats, "vary_seed": vary_seed,
+        "benchmark": benchmark,
+        "repeats": repeats,
+        "vary_seed": vary_seed,
         "pass_rates": [round(r, 4) for r in rates],
         "max_spread_pp": round(spread * 100, 3),
         "target_within_pp": 2.0,
@@ -208,17 +247,25 @@ def _semantic(rec) -> str:
     """Canonical semantic projection: verdicts + scores + config, excluding
     wall-clock metadata (latency/timestamps/runtime) that cannot repeat."""
     payload = {
-        "benchmark": rec.benchmark, "agent": rec.agent, "seed": rec.seed,
-        "ablation": rec.ablation, "versions": rec.versions,
-        "verdicts": [{"case_id": v.case_id, "passed": v.passed,
-                      "failure_class": v.failure_class.value,
-                      "scores": v.scores,
-                      "failed_evaluators": v.failed_evaluators,
-                      "evaluator_errors": v.evaluator_errors,
-                      "termination": v.termination,
-                      "loop_detected": v.loop_detected,
-                      "final_answer": v.final_answer}
-                     for v in rec.verdicts],
+        "benchmark": rec.benchmark,
+        "agent": rec.agent,
+        "seed": rec.seed,
+        "ablation": rec.ablation,
+        "versions": rec.versions,
+        "verdicts": [
+            {
+                "case_id": v.case_id,
+                "passed": v.passed,
+                "failure_class": v.failure_class.value,
+                "scores": v.scores,
+                "failed_evaluators": v.failed_evaluators,
+                "evaluator_errors": v.evaluator_errors,
+                "termination": v.termination,
+                "loop_detected": v.loop_detected,
+                "final_answer": v.final_answer,
+            }
+            for v in rec.verdicts
+        ],
     }
     return json.dumps(payload, sort_keys=True)
 

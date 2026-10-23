@@ -1,15 +1,19 @@
 """Pytest-marker smoke suite — the CI evaluation gate (runs in ~2s)."""
+
 import pytest
 
 
 @pytest.mark.agent_eval
-@pytest.mark.parametrize("benchmark,skill", [
-    ("react_basic", 0.85),
-    ("plan_execute_basic", 0.85),
-    ("supervisor_basic", 0.85),
-    ("swarm_basic", 0.85),
-    ("map_reduce_basic", 0.85),
-])
+@pytest.mark.parametrize(
+    "benchmark,skill",
+    [
+        ("react_basic", 0.85),
+        ("plan_execute_basic", 0.85),
+        ("supervisor_basic", 0.85),
+        ("swarm_basic", 0.85),
+        ("map_reduce_basic", 0.85),
+    ],
+)
 def test_benchmark_smoke(eval_case, benchmark, skill):
     """Smoke: 8 cases per pattern must clear a low floor. Full-suite
     threshold gates are asserted in the CI eval-gate job (all 56 cases)."""

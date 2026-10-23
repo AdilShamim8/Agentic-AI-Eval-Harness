@@ -24,6 +24,7 @@ Live-backend reliability: Not measured yet (no endpoint available in the
 
 Selection: env AEH_JUDGE_BACKEND=live|rubric, or constructor argument.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -146,22 +147,27 @@ class RubricJudge:
             elif spec.get("type") == "exact":
                 s = 1.0 if answer == str(spec.get("value", "")) else 0.0
             else:
-                s = _token_f1(answer, gold) if gold else (
-                    1.0 if answer else 0.0)
+                s = _token_f1(answer, gold) if gold else (1.0 if answer else 0.0)
             conf = min(1.0, abs(s - 0.5) * 2)  # far from boundary = confident
-            return {"score": s, "passed": s >= 0.7,
-                    "rationale": f"answer-correctness={s:.2f} "
-                                 f"(type={spec.get('type', 'reference')}); "
-                                 f"gold='{gold[:60]}'",
-                    "confidence": round(conf, 2), "items": [
-                        {"item": "answer conveys the reference facts",
-                         "score": round(s, 3)}]}
+            return {
+                "score": s,
+                "passed": s >= 0.7,
+                "rationale": f"answer-correctness={s:.2f} "
+                f"(type={spec.get('type', 'reference')}); "
+                f"gold='{gold[:60]}'",
+                "confidence": round(conf, 2),
+                "items": [{"item": "answer conveys the reference facts", "score": round(s, 3)}],
+            }
         if self.criterion == "instruction_following":
             instructions = case.expected.get("instructions", [])
             if not instructions:
-                return {"score": 1.0 if answer else 0.0, "passed": bool(answer),
-                        "rationale": "no explicit instructions on case",
-                        "confidence": 0.5, "items": []}
+                return {
+                    "score": 1.0 if answer else 0.0,
+                    "passed": bool(answer),
+                    "rationale": "no explicit instructions on case",
+                    "confidence": 0.5,
+                    "items": [],
+                }
             items = []
             for ins in instructions:
                 kind = ins.get("kind", "")
@@ -179,56 +185,86 @@ class RubricJudge:
                     ok = True
                 items.append({"item": ins, "ok": ok})
             s = sum(1 for i in items if i["ok"]) / len(items) if items else 1.0
-            return {"score": s, "passed": s == 1.0,
-                    "rationale": f"{sum(1 for i in items if i['ok'])}/{len(items)} "
-                                 "instruction items satisfied",
-                    "confidence": 0.8, "items": items}
+            return {
+                "score": s,
+                "passed": s == 1.0,
+                "rationale": f"{sum(1 for i in items if i['ok'])}/{len(items)} "
+                "instruction items satisfied",
+                "confidence": 0.8,
+                "items": items,
+            }
         if self.criterion == "plan_quality":
             plan = outcome.trajectory.plan
             required = case.required_tools
             if not required or not plan:
                 s = 0.5 if required else 1.0
-                return {"score": s, "passed": s >= 0.7,
-                        "rationale": "plan absent or nothing to plan",
-                        "confidence": 0.4, "items": []}
+                return {
+                    "score": s,
+                    "passed": s >= 0.7,
+                    "rationale": "plan absent or nothing to plan",
+                    "confidence": 0.4,
+                    "items": [],
+                }
             blob = " ".join(plan).lower()
-            covered = [t for t in required
-                       if t.replace("_", " ") in blob or t in blob]
+            covered = [t for t in required if t.replace("_", " ") in blob or t in blob]
             s = len(covered) / len(required)
-            return {"score": s, "passed": s >= 0.7,
-                    "rationale": f"plan covers {len(covered)}/{len(required)} required tools",
-                    "confidence": 0.7,
-                    "items": [{"tool": t, "covered": t in covered} for t in required]}
+            return {
+                "score": s,
+                "passed": s >= 0.7,
+                "rationale": f"plan covers {len(covered)}/{len(required)} required tools",
+                "confidence": 0.7,
+                "items": [{"tool": t, "covered": t in covered} for t in required],
+            }
         if self.criterion == "synthesis_quality":
             values = case.answer_spec.get("values", [])
             if not values:
                 s = _token_f1(answer, gold) if gold else (1.0 if answer else 0.0)
-                return {"score": s, "passed": s >= 0.6,
-                        "rationale": "single-source synthesis overlap",
-                        "confidence": 0.5, "items": []}
+                return {
+                    "score": s,
+                    "passed": s >= 0.6,
+                    "rationale": "single-source synthesis overlap",
+                    "confidence": 0.5,
+                    "items": [],
+                }
             items = []
             low = answer.lower()
             for v in values:
                 contained = str(v).lower() in low  # containment, calibrated v1.1
                 items.append({"part": str(v)[:60], "present": contained})
             s = sum(1 for i in items if i["present"]) / len(items) if items else 1.0
-            return {"score": s, "passed": s >= 0.6,
-                    "rationale": f"mean per-part overlap {s:.2f}",
-                    "confidence": 0.6, "items": items}
-        return {"score": 0.0, "passed": False,
-                "rationale": f"unknown criterion {self.criterion}",
-                "confidence": 0.0, "items": []}
+            return {
+                "score": s,
+                "passed": s >= 0.6,
+                "rationale": f"mean per-part overlap {s:.2f}",
+                "confidence": 0.6,
+                "items": items,
+            }
+        return {
+            "score": 0.0,
+            "passed": False,
+            "rationale": f"unknown criterion {self.criterion}",
+            "confidence": 0.0,
+            "items": [],
+        }
 
     # -- evaluator protocol ---------------------------------------------------
     def evaluate(self, case: TestCase, outcome: AgentRunOutcome) -> EvaluationResult:
         res = self.score(case, outcome)
-        return _result(case, self.name, self.version, res["score"], res["passed"],
-                       {"rationale": res["rationale"], "items": res["items"]},
-                       {"backend": RUBRIC_BACKEND_ID,
-                        "model": None,
-                        "prompt_version": RUBRIC_PROMPT_VERSION,
-                        "confidence": res["confidence"],
-                        "deterministic": True})
+        return _result(
+            case,
+            self.name,
+            self.version,
+            res["score"],
+            res["passed"],
+            {"rationale": res["rationale"], "items": res["items"]},
+            {
+                "backend": RUBRIC_BACKEND_ID,
+                "model": None,
+                "prompt_version": RUBRIC_PROMPT_VERSION,
+                "confidence": res["confidence"],
+                "deterministic": True,
+            },
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -249,7 +285,9 @@ def _prompt_path(criterion: str) -> str:
     p = os.path.join(root, fname)
     if os.path.isfile(p):
         return p
-    repo_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    repo_root = os.path.dirname(
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    )
     alt = os.path.join(repo_root, "prompts", fname)
     if os.path.isfile(alt):
         return alt
@@ -281,8 +319,7 @@ def _validated_live_payload(parsed: object) -> dict:
         raise _InvalidLiveResponse("response is not a JSON object")
     raw_score = parsed.get("score")
     if isinstance(raw_score, bool) or not isinstance(raw_score, (int, float)):
-        raise _InvalidLiveResponse(
-            f"score {raw_score!r} is missing or not numeric")
+        raise _InvalidLiveResponse(f"score {raw_score!r} is missing or not numeric")
     score = float(raw_score)
     if not 0.0 <= score <= 1.0:
         # no silent clamping: a judge claiming 5.0 is out of contract
@@ -295,11 +332,9 @@ def _validated_live_payload(parsed: object) -> dict:
         elif isinstance(raw_passed, str) and raw_passed.strip().lower() in ("true", "false"):
             passed = raw_passed.strip().lower() == "true"
         else:
-            raise _InvalidLiveResponse(
-                f"passed {raw_passed!r} is not a boolean or 'true'/'false'")
+            raise _InvalidLiveResponse(f"passed {raw_passed!r} is not a boolean or 'true'/'false'")
         if passed != (score >= 0.7):
-            raise _InvalidLiveResponse(
-                f"passed={passed} contradicts score={score} (threshold 0.7)")
+            raise _InvalidLiveResponse(f"passed={passed} contradicts score={score} (threshold 0.7)")
     else:
         passed = score >= 0.7
 
@@ -318,21 +353,32 @@ def _validated_live_payload(parsed: object) -> dict:
     if items is not None and not isinstance(items, list):
         raise _InvalidLiveResponse("items is not a list")
 
-    return {"score": score, "passed": passed, "rationale": rationale,
-            "confidence": confidence, "items": items}
+    return {
+        "score": score,
+        "passed": passed,
+        "rationale": rationale,
+        "confidence": confidence,
+        "items": items,
+    }
 
 
 class LiveJudge(RubricJudge):
     """Calls an OpenAI-compatible endpoint with the versioned judge prompt;
     falls back to the deterministic rubric on any failure (recorded)."""
 
-    def __init__(self, criterion: str = "answer_correctness",
-                 model: str | None = None, base_url: str | None = None,
-                 api_key: str | None = None, timeout_s: float = 30.0):
+    def __init__(
+        self,
+        criterion: str = "answer_correctness",
+        model: str | None = None,
+        base_url: str | None = None,
+        api_key: str | None = None,
+        timeout_s: float = 30.0,
+    ):
         super().__init__(criterion)
         self.model = model or os.environ.get("JUDGE_MODEL", "gpt-4o-mini")
-        self.base_url = (base_url or os.environ.get("OPENAI_BASE_URL",
-                                                    "https://api.openai.com/v1")).rstrip("/")
+        self.base_url = (
+            base_url or os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1")
+        ).rstrip("/")
         self.api_key = api_key or os.environ.get("OPENAI_API_KEY", "")
         self.timeout_s = timeout_s
 
@@ -352,9 +398,12 @@ class LiveJudge(RubricJudge):
             req = urllib.request.Request(
                 f"{self.base_url}/chat/completions",
                 data=json.dumps(body).encode(),
-                headers={"Content-Type": "application/json",
-                         "Authorization": f"Bearer {self.api_key}"},
-                method="POST")
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {self.api_key}",
+                },
+                method="POST",
+            )
             with urllib.request.urlopen(req, timeout=self.timeout_s) as resp:
                 data = json.loads(resp.read().decode())
             content = data["choices"][0]["message"]["content"].strip()
@@ -365,22 +414,32 @@ class LiveJudge(RubricJudge):
             payload = _validated_live_payload(parsed)
             latency = round((time.perf_counter() - t0) * 1000, 1)
             return _result(
-                case, self.name, self.version, payload["score"], payload["passed"],
-                {"rationale": payload["rationale"][:500],
-                 "items": payload["items"] or []},
-                {"backend": "openai-compatible-live",
-                 "model": self.model,
-                 "prompt_version": os.path.basename(
-                     PROMPT_FILES.get(self.criterion, "?")),
-                 "prompt_sha": self._prompt_sha(),
-                 "latency_ms": latency,
-                 "confidence": payload["confidence"],
-                 "fallback": None})
+                case,
+                self.name,
+                self.version,
+                payload["score"],
+                payload["passed"],
+                {"rationale": payload["rationale"][:500], "items": payload["items"] or []},
+                {
+                    "backend": "openai-compatible-live",
+                    "model": self.model,
+                    "prompt_version": os.path.basename(PROMPT_FILES.get(self.criterion, "?")),
+                    "prompt_sha": self._prompt_sha(),
+                    "latency_ms": latency,
+                    "confidence": payload["confidence"],
+                    "fallback": None,
+                },
+            )
         except _InvalidLiveResponse as exc:
-            return self._with_fallback_note(
-                rubric, f"invalid live response: {exc}")
-        except (urllib.error.URLError, TimeoutError, ValueError, KeyError,
-                OSError, SecurityViolation) as exc:
+            return self._with_fallback_note(rubric, f"invalid live response: {exc}")
+        except (
+            urllib.error.URLError,
+            TimeoutError,
+            ValueError,
+            KeyError,
+            OSError,
+            SecurityViolation,
+        ) as exc:
             return self._with_fallback_note(rubric, f"live judge failed: {exc}")
 
     # -- helpers ---------------------------------------------------------------
@@ -389,20 +448,23 @@ class LiveJudge(RubricJudge):
         try:
             template = open(path, encoding="utf-8").read()
         except OSError:
-            template = ("Judge the agent's answer for {criterion}.\nTASK: {task}\n"
-                        "REFERENCE: {reference}\nANSWER: {answer}\n"
-                        "Respond as JSON: {{score, passed, rationale, confidence}}.")
+            template = (
+                "Judge the agent's answer for {criterion}.\nTASK: {task}\n"
+                "REFERENCE: {reference}\nANSWER: {answer}\n"
+                "Respond as JSON: {{score, passed, rationale, confidence}}."
+            )
         tools = ", ".join(outcome.trajectory.tool_names()[:20]) or "(none)"
         if outcome.trajectory.plan:
             traj = f"Plan: {' -> '.join(outcome.trajectory.plan[:10])} | Tools: {tools}"
         else:
             traj = tools
-        return (template
-                .replace("{criterion}", self.criterion)
-                .replace("{task}", case.task[:2000])
-                .replace("{reference}", _gold_reference(case)[:1000])
-                .replace("{answer}", (outcome.final_answer or "")[:2000])
-                .replace("{trajectory}", traj))
+        return (
+            template.replace("{criterion}", self.criterion)
+            .replace("{task}", case.task[:2000])
+            .replace("{reference}", _gold_reference(case)[:1000])
+            .replace("{answer}", (outcome.final_answer or "")[:2000])
+            .replace("{trajectory}", traj)
+        )
 
     def _prompt_sha(self) -> str:
         try:

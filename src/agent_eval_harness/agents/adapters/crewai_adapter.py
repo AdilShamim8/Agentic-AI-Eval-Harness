@@ -10,6 +10,7 @@ Integration contract:
 - Without crewai installed, construction raises InfraError with the install
   hint; stub crews are used by unit tests (real-crew support: Not measured yet).
 """
+
 from __future__ import annotations
 
 from typing import Any
@@ -46,26 +47,44 @@ class CrewAIAdapter:
                 raw = str(getattr(task_out, "raw", "") or "")
                 agent = str(getattr(task_out, "agent", "") or f"task{i}")
                 parts.append(raw)
-                traj.steps.append(StepRecord(index=traj.step_count(), phase="act",
-                                             summary=f"crew task {i + 1} ({agent}): "
-                                                     f"{raw[:160]}", agent=agent))
+                traj.steps.append(
+                    StepRecord(
+                        index=traj.step_count(),
+                        phase="act",
+                        summary=f"crew task {i + 1} ({agent}): {raw[:160]}",
+                        agent=agent,
+                    )
+                )
                 tool_calls = getattr(task_out, "tools_used", None) or []
                 for tc in tool_calls:
                     name = getattr(tc, "name", "tool")
-                    traj.tool_calls.append(ToolCallRecord(
-                        name=str(name), arguments={}, ok=True))
+                    traj.tool_calls.append(ToolCallRecord(name=str(name), arguments={}, ok=True))
             final = str(getattr(output, "raw", "") or "; ".join(parts))
-            traj.steps.append(StepRecord(index=traj.step_count(), phase="final",
-                                         summary=f"final: {final[:200]}", agent=self.id))
+            traj.steps.append(
+                StepRecord(
+                    index=traj.step_count(),
+                    phase="final",
+                    summary=f"final: {final[:200]}",
+                    agent=self.id,
+                )
+            )
             stats = ctx.gateway.stats()
             return AgentRunOutcome(
-                case_id=ctx.case.id, ok=bool(final), final_answer=final,
-                trajectory=traj, security_flags=list(stats.get("security_flags", [])))
+                case_id=ctx.case.id,
+                ok=bool(final),
+                final_answer=final,
+                trajectory=traj,
+                security_flags=list(stats.get("security_flags", [])),
+            )
         except Exception as exc:  # noqa: BLE001
             from agent_eval_harness.core.errors import classify_exception
 
             traj.termination = "error"
-            return AgentRunOutcome(case_id=ctx.case.id, ok=False, final_answer="",
-                                   trajectory=traj,
-                                   failure_class=classify_exception(exc),
-                                   error=str(exc))
+            return AgentRunOutcome(
+                case_id=ctx.case.id,
+                ok=False,
+                final_answer="",
+                trajectory=traj,
+                failure_class=classify_exception(exc),
+                error=str(exc),
+            )

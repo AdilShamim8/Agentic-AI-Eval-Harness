@@ -3,6 +3,7 @@
 Provides an interactive browser interface for viewing benchmark runs, inspecting
 trajectories, checking CI gates, and launching runs with zero external dependencies.
 """
+
 from __future__ import annotations
 
 import json
@@ -591,230 +592,253 @@ class DashboardHandler(BaseHTTPRequestHandler):
     _execute_lock = threading.Lock()
 
     def do_GET(self) -> None:
-      parsed = urlparse(self.path)
-      path = parsed.path.rstrip("/")
-      if path == "" or path == "/":
-        self._send_html(INDEX_HTML)
-        return
+        parsed = urlparse(self.path)
+        path = parsed.path.rstrip("/")
+        if path == "" or path == "/":
+            self._send_html(INDEX_HTML)
+            return
 
-      if path == "/api/status":
-        self._handle_status()
-      elif path == "/api/runs":
-        self._handle_list_runs()
-      elif path.startswith("/api/runs/"):
-        run_id = path[len("/api/runs/"):]
-        self._handle_get_run(run_id)
-      elif path == "/api/benchmarks":
-        self._handle_list_benchmarks()
-      elif path == "/api/baselines":
-        self._handle_list_baselines()
-      else:
-        self.send_error(HTTPStatus.NOT_FOUND, "Not Found")
+        if path == "/api/status":
+            self._handle_status()
+        elif path == "/api/runs":
+            self._handle_list_runs()
+        elif path.startswith("/api/runs/"):
+            run_id = path[len("/api/runs/") :]
+            self._handle_get_run(run_id)
+        elif path == "/api/benchmarks":
+            self._handle_list_benchmarks()
+        elif path == "/api/baselines":
+            self._handle_list_baselines()
+        else:
+            self.send_error(HTTPStatus.NOT_FOUND, "Not Found")
 
     def do_POST(self) -> None:
-      parsed = urlparse(self.path)
-      if parsed.path.rstrip("/") == "/api/run":
-        self._handle_execute_run()
-      else:
-        self.send_error(HTTPStatus.NOT_FOUND, "Not Found")
+        parsed = urlparse(self.path)
+        if parsed.path.rstrip("/") == "/api/run":
+            self._handle_execute_run()
+        else:
+            self.send_error(HTTPStatus.NOT_FOUND, "Not Found")
 
     def _handle_status(self) -> None:
-      runs = self._collect_runs()
-      latest = runs[0] if runs else None
-      self._send_json({
-          "status": "healthy",
-          "total_runs": len(runs),
-          "latest_run": latest,
-      })
+        runs = self._collect_runs()
+        latest = runs[0] if runs else None
+        self._send_json(
+            {
+                "status": "healthy",
+                "total_runs": len(runs),
+                "latest_run": latest,
+            }
+        )
 
     def _handle_list_runs(self) -> None:
-      runs = self._collect_runs()
-      self._send_json({"runs": runs})
+        runs = self._collect_runs()
+        self._send_json({"runs": runs})
 
     def _handle_get_run(self, run_id: str) -> None:
-      safe_id = os.path.basename(run_id)
-      filename = os.path.join(self.runs_dir, f"{safe_id}.json")
-      if not os.path.isfile(filename):
-        self.send_error(HTTPStatus.NOT_FOUND, f"Run {safe_id} not found")
-        return
-      with open(filename, encoding="utf-8") as fh:
-        data = json.load(fh)
-      self._send_json(data)
+        safe_id = os.path.basename(run_id)
+        filename = os.path.join(self.runs_dir, f"{safe_id}.json")
+        if not os.path.isfile(filename):
+            self.send_error(HTTPStatus.NOT_FOUND, f"Run {safe_id} not found")
+            return
+        with open(filename, encoding="utf-8") as fh:
+            data = json.load(fh)
+        self._send_json(data)
 
     def _handle_list_benchmarks(self) -> None:
-      benchmarks = list_benchmarks()
-      self._send_json({"benchmarks": benchmarks})
+        benchmarks = list_benchmarks()
+        self._send_json({"benchmarks": benchmarks})
 
     def _handle_list_baselines(self) -> None:
-      baselines = []
-      if os.path.isdir(self.baselines_dir):
-        for f in os.listdir(self.baselines_dir):
-          if f.endswith(".json"):
-            name = f[:-5]
-            with open(os.path.join(self.baselines_dir, f), encoding="utf-8") as fh:
-              bdata = json.load(fh)
-            baselines.append({
-                "name": name,
-                "benchmark": bdata.get("benchmark"),
-                "pass_rate": bdata.get("metrics", {}).get("pass_rate", 0.0),
-            })
-      self._send_json({"baselines": baselines})
+        baselines = []
+        if os.path.isdir(self.baselines_dir):
+            for f in os.listdir(self.baselines_dir):
+                if f.endswith(".json"):
+                    name = f[:-5]
+                    with open(os.path.join(self.baselines_dir, f), encoding="utf-8") as fh:
+                        bdata = json.load(fh)
+                    baselines.append(
+                        {
+                            "name": name,
+                            "benchmark": bdata.get("benchmark"),
+                            "pass_rate": bdata.get("metrics", {}).get("pass_rate", 0.0),
+                        }
+                    )
+        self._send_json({"baselines": baselines})
 
     MAX_BODY_BYTES = 1 << 20  # 1 MiB request-body cap
 
     def _handle_execute_run(self) -> None:
-      try:
-        # ---- request parsing + validation (fail with 4xx, never 500) ----
         try:
-          length = int(self.headers.get("Content-Length", 0) or 0)
-        except ValueError:
-          self._send_json({"error": "invalid Content-Length header"},
-                           status=HTTPStatus.BAD_REQUEST)
-          return
-        if length < 0:
-          self._send_json({"error": "invalid Content-Length header"},
-                           status=HTTPStatus.BAD_REQUEST)
-          return
-        if length > self.MAX_BODY_BYTES:
-          # refuse before reading anything: don't let a client force the
-          # server to buffer an unbounded body
-          self.close_connection = True
-          self._send_json({"error": f"request body too large "
-                                    f"(max {self.MAX_BODY_BYTES} bytes)"},
-                           status=HTTPStatus.REQUEST_ENTITY_TOO_LARGE)
-          return
-        body = self.rfile.read(length) if length > 0 else b""
-        try:
-          payload = json.loads(body.decode("utf-8")) if body else {}
-        except (ValueError, UnicodeDecodeError):
-          self._send_json({"error": "invalid JSON body"},
-                           status=HTTPStatus.BAD_REQUEST)
-          return
-        if not isinstance(payload, dict):
-          self._send_json({"error": "request body must be a JSON object"},
-                           status=HTTPStatus.BAD_REQUEST)
-          return
+            # ---- request parsing + validation (fail with 4xx, never 500) ----
+            try:
+                length = int(self.headers.get("Content-Length", 0) or 0)
+            except ValueError:
+                self._send_json(
+                    {"error": "invalid Content-Length header"}, status=HTTPStatus.BAD_REQUEST
+                )
+                return
+            if length < 0:
+                self._send_json(
+                    {"error": "invalid Content-Length header"}, status=HTTPStatus.BAD_REQUEST
+                )
+                return
+            if length > self.MAX_BODY_BYTES:
+                # refuse before reading anything: don't let a client force the
+                # server to buffer an unbounded body
+                self.close_connection = True
+                self._send_json(
+                    {"error": f"request body too large (max {self.MAX_BODY_BYTES} bytes)"},
+                    status=HTTPStatus.REQUEST_ENTITY_TOO_LARGE,
+                )
+                return
+            body = self.rfile.read(length) if length > 0 else b""
+            try:
+                payload = json.loads(body.decode("utf-8")) if body else {}
+            except (ValueError, UnicodeDecodeError):
+                self._send_json({"error": "invalid JSON body"}, status=HTTPStatus.BAD_REQUEST)
+                return
+            if not isinstance(payload, dict):
+                self._send_json(
+                    {"error": "request body must be a JSON object"}, status=HTTPStatus.BAD_REQUEST
+                )
+                return
 
-        bench_name = payload.get("benchmark", "react_basic")
-        if not isinstance(bench_name, str) or not bench_name.strip():
-          self._send_json({"error": "benchmark must be a non-empty string"},
-                           status=HTTPStatus.BAD_REQUEST)
-          return
-        try:
-          skill = float(payload.get("skill", 0.85))
-        except (TypeError, ValueError):
-          self._send_json({"error": "skill must be a number in [0,1]"},
-                           status=HTTPStatus.BAD_REQUEST)
-          return
-        if not 0.0 <= skill <= 1.0:
-          self._send_json({"error": "skill must be a number in [0,1]"},
-                           status=HTTPStatus.BAD_REQUEST)
-          return
-        raw_limit = payload.get("limit")
-        if raw_limit is None or raw_limit == "":
-          limit = None  # full run
-        else:
-          try:
-            limit = int(raw_limit)
-          except (TypeError, ValueError):
-            self._send_json({"error": "limit must be a positive integer (or null)"},
-                             status=HTTPStatus.BAD_REQUEST)
-            return
-          if limit < 1:
-            # v0.2.1 silently treated limit=0 (and negatives) as a full run
-            self._send_json({"error": "limit must be a positive integer (or null)"},
-                             status=HTTPStatus.BAD_REQUEST)
-            return
+            bench_name = payload.get("benchmark", "react_basic")
+            if not isinstance(bench_name, str) or not bench_name.strip():
+                self._send_json(
+                    {"error": "benchmark must be a non-empty string"}, status=HTTPStatus.BAD_REQUEST
+                )
+                return
+            try:
+                skill = float(payload.get("skill", 0.85))
+            except (TypeError, ValueError):
+                self._send_json(
+                    {"error": "skill must be a number in [0,1]"}, status=HTTPStatus.BAD_REQUEST
+                )
+                return
+            if not 0.0 <= skill <= 1.0:
+                self._send_json(
+                    {"error": "skill must be a number in [0,1]"}, status=HTTPStatus.BAD_REQUEST
+                )
+                return
+            raw_limit = payload.get("limit")
+            if raw_limit is None or raw_limit == "":
+                limit = None  # full run
+            else:
+                try:
+                    limit = int(raw_limit)
+                except (TypeError, ValueError):
+                    self._send_json(
+                        {"error": "limit must be a positive integer (or null)"},
+                        status=HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+                if limit < 1:
+                    # v0.2.1 silently treated limit=0 (and negatives) as a full run
+                    self._send_json(
+                        {"error": "limit must be a positive integer (or null)"},
+                        status=HTTPStatus.BAD_REQUEST,
+                    )
+                    return
 
-        # ---- deployment mode check (read-only viewer vs executor) --------
-        if not (os.path.isdir(self.runs_dir) and os.access(self.runs_dir, os.W_OK)):
-          self._send_json(
-              {"error": "dashboard is deployed in READ-ONLY VIEWER mode "
+            # ---- deployment mode check (read-only viewer vs executor) --------
+            if not (os.path.isdir(self.runs_dir) and os.access(self.runs_dir, os.W_OK)):
+                self._send_json(
+                    {
+                        "error": "dashboard is deployed in READ-ONLY VIEWER mode "
                         "(evals/runs is not writable). POST /api/run is "
                         "disabled. Execute benchmarks with the runner "
                         "service (docker compose run --rm runner "
-                        "run --benchmark <name>) or the agent-eval CLI."},
-              status=HTTPStatus.SERVICE_UNAVAILABLE)
-          return
+                        "run --benchmark <name>) or the agent-eval CLI."
+                    },
+                    status=HTTPStatus.SERVICE_UNAVAILABLE,
+                )
+                return
 
-        # ---- authorized execution (serialized) ----------------------------
-        with DashboardHandler._execute_lock:
-          bench = load_benchmark(bench_name)
-          cfg = RunConfig(benchmark=bench_name, skill=skill, limit=limit, out_dir=self.runs_dir)
-          runner = BenchmarkRunner(bench, cfg)
-          record = runner.run()
+            # ---- authorized execution (serialized) ----------------------------
+            with DashboardHandler._execute_lock:
+                bench = load_benchmark(bench_name)
+                cfg = RunConfig(
+                    benchmark=bench_name, skill=skill, limit=limit, out_dir=self.runs_dir
+                )
+                runner = BenchmarkRunner(bench, cfg)
+                record = runner.run()
 
-        self._send_json({
-            "run_id": record.run_id,
-            "benchmark": record.benchmark,
-            "pass_rate": record.pass_rate,
-            "recorded_at": record.recorded_at,
-            "metrics": record.metrics,
-            "verdicts": [
+            self._send_json(
                 {
-                    "case_id": v.case_id,
-                    "pattern": v.pattern,
-                    "category": v.category,
-                    "passed": v.passed,
-                    "failure_class": v.failure_class.value,
-                    "tool_calls": v.tool_calls,
-                    "final_answer": v.final_answer,
+                    "run_id": record.run_id,
+                    "benchmark": record.benchmark,
+                    "pass_rate": record.pass_rate,
+                    "recorded_at": record.recorded_at,
+                    "metrics": record.metrics,
+                    "verdicts": [
+                        {
+                            "case_id": v.case_id,
+                            "pattern": v.pattern,
+                            "category": v.category,
+                            "passed": v.passed,
+                            "failure_class": v.failure_class.value,
+                            "tool_calls": v.tool_calls,
+                            "final_answer": v.final_answer,
+                        }
+                        for v in record.verdicts
+                    ],
                 }
-                for v in record.verdicts
-            ],
-        })
-      except InfraError as exc:
-        # unknown benchmark / bad registry config: a client error, not a 500
-        self._send_json({"error": str(exc)}, status=HTTPStatus.BAD_REQUEST)
-      except Exception as exc:
-        self._send_json({"error": str(exc)}, status=HTTPStatus.INTERNAL_SERVER_ERROR)
+            )
+        except InfraError as exc:
+            # unknown benchmark / bad registry config: a client error, not a 500
+            self._send_json({"error": str(exc)}, status=HTTPStatus.BAD_REQUEST)
+        except Exception as exc:
+            self._send_json({"error": str(exc)}, status=HTTPStatus.INTERNAL_SERVER_ERROR)
 
     def _collect_runs(self) -> list[dict[str, Any]]:
-      results: list[dict[str, Any]] = []
-      if not os.path.isdir(self.runs_dir):
+        results: list[dict[str, Any]] = []
+        if not os.path.isdir(self.runs_dir):
+            return results
+        for fname in os.listdir(self.runs_dir):
+            if not fname.endswith(".json") or fname.endswith(".events.json"):
+                continue
+            fpath = os.path.join(self.runs_dir, fname)
+            try:
+                with open(fpath, encoding="utf-8") as fh:
+                    data = json.load(fh)
+                results.append(
+                    {
+                        "run_id": data.get("run_id", fname[:-5]),
+                        "benchmark": data.get("benchmark", "unknown"),
+                        "pass_rate": float(data.get("metrics", {}).get("pass_rate", 0.0)),
+                        "cases": int(data.get("metrics", {}).get("cases", 0)),
+                        "recorded_at": data.get("recorded_at", ""),
+                    }
+                )
+            except Exception:
+                continue
+        results.sort(key=lambda r: r.get("recorded_at", ""), reverse=True)
         return results
-      for fname in os.listdir(self.runs_dir):
-        if not fname.endswith(".json") or fname.endswith(".events.json"):
-          continue
-        fpath = os.path.join(self.runs_dir, fname)
-        try:
-          with open(fpath, encoding="utf-8") as fh:
-            data = json.load(fh)
-          results.append({
-              "run_id": data.get("run_id", fname[:-5]),
-              "benchmark": data.get("benchmark", "unknown"),
-              "pass_rate": float(data.get("metrics", {}).get("pass_rate", 0.0)),
-              "cases": int(data.get("metrics", {}).get("cases", 0)),
-              "recorded_at": data.get("recorded_at", ""),
-          })
-        except Exception:
-          continue
-      results.sort(key=lambda r: r.get("recorded_at", ""), reverse=True)
-      return results
 
     def _send_html(self, html: str) -> None:
-      data = html.encode("utf-8")
-      self.send_response(HTTPStatus.OK)
-      self.send_header("Content-Type", "text/html; charset=utf-8")
-      self.send_header("X-Content-Type-Options", "nosniff")
-      self.send_header("Content-Length", str(len(data)))
-      self.end_headers()
-      self.wfile.write(data)
+        data = html.encode("utf-8")
+        self.send_response(HTTPStatus.OK)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("Content-Length", str(len(data)))
+        self.end_headers()
+        self.wfile.write(data)
 
     def _send_json(self, obj: Any, status: HTTPStatus = HTTPStatus.OK) -> None:
-      data = json.dumps(obj).encode("utf-8")
-      self.send_response(status)
-      self.send_header("Content-Type", "application/json")
-      # same-origin by default: the dashboard UI is served from this origin.
-      # No Access-Control-Allow-Origin: cross-origin readers are blocked by SOP.
-      self.send_header("X-Content-Type-Options", "nosniff")
-      self.send_header("Content-Length", str(len(data)))
-      self.end_headers()
-      self.wfile.write(data)
+        data = json.dumps(obj).encode("utf-8")
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        # same-origin by default: the dashboard UI is served from this origin.
+        # No Access-Control-Allow-Origin: cross-origin readers are blocked by SOP.
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("Content-Length", str(len(data)))
+        self.end_headers()
+        self.wfile.write(data)
 
     def log_message(self, format: str, *args: Any) -> None:
-      # Suppress default noisy console logs for clean operational output
-      pass
+        # Suppress default noisy console logs for clean operational output
+        pass
 
 
 def run_server(
@@ -823,18 +847,18 @@ def run_server(
     runs_dir: str | None = None,
     baselines_dir: str | None = None,
 ) -> None:
-  runs_dir = runs_dir or default_runs_dir()
-  baselines_dir = baselines_dir or default_baselines_dir()
-  DashboardHandler.runs_dir = runs_dir
-  DashboardHandler.baselines_dir = baselines_dir
-  ThreadingHTTPServer.allow_reuse_address = True
-  server = ThreadingHTTPServer((host, port), DashboardHandler)
-  server.daemon_threads = True
-  print(f"  agent-eval dashboard live at http://{host}:{port}/")
-  print("  Press Ctrl+C to terminate.")
-  try:
-    server.serve_forever()
-  except KeyboardInterrupt:
-    print("\n  Dashboard stopped.")
-  finally:
-    server.server_close()
+    runs_dir = runs_dir or default_runs_dir()
+    baselines_dir = baselines_dir or default_baselines_dir()
+    DashboardHandler.runs_dir = runs_dir
+    DashboardHandler.baselines_dir = baselines_dir
+    ThreadingHTTPServer.allow_reuse_address = True
+    server = ThreadingHTTPServer((host, port), DashboardHandler)
+    server.daemon_threads = True
+    print(f"  agent-eval dashboard live at http://{host}:{port}/")
+    print("  Press Ctrl+C to terminate.")
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        print("\n  Dashboard stopped.")
+    finally:
+        server.server_close()

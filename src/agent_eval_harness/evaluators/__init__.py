@@ -1,4 +1,5 @@
 """Evaluator registry: name -> factory. Benchmarks reference these names."""
+
 from __future__ import annotations
 
 from agent_eval_harness.core.errors import InfraError
@@ -52,8 +53,7 @@ _FACTORIES = {
 
 def build_evaluator(name: str):
     if name not in _FACTORIES:
-        raise InfraError(
-            f"unknown evaluator '{name}' (available: {sorted(_FACTORIES)})")
+        raise InfraError(f"unknown evaluator '{name}' (available: {sorted(_FACTORIES)})")
     return _FACTORIES[name]()
 
 

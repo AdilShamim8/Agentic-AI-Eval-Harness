@@ -4,6 +4,7 @@ The status command is the weekly one-glance health view an operator checks
 after handover — it must degrade gracefully (no runs, no baselines, no
 registry) and flag regressions against the named baseline.
 """
+
 from __future__ import annotations
 
 import json
@@ -19,14 +20,22 @@ class _Args:
         self.baseline = baseline
 
 
-def _write_run(runs_dir: str, run_id: str, benchmark: str, pass_rate: float,
-               recorded_at: str = "2026-09-12T00:00:00+0000") -> None:
+def _write_run(
+    runs_dir: str,
+    run_id: str,
+    benchmark: str,
+    pass_rate: float,
+    recorded_at: str = "2026-09-12T00:00:00+0000",
+) -> None:
     os.makedirs(runs_dir, exist_ok=True)
-    rec = {"run_id": run_id, "benchmark": benchmark, "recorded_at": recorded_at,
-           "agent": "builtin:react",
-           "metrics": {"pass_rate": pass_rate, "cases": 56}}
-    with open(os.path.join(runs_dir, f"{run_id}.json"), "w",
-              encoding="utf-8") as fh:
+    rec = {
+        "run_id": run_id,
+        "benchmark": benchmark,
+        "recorded_at": recorded_at,
+        "agent": "builtin:react",
+        "metrics": {"pass_rate": pass_rate, "cases": 56},
+    }
+    with open(os.path.join(runs_dir, f"{run_id}.json"), "w", encoding="utf-8") as fh:
         json.dump(rec, fh)
 
 
@@ -61,14 +70,13 @@ def test_status_degrades_gracefully_when_empty(tmp_path, capsys):
 def test_status_flags_regression_vs_baseline(tmp_path, capsys):
     runs = str(tmp_path / "runs")
     bases = str(tmp_path / "bases")
-    _write_run(runs, "reg", "react_basic", 0.62)          # -26.8pp vs baseline
+    _write_run(runs, "reg", "react_basic", 0.62)  # -26.8pp vs baseline
     os.makedirs(bases)
     with open(os.path.join(bases, "main.json"), "w", encoding="utf-8") as fh:
-        json.dump({"benchmark": "react_basic",
-                   "metrics": {"pass_rate": 0.893}}, fh)
+        json.dump({"benchmark": "react_basic", "metrics": {"pass_rate": 0.893}}, fh)
     rc = cmd_status(_Args(runs, bases, "main"))
     out = capsys.readouterr().out
-    assert rc == 1                                        # operator must be alerted
+    assert rc == 1  # operator must be alerted
     assert "REGRESSION" in out
     assert "-27.3pp" in out
 
@@ -79,8 +87,7 @@ def test_status_ok_when_matching_baseline(tmp_path, capsys):
     _write_run(runs, "ok", "react_basic", 0.89)
     os.makedirs(bases)
     with open(os.path.join(bases, "main.json"), "w", encoding="utf-8") as fh:
-        json.dump({"benchmark": "react_basic",
-                   "metrics": {"pass_rate": 0.893}}, fh)
+        json.dump({"benchmark": "react_basic", "metrics": {"pass_rate": 0.893}}, fh)
     rc = cmd_status(_Args(runs, bases, "main"))
     out = capsys.readouterr().out
     assert rc == 0
@@ -131,7 +138,6 @@ def test_load_run_direct_path_and_suffix(tmp_path, capsys):
     assert "test_run_123" in out
 
 
-
 # ---- CLI works without rich (Issue K) ----------------------------------------
 # The documented minimal install has NO rich (PyYAML is the only runtime
 # dependency). Every error/warning path must work there.
@@ -143,8 +149,10 @@ def test_validate_invalid_dataset_without_rich(capsys, tmp_path):
     from agent_eval_harness import cli
 
     bad = tmp_path / "bad.jsonl"
-    bad.write_text('{"id":"x1","pattern":"react","category":"nope","task":"t",'
-                   '"expected":{}}\n', encoding="utf-8")
+    bad.write_text(
+        '{"id":"x1","pattern":"react","category":"nope","task":"t","expected":{}}\n',
+        encoding="utf-8",
+    )
 
     assert cli.app.RICH is False or cli.app.RICH is True  # module accessible
     import agent_eval_harness.cli.app as app
@@ -166,18 +174,33 @@ def test_compare_version_drift_warning_without_rich(capsys):
     from agent_eval_harness.core.errors import FailureClass
 
     def _mk(rid, ds_rev):
-        v = CaseVerdict(case_id="c1", pattern="react", category="normal",
-                        passed=True, failure_class=FailureClass.NONE, scores={})
+        v = CaseVerdict(
+            case_id="c1",
+            pattern="react",
+            category="normal",
+            passed=True,
+            failure_class=FailureClass.NONE,
+            scores={},
+        )
         return RunRecord(
-            run_id=rid, benchmark="react_basic", benchmark_version="1.0",
-            agent="builtin:react", agent_pattern="react", seed=1, ablation="full",
-            versions={"dataset": {"revision": ds_rev}}, config={}, verdicts=[v],
-            metrics={"pass_rate": 1.0, "cases": 1, "per_evaluator": {}})
+            run_id=rid,
+            benchmark="react_basic",
+            benchmark_version="1.0",
+            agent="builtin:react",
+            agent_pattern="react",
+            seed=1,
+            ablation="full",
+            versions={"dataset": {"revision": ds_rev}},
+            config={},
+            verdicts=[v],
+            metrics={"pass_rate": 1.0, "cases": 1, "per_evaluator": {}},
+        )
 
     import json as _json
     import tempfile
     import os
     from agent_eval_harness.core.schemas import to_jsonable
+
     with tempfile.TemporaryDirectory() as td:
         for rid, rev in (("ra", "aaa"), ("rb", "bbb")):
             with open(os.path.join(td, f"{rid}.json"), "w", encoding="utf-8") as fh:
@@ -201,19 +224,24 @@ def test_cli_subprocess_without_rich(tmp_path):
     shim.mkdir()
     (shim / "rich").mkdir()
     (shim / "rich" / "__init__.py").write_text(
-        "raise ImportError('rich is not installed (simulated)')\n",
-        encoding="utf-8")
+        "raise ImportError('rich is not installed (simulated)')\n", encoding="utf-8"
+    )
 
     bad = tmp_path / "bad.jsonl"
-    bad.write_text('{"id":"x1","pattern":"react","category":"nope","task":"t",'
-                   '"expected":{}}\n', encoding="utf-8")
+    bad.write_text(
+        '{"id":"x1","pattern":"react","category":"nope","task":"t","expected":{}}\n',
+        encoding="utf-8",
+    )
 
     env = dict(os.environ)
     env["PYTHONPATH"] = str(shim) + os.pathsep + env.get("PYTHONPATH", "")
     r = subprocess.run(
-        [sys.executable, "-m", "agent_eval_harness.cli.app",
-         "validate", "--dataset", str(bad)],
-        capture_output=True, text=True, env=env, timeout=60)
+        [sys.executable, "-m", "agent_eval_harness.cli.app", "validate", "--dataset", str(bad)],
+        capture_output=True,
+        text=True,
+        env=env,
+        timeout=60,
+    )
     assert r.returncode == 1, r.stderr[-500:]
     assert "INVALID" in r.stderr or "INVALID" in r.stdout
     assert "AssertionError" not in r.stderr + r.stdout

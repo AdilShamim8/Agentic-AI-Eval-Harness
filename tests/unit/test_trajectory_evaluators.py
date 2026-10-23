@@ -1,4 +1,5 @@
 """Trajectory + behavioral evaluator unit tests."""
+
 from agent_eval_harness.core.schemas import (
     AgentRunOutcome,
     StepRecord,
@@ -19,26 +20,47 @@ from agent_eval_harness.evaluators.trajectory.behavior import (
 
 def make_case(golden=None, required=None, max_steps=12, faults=None):
     return TestCase(
-        id="c", pattern="react", category="normal", task="t",
-        expected={"answer": {}, "golden_trajectory": golden or [],
-                  "required_tools": required or [], "max_steps": max_steps},
-        faults=faults or [])
+        id="c",
+        pattern="react",
+        category="normal",
+        task="t",
+        expected={
+            "answer": {},
+            "golden_trajectory": golden or [],
+            "required_tools": required or [],
+            "max_steps": max_steps,
+        },
+        faults=faults or [],
+    )
 
 
-def make_outcome(calls=None, termination="answer", loop=False, final="x",
-                 recovered=False, fault_injected=False, plan=None,
-                 steps=4, last_phase="final"):
+def make_outcome(
+    calls=None,
+    termination="answer",
+    loop=False,
+    final="x",
+    recovered=False,
+    fault_injected=False,
+    plan=None,
+    steps=4,
+    last_phase="final",
+):
     traj = Trajectory(termination=termination, loop_detected=loop)
     traj.plan = plan or []
-    for name, args in (calls or []):
+    for name, args in calls or []:
         traj.tool_calls.append(ToolCallRecord(name=name, arguments=args, ok=True))
     for i in range(steps):
         traj.steps.append(StepRecord(index=i, phase="act", summary="s"))
     if last_phase:
         traj.steps.append(StepRecord(index=steps, phase=last_phase, summary="final"))
-    return AgentRunOutcome(case_id="c", ok=True, final_answer=final,
-                           trajectory=traj, recovered_from_fault=recovered,
-                           fault_injected=fault_injected)
+    return AgentRunOutcome(
+        case_id="c",
+        ok=True,
+        final_answer=final,
+        trajectory=traj,
+        recovered_from_fault=recovered,
+        fault_injected=fault_injected,
+    )
 
 
 def test_lcs():
@@ -48,14 +70,11 @@ def test_lcs():
 
 
 def test_trajectory_alignment():
-    golden = [{"tool": "calculator"}, {"tool": "text_transform"},
-              {"tool": "data_calc"}]
+    golden = [{"tool": "calculator"}, {"tool": "text_transform"}, {"tool": "data_calc"}]
     ev = TrajectoryAlignment()
-    good = make_outcome(calls=[("calculator", {}), ("text_transform", {}),
-                               ("data_calc", {})])
+    good = make_outcome(calls=[("calculator", {}), ("text_transform", {}), ("data_calc", {})])
     assert ev.evaluate(make_case(golden), good).passed
-    reversed_ = make_outcome(calls=[("data_calc", {}), ("text_transform", {}),
-                                    ("calculator", {})])
+    reversed_ = make_outcome(calls=[("data_calc", {}), ("text_transform", {}), ("calculator", {})])
     res = ev.evaluate(make_case(golden), reversed_)
     assert not res.passed  # ordering matters at sequence length 3
     empty = make_outcome(calls=[])
@@ -67,14 +86,16 @@ def test_tool_efficiency():
     golden = [{"tool": "calculator"}]
     clean = make_outcome(calls=[("calculator", {"e": "1"})])
     assert ev.evaluate(make_case(golden), clean).score == 1.0
-    wasteful = make_outcome(calls=[("calculator", {"e": "1"}),
-                                   ("text_stats", {"t": "x"}),
-                                   ("summarize", {"t": "x"})])
+    wasteful = make_outcome(
+        calls=[("calculator", {"e": "1"}), ("text_stats", {"t": "x"}), ("summarize", {"t": "x"})]
+    )
     assert ev.evaluate(make_case(golden), wasteful).score < 0.6
     # fault-aware: retry after injected fault is necessary, not waste
-    faulted = make_outcome(calls=[("calculator", {"e": "1"}),
-                                  ("calculator", {"e": "1"})],
-                           recovered=True, fault_injected=True)
+    faulted = make_outcome(
+        calls=[("calculator", {"e": "1"}), ("calculator", {"e": "1"})],
+        recovered=True,
+        fault_injected=True,
+    )
     res = ev.evaluate(make_case(golden, faults=[{"tool": "calculator"}]), faulted)
     assert res.score == 1.0
 

@@ -1,4 +1,5 @@
 """Metrics + regression engine + registry unit tests."""
+
 import math
 
 import pytest
@@ -30,8 +31,13 @@ def test_registry_load_and_validate():
     bm_ext = load_benchmark("react_basic.yaml")
     assert bm_ext.name == "react_basic"
     names = [b["name"] for b in list_benchmarks()]
-    assert {"react_basic", "supervisor_basic", "map_reduce_basic",
-            "failure_recovery", "adversarial"} <= set(names)
+    assert {
+        "react_basic",
+        "supervisor_basic",
+        "map_reduce_basic",
+        "failure_recovery",
+        "adversarial",
+    } <= set(names)
     with pytest.raises(InfraError):
         load_benchmark("no_such_benchmark")
 
@@ -69,22 +75,44 @@ def _record(rate_a, n=40, evals=None):
     verdicts = []
     for i in range(n):
         passed = i < int(rate_a * n)
-        verdicts.append(CaseVerdict(
-            case_id=f"c{i}", pattern="react", category="normal", passed=passed,
-            scores=evals or {}, failed_evaluators=[] if passed else ["task_checks"]))
+        verdicts.append(
+            CaseVerdict(
+                case_id=f"c{i}",
+                pattern="react",
+                category="normal",
+                passed=passed,
+                scores=evals or {},
+                failed_evaluators=[] if passed else ["task_checks"],
+            )
+        )
     return RunRecord(
-        run_id="r1", benchmark="react_basic", benchmark_version="1.0",
-        agent="builtin:react", agent_pattern="react", seed=1, ablation="full",
-        versions={}, config={},
+        run_id="r1",
+        benchmark="react_basic",
+        benchmark_version="1.0",
+        agent="builtin:react",
+        agent_pattern="react",
+        seed=1,
+        ablation="full",
+        versions={},
+        config={},
         verdicts=verdicts,
-        metrics={"cases": n, "passed": int(rate_a * n), "pass_rate": rate_a,
-                 "per_evaluator": evals and {} or {}})
+        metrics={
+            "cases": n,
+            "passed": int(rate_a * n),
+            "pass_rate": rate_a,
+            "per_evaluator": evals and {} or {},
+        },
+    )
 
 
 def _baseline(rate):
-    return BaselineRecord(name="b", run_id="r0", benchmark="react_basic",
-                          created_at="t",
-                          metrics={"pass_rate": rate, "per_evaluator": {}})
+    return BaselineRecord(
+        name="b",
+        run_id="r0",
+        benchmark="react_basic",
+        created_at="t",
+        metrics={"pass_rate": rate, "per_evaluator": {}},
+    )
 
 
 def test_regression_detected():
@@ -149,14 +177,11 @@ def test_save_baseline_with_json_suffix(tmp_path):
     assert "\\" not in p
 
 
-
-
 def test_runner_persist_posix_events_path(tmp_path):
     from agent_eval_harness.runner.runner import BenchmarkRunner, RunConfig
 
     bm = load_benchmark("react_basic")
-    runner = BenchmarkRunner(bm, RunConfig(benchmark="react_basic", limit=1,
-                                           out_dir=str(tmp_path)))
+    runner = BenchmarkRunner(bm, RunConfig(benchmark="react_basic", limit=1, out_dir=str(tmp_path)))
     rec = runner.run()
     assert "\\" not in rec.events_path
     assert rec.events_path.endswith(f"{rec.run_id}.events.jsonl")
@@ -166,14 +191,34 @@ def test_aggregation_handles_zero_latency_and_none_redundant():
     from agent_eval_harness.metrics.aggregation import aggregate
 
     verdicts = [
-        {"case_id": "c1", "pattern": "react", "category": "normal", "passed": True,
-         "failure_class": "none", "scores": {"s1": 1.0}, "failed_evaluators": [],
-         "evaluator_errors": [], "latency_ms": 0.0, "tool_calls": 1,
-         "loop_detected": False, "termination": "answer"},
-        {"case_id": "c2", "pattern": "react", "category": "normal", "passed": True,
-         "failure_class": "none", "scores": {"s1": 1.0}, "failed_evaluators": [],
-         "evaluator_errors": [], "latency_ms": 10.0, "tool_calls": 1,
-         "loop_detected": False, "termination": "answer"},
+        {
+            "case_id": "c1",
+            "pattern": "react",
+            "category": "normal",
+            "passed": True,
+            "failure_class": "none",
+            "scores": {"s1": 1.0},
+            "failed_evaluators": [],
+            "evaluator_errors": [],
+            "latency_ms": 0.0,
+            "tool_calls": 1,
+            "loop_detected": False,
+            "termination": "answer",
+        },
+        {
+            "case_id": "c2",
+            "pattern": "react",
+            "category": "normal",
+            "passed": True,
+            "failure_class": "none",
+            "scores": {"s1": 1.0},
+            "failed_evaluators": [],
+            "evaluator_errors": [],
+            "latency_ms": 10.0,
+            "tool_calls": 1,
+            "loop_detected": False,
+            "termination": "answer",
+        },
     ]
     outcomes = [
         {"redundant": None, "fault_injected": False},
@@ -189,24 +234,62 @@ def test_compare_runs_union_evaluators():
     from agent_eval_harness.core.errors import FailureClass
     from agent_eval_harness.core.schemas import CaseVerdict, RunRecord
 
-    v_a1 = CaseVerdict(case_id="c1", pattern="react", category="normal", passed=True,
-                       failure_class=FailureClass.NONE, scores={}, failed_evaluators=[],
-                       evaluator_errors=[])
-    v_a2 = CaseVerdict(case_id="c2", pattern="react", category="normal", passed=True,
-                       failure_class=FailureClass.NONE, scores={"ev2": 0.8}, failed_evaluators=[],
-                       evaluator_errors=[])
-    v_b1 = CaseVerdict(case_id="c1", pattern="react", category="normal", passed=True,
-                       failure_class=FailureClass.NONE, scores={"ev1": 1.0}, failed_evaluators=[],
-                       evaluator_errors=[])
-    v_b2 = CaseVerdict(case_id="c2", pattern="react", category="normal", passed=True,
-                       failure_class=FailureClass.NONE, scores={"ev2": 0.9}, failed_evaluators=[],
-                       evaluator_errors=[])
+    v_a1 = CaseVerdict(
+        case_id="c1",
+        pattern="react",
+        category="normal",
+        passed=True,
+        failure_class=FailureClass.NONE,
+        scores={},
+        failed_evaluators=[],
+        evaluator_errors=[],
+    )
+    v_a2 = CaseVerdict(
+        case_id="c2",
+        pattern="react",
+        category="normal",
+        passed=True,
+        failure_class=FailureClass.NONE,
+        scores={"ev2": 0.8},
+        failed_evaluators=[],
+        evaluator_errors=[],
+    )
+    v_b1 = CaseVerdict(
+        case_id="c1",
+        pattern="react",
+        category="normal",
+        passed=True,
+        failure_class=FailureClass.NONE,
+        scores={"ev1": 1.0},
+        failed_evaluators=[],
+        evaluator_errors=[],
+    )
+    v_b2 = CaseVerdict(
+        case_id="c2",
+        pattern="react",
+        category="normal",
+        passed=True,
+        failure_class=FailureClass.NONE,
+        scores={"ev2": 0.9},
+        failed_evaluators=[],
+        evaluator_errors=[],
+    )
 
     def _make_rec(rid, verdicts):
-        return RunRecord(run_id=rid, benchmark="react_basic", benchmark_version="1.0",
-                         agent="builtin:react", agent_pattern="react", seed=1, ablation="full",
-                         versions={}, config={}, verdicts=verdicts,
-                         metrics={"pass_rate": 1.0, "cases": 2}, recorded_at="")
+        return RunRecord(
+            run_id=rid,
+            benchmark="react_basic",
+            benchmark_version="1.0",
+            agent="builtin:react",
+            agent_pattern="react",
+            seed=1,
+            ablation="full",
+            versions={},
+            config={},
+            verdicts=verdicts,
+            metrics={"pass_rate": 1.0, "cases": 2},
+            recorded_at="",
+        )
 
     rec_a = _make_rec("ra", [v_a1, v_a2])
     rec_b = _make_rec("rb", [v_b1, v_b2])
@@ -226,9 +309,7 @@ def test_load_run_optional_fields(tmp_path):
     data = {
         "run_id": "test_partial",
         "benchmark": "bench",
-        "verdicts": [
-            {"case_id": "c1", "passed": True}
-        ]
+        "verdicts": [{"case_id": "c1", "passed": True}],
     }
     p = tmp_path / "test_partial.json"
     p.write_text(json.dumps(data), encoding="utf-8")
@@ -246,8 +327,9 @@ def test_export_calibration_sample_flat_path(tmp_path):
 
     flat_path = "test_sample_flat.csv"
     try:
-        res = export_calibration_sample("react_basic", sample_n=2, out_path=flat_path,
-                                        run_out_dir=str(tmp_path / "runs"))
+        res = export_calibration_sample(
+            "react_basic", sample_n=2, out_path=flat_path, run_out_dir=str(tmp_path / "runs")
+        )
         assert os.path.isfile(flat_path)
         assert res["exported"] == 2
     finally:
@@ -255,59 +337,84 @@ def test_export_calibration_sample_flat_path(tmp_path):
             os.remove(flat_path)
 
 
-
-
 # ---- regression gate compatibility (Issue H) ---------------------------------
 
 
-def _compat_record(rate, n=56, benchmark="react_basic", selection=None,
-                   ds_rev="6b2d6a9a48bc7c96", evaluators="task_checks,tool_selection,trajectory,termination,tool_efficiency,loop_detection"):
+def _compat_record(
+    rate,
+    n=56,
+    benchmark="react_basic",
+    selection=None,
+    ds_rev="6b2d6a9a48bc7c96",
+    evaluators="task_checks,tool_selection,trajectory,termination,tool_efficiency,loop_detection",
+):
     """A run record with the identity fields real runner records carry."""
     from agent_eval_harness.core.schemas import CaseVerdict
 
     verdicts = []
     for i in range(n):
         passed = i < int(rate * n)
-        verdicts.append(CaseVerdict(
-            case_id=f"c{i}", pattern="react", category="normal", passed=passed,
-            scores={}, failed_evaluators=[] if passed else ["task_checks"]))
+        verdicts.append(
+            CaseVerdict(
+                case_id=f"c{i}",
+                pattern="react",
+                category="normal",
+                passed=passed,
+                scores={},
+                failed_evaluators=[] if passed else ["task_checks"],
+            )
+        )
     cfg = {}
     if selection:
         cfg["case_selection"] = selection
     return RunRecord(
-        run_id="r-compat", benchmark=benchmark, benchmark_version="1.0",
-        agent="builtin:react", agent_pattern="react", seed=1, ablation="full",
-        versions={"dataset": {"revision": ds_rev},
-                  "evaluator": {"revision": evaluators}},
-        config=cfg, verdicts=verdicts,
-        metrics={"cases": n, "passed": int(rate * n), "pass_rate": rate,
-                 "per_evaluator": {}})
+        run_id="r-compat",
+        benchmark=benchmark,
+        benchmark_version="1.0",
+        agent="builtin:react",
+        agent_pattern="react",
+        seed=1,
+        ablation="full",
+        versions={"dataset": {"revision": ds_rev}, "evaluator": {"revision": evaluators}},
+        config=cfg,
+        verdicts=verdicts,
+        metrics={"cases": n, "passed": int(rate * n), "pass_rate": rate, "per_evaluator": {}},
+    )
 
 
-def _compat_baseline(rate, benchmark="react_basic", n=56, selection=None,
-                     ds_rev="6b2d6a9a48bc7c96",
-                     evaluators="task_checks,tool_selection,trajectory,termination,tool_efficiency,loop_detection"):
+def _compat_baseline(
+    rate,
+    benchmark="react_basic",
+    n=56,
+    selection=None,
+    ds_rev="6b2d6a9a48bc7c96",
+    evaluators="task_checks,tool_selection,trajectory,termination,tool_efficiency,loop_detection",
+):
     metrics = {"pass_rate": rate, "per_evaluator": {}, "cases": n}
     if selection:
         metrics["case_selection"] = selection
     return BaselineRecord(
-        name="b", run_id="r0", benchmark=benchmark, created_at="t",
+        name="b",
+        run_id="r0",
+        benchmark=benchmark,
+        created_at="t",
         metrics=metrics,
-        versions={"dataset": {"revision": ds_rev}, "evaluator": {"revision": evaluators}})
+        versions={"dataset": {"revision": ds_rev}, "evaluator": {"revision": evaluators}},
+    )
 
 
 def test_regression_rejects_cross_benchmark():
     from agent_eval_harness.regression.engine import check_regression
 
-    gate = check_regression(_compat_record(0.75, benchmark="failure_recovery"),
-                            _compat_baseline(0.89))
+    gate = check_regression(
+        _compat_record(0.75, benchmark="failure_recovery"), _compat_baseline(0.89)
+    )
     assert not gate.passed
     assert gate.exit_code == 1
     assert any(f.verdict == "incompatible_benchmark" for f in gate.findings)
     assert "GATE INCOMPATIBLE" in gate.summary
     # must NOT present numeric deltas as if they were meaningful evidence
-    assert not any(f.verdict in ("ok", "regression", "improvement")
-                   for f in gate.findings)
+    assert not any(f.verdict in ("ok", "regression", "improvement") for f in gate.findings)
 
 
 def test_regression_rejects_case_count_mismatch():
@@ -324,7 +431,8 @@ def test_regression_rejects_selection_digest_mismatch():
 
     gate = check_regression(
         _compat_record(0.9, selection="n=56;sha=aaaaaaaaaaaa"),
-        _compat_baseline(0.89, selection="n=56;sha=bbbbbbbbbbbb"))
+        _compat_baseline(0.89, selection="n=56;sha=bbbbbbbbbbbb"),
+    )
     assert not gate.passed
     assert any(f.verdict == "incompatible_selection" for f in gate.findings)
 
@@ -332,8 +440,10 @@ def test_regression_rejects_selection_digest_mismatch():
 def test_regression_rejects_dataset_revision_mismatch():
     from agent_eval_harness.regression.engine import check_regression
 
-    gate = check_regression(_compat_record(0.9, ds_rev="ffffffffffffffff"),
-                            _compat_baseline(0.89, ds_rev="6b2d6a9a48bc7c96"))
+    gate = check_regression(
+        _compat_record(0.9, ds_rev="ffffffffffffffff"),
+        _compat_baseline(0.89, ds_rev="6b2d6a9a48bc7c96"),
+    )
     assert not gate.passed
     assert any(f.verdict == "incompatible_dataset" for f in gate.findings)
 
@@ -343,7 +453,8 @@ def test_regression_rejects_evaluator_set_mismatch():
 
     gate = check_regression(
         _compat_record(0.9, evaluators="task_checks,termination"),
-        _compat_baseline(0.89, evaluators="task_checks,tool_selection"))
+        _compat_baseline(0.89, evaluators="task_checks,tool_selection"),
+    )
     assert not gate.passed
     assert any(f.verdict == "incompatible_evaluators" for f in gate.findings)
 
@@ -354,7 +465,8 @@ def test_regression_accepts_comparable_samples():
     # same benchmark, same dataset, same selection digest, same evaluators
     gate = check_regression(
         _compat_record(0.88, selection="n=56;sha=deadbeef1234"),
-        _compat_baseline(0.89, selection="n=56;sha=deadbeef1234"))
+        _compat_baseline(0.89, selection="n=56;sha=deadbeef1234"),
+    )
     assert gate.passed  # -0.01 within -0.03 threshold
     assert not any(f.verdict.startswith("incompatible") for f in gate.findings)
 
@@ -380,8 +492,9 @@ def test_regression_runnerlevel_cross_benchmark_rejected(tmp_path):
 
     main_base = load_baseline("main")
     bm = load_benchmark("failure_recovery")
-    fr_run = BenchmarkRunner(bm, RunConfig(benchmark="failure_recovery",
-                                           out_dir=str(tmp_path))).run()
+    fr_run = BenchmarkRunner(
+        bm, RunConfig(benchmark="failure_recovery", out_dir=str(tmp_path))
+    ).run()
     gate = check_regression(fr_run, main_base)
     assert not gate.passed
     assert any(f.verdict == "incompatible_benchmark" for f in gate.findings)
@@ -390,9 +503,9 @@ def test_regression_runnerlevel_cross_benchmark_rejected(tmp_path):
 # ---- min_cases_for_gate configuration (Issue B) ------------------------------
 
 
-def _gate_cfg(tmp_path, default_min=None, top_min=None, bench_min=None,
-              pass_on_insufficient=None):
+def _gate_cfg(tmp_path, default_min=None, top_min=None, bench_min=None, pass_on_insufficient=None):
     import yaml
+
     cfg = {"default": {"pass_rate": -0.03}, "benchmarks": {}}
     if default_min is not None:
         cfg["default"]["min_cases_for_gate"] = default_min
@@ -413,8 +526,9 @@ def test_min_cases_configured_under_default_is_honored(tmp_path):
 
     # operator raises the bar from 10 to 30; a 20-case run must be inconclusive
     gates = _gate_cfg(tmp_path, default_min=30)
-    gate = check_regression(_compat_record(0.88, n=20), _compat_baseline(0.89, n=20),
-                            gate_config_path=gates)
+    gate = check_regression(
+        _compat_record(0.88, n=20), _compat_baseline(0.89, n=20), gate_config_path=gates
+    )
     assert any(f.verdict == "insufficient_data" for f in gate.findings)
     assert not gate.passed, "fail-closed when configured minimum is not met"
 
@@ -423,8 +537,9 @@ def test_min_cases_per_benchmark_override_wins(tmp_path):
     from agent_eval_harness.regression.engine import check_regression
 
     gates = _gate_cfg(tmp_path, default_min=10, bench_min=40)
-    gate = check_regression(_compat_record(0.88, n=20), _compat_baseline(0.89, n=20),
-                            gate_config_path=gates)
+    gate = check_regression(
+        _compat_record(0.88, n=20), _compat_baseline(0.89, n=20), gate_config_path=gates
+    )
     assert any(f.verdict == "insufficient_data" for f in gate.findings)
     assert not gate.passed
 
@@ -434,13 +549,15 @@ def test_min_cases_boundary_exact_and_below(tmp_path):
 
     gates = _gate_cfg(tmp_path, default_min=20)
     # exactly at the minimum -> sufficient -> normal comparison
-    gate = check_regression(_compat_record(0.88, n=20), _compat_baseline(0.89, n=20),
-                            gate_config_path=gates)
+    gate = check_regression(
+        _compat_record(0.88, n=20), _compat_baseline(0.89, n=20), gate_config_path=gates
+    )
     assert not any(f.verdict == "insufficient_data" for f in gate.findings)
     assert gate.passed
     # one below the minimum -> inconclusive
-    gate = check_regression(_compat_record(0.88, n=19), _compat_baseline(0.89, n=19),
-                            gate_config_path=gates)
+    gate = check_regression(
+        _compat_record(0.88, n=19), _compat_baseline(0.89, n=19), gate_config_path=gates
+    )
     assert any(f.verdict == "insufficient_data" for f in gate.findings)
     assert not gate.passed
 
@@ -449,8 +566,9 @@ def test_min_cases_zero_cases_is_insufficient(tmp_path):
     from agent_eval_harness.regression.engine import check_regression
 
     gates = _gate_cfg(tmp_path, default_min=10)
-    gate = check_regression(_compat_record(0.0, n=0), _compat_baseline(0.89, n=0),
-                            gate_config_path=gates)
+    gate = check_regression(
+        _compat_record(0.0, n=0), _compat_baseline(0.89, n=0), gate_config_path=gates
+    )
     assert any(f.verdict == "insufficient_data" for f in gate.findings)
     assert not gate.passed
 
@@ -459,8 +577,9 @@ def test_min_cases_legacy_top_level_still_honored(tmp_path):
     from agent_eval_harness.regression.engine import check_regression
 
     gates = _gate_cfg(tmp_path, top_min=30)
-    gate = check_regression(_compat_record(0.88, n=20), _compat_baseline(0.89, n=20),
-                            gate_config_path=gates)
+    gate = check_regression(
+        _compat_record(0.88, n=20), _compat_baseline(0.89, n=20), gate_config_path=gates
+    )
     assert any(f.verdict == "insufficient_data" for f in gate.findings)
 
 
@@ -469,13 +588,15 @@ def test_pass_on_insufficient_policy_both_ways(tmp_path):
 
     # fail closed (default, what CI needs)
     gates = _gate_cfg(tmp_path, default_min=30, pass_on_insufficient=False)
-    gate = check_regression(_compat_record(0.88, n=20), _compat_baseline(0.89, n=20),
-                            gate_config_path=gates)
+    gate = check_regression(
+        _compat_record(0.88, n=20), _compat_baseline(0.89, n=20), gate_config_path=gates
+    )
     assert not gate.passed
     # explicitly authorized to pass: must still be visible as inconclusive
     gates = _gate_cfg(tmp_path, default_min=30, pass_on_insufficient=True)
-    gate = check_regression(_compat_record(0.88, n=20), _compat_baseline(0.89, n=20),
-                            gate_config_path=gates)
+    gate = check_regression(
+        _compat_record(0.88, n=20), _compat_baseline(0.89, n=20), gate_config_path=gates
+    )
     assert gate.passed
     assert "insufficient" in gate.summary
 
@@ -491,8 +612,9 @@ def test_persist_is_atomic_and_leaves_no_tmp(tmp_path, monkeypatch):
     from agent_eval_harness.runner.runner import BenchmarkRunner, RunConfig
 
     bm = load_benchmark("react_basic")
-    r = BenchmarkRunner(bm, RunConfig(benchmark="react_basic", limit=2,
-                                      out_dir=str(tmp_path))).run()
+    r = BenchmarkRunner(
+        bm, RunConfig(benchmark="react_basic", limit=2, out_dir=str(tmp_path))
+    ).run()
     rec_path = tmp_path / f"{r.run_id}.json"
     assert rec_path.read_text(encoding="utf-8").startswith("{")
     assert not list(tmp_path.glob("*.tmp")), "no .tmp residue after success"
@@ -507,12 +629,14 @@ def test_persist_is_atomic_and_leaves_no_tmp(tmp_path, monkeypatch):
 
     monkeypatch.setattr(runner_mod, "dumps", boom)
     try:
-        BenchmarkRunner(bm, RunConfig(benchmark="react_basic", limit=2,
-                                      out_dir=str(tmp_path))).run()
+        BenchmarkRunner(
+            bm, RunConfig(benchmark="react_basic", limit=2, out_dir=str(tmp_path))
+        ).run()
     except ValueError:
         pass
     finally:
         monkeypatch.undo()
-    assert target.read_text(encoding="utf-8") == sentinel, \
+    assert target.read_text(encoding="utf-8") == sentinel, (
         "existing record clobbered by a failed persist"
+    )
     assert not list(tmp_path.glob("*.tmp")), "no .tmp residue after failure"

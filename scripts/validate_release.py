@@ -18,6 +18,7 @@ Steps (per the master build contract §25):
 Writes the executed results into release/RELEASE_CHECKLIST.md.
 Exit code 0 only if every step passes.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -88,9 +89,16 @@ REQUIRED = [
     "infra/.github/workflows/eval-gate.yml",
     "infra/.github/workflows/security.yml",
     "diagrams/architecture.mmd",
-    "README.md", "QUICKSTART.md", "ARCHITECTURE.md", "SECURITY.md",
-    "CHANGELOG.md", "RELEASE_NOTES.md", "RELEASE_CHECKLIST.md",
-    "RUNBOOK.md", "INCIDENTS.md", "DECISIONS.md",
+    "README.md",
+    "QUICKSTART.md",
+    "ARCHITECTURE.md",
+    "SECURITY.md",
+    "CHANGELOG.md",
+    "RELEASE_NOTES.md",
+    "RELEASE_CHECKLIST.md",
+    "RUNBOOK.md",
+    "INCIDENTS.md",
+    "DECISIONS.md",
     "MANIFEST.sha256",
 ]
 
@@ -108,9 +116,16 @@ def run(cmd, cwd, env=None, timeout=600):
     if env:
         e.update(env)
     e.setdefault("PYTHONIOENCODING", "utf-8")
-    return subprocess.run(cmd, capture_output=True, text=True, cwd=cwd,
-                          env=e, timeout=timeout, encoding="utf-8", errors="replace")
-
+    return subprocess.run(
+        cmd,
+        capture_output=True,
+        text=True,
+        cwd=cwd,
+        env=e,
+        timeout=timeout,
+        encoding="utf-8",
+        errors="replace",
+    )
 
 
 def main() -> int:
@@ -130,6 +145,7 @@ def main() -> int:
 
     # 1. extract using Python zipfile
     import zipfile
+
     extract_ok = False
     try:
         with zipfile.ZipFile(ZIP, "r") as zf:
@@ -137,14 +153,21 @@ def main() -> int:
         extract_ok = True
     except Exception as exc:
         extract_ok = False
-    step("1. extract zip into clean directory", extract_ok and os.path.isdir(extracted),
-         f"{len(os.listdir(extracted))} top-level entries" if extract_ok else f"failed to extract {ZIP}")
+    step(
+        "1. extract zip into clean directory",
+        extract_ok and os.path.isdir(extracted),
+        f"{len(os.listdir(extracted))} top-level entries"
+        if extract_ok
+        else f"failed to extract {ZIP}",
+    )
 
     # 2. structure
-    missing = [p for p in REQUIRED
-               if not os.path.isfile(os.path.join(extracted, p))]
-    step("2. required files present", not missing,
-         f"missing: {missing}" if missing else f"{len(REQUIRED)} required files verified")
+    missing = [p for p in REQUIRED if not os.path.isfile(os.path.join(extracted, p))]
+    step(
+        "2. required files present",
+        not missing,
+        f"missing: {missing}" if missing else f"{len(REQUIRED)} required files verified",
+    )
 
     # 3. manifest hashes
     bad = []
@@ -156,72 +179,125 @@ def main() -> int:
                 continue
             sha, rel = line.split("  ", 1)
             path = os.path.join(extracted, rel)
-            if not os.path.isfile(path) or \
-                    hashlib.sha256(open(path, "rb").read()).hexdigest() != sha:
+            if (
+                not os.path.isfile(path)
+                or hashlib.sha256(open(path, "rb").read()).hexdigest() != sha
+            ):
                 bad.append(rel)
-    step("3. MANIFEST.sha256 per-file hashes", not bad,
-         f"{len(bad)} mismatched" if bad else "all hashes match")
+    step(
+        "3. MANIFEST.sha256 per-file hashes",
+        not bad,
+        f"{len(bad)} mismatched" if bad else "all hashes match",
+    )
 
     # 4. tests from extracted source
     env = {
         "PYTHONPATH": os.path.join(extracted, "source", "src"),
         "PYTHONIOENCODING": "utf-8",
     }
-    r = run([sys.executable, "-m", "pytest", "tests/unit", "tests/integration",
-             "tests/failure_injection", "-q", "--tb=no", "-p", "no:warnings"],
-            extracted, env=env)
+    r = run(
+        [
+            sys.executable,
+            "-m",
+            "pytest",
+            "tests/unit",
+            "tests/integration",
+            "tests/failure_injection",
+            "-q",
+            "--tb=no",
+            "-p",
+            "no:warnings",
+        ],
+        extracted,
+        env=env,
+    )
     ok = r.returncode == 0
     tail = [l for l in r.stdout.splitlines() if "passed" in l or "failed" in l]
-    step("4. test suite from extracted source", ok,
-         tail[-1] if tail else r.stdout[-120:])
+    step("4. test suite from extracted source", ok, tail[-1] if tail else r.stdout[-120:])
 
     # 5. smoke evaluation from extracted tree
-    r = run([sys.executable, "-m", "agent_eval_harness.cli.app", "run",
-             "--benchmark", "react_basic", "--limit", "6", "--out",
-             os.path.join(WORK, "smoke_runs")], extracted, env=env)
+    r = run(
+        [
+            sys.executable,
+            "-m",
+            "agent_eval_harness.cli.app",
+            "run",
+            "--benchmark",
+            "react_basic",
+            "--limit",
+            "6",
+            "--out",
+            os.path.join(WORK, "smoke_runs"),
+        ],
+        extracted,
+        env=env,
+    )
     ok = r.returncode == 0 and "Pass rate" in r.stdout
     pass_line = [l for l in r.stdout.splitlines() if "Pass rate" in l]
-    step("5. evaluation smoke test (react_basic x6)", ok,
-         pass_line[-1].strip() if pass_line else r.stderr[-120:])
+    step(
+        "5. evaluation smoke test (react_basic x6)",
+        ok,
+        pass_line[-1].strip() if pass_line else r.stderr[-120:],
+    )
 
     # 5b. FDE demo from the extracted tree (also executes the runbook path)
     r = run([sys.executable, "scripts/demo.py"], extracted, env=env)
-    ok = (r.returncode == 0 and "GATE FAIL" in (r.stdout + r.stderr)
-          and "McNemar" in (r.stdout + r.stderr)
-          and "demo complete" in (r.stdout + r.stderr))
+    ok = (
+        r.returncode == 0
+        and "GATE FAIL" in (r.stdout + r.stderr)
+        and "McNemar" in (r.stdout + r.stderr)
+        and "demo complete" in (r.stdout + r.stderr)
+    )
     demo_detail = ""
     for l in (r.stdout + r.stderr).splitlines():
         if "demo complete" in l:
             demo_detail = l.strip()
             break
-    step("5b. FDE demo clean-room (injected regression -> GATE FAIL -> "
-         "diagnosis)", ok, demo_detail or (r.stderr[-120:] if not ok else ""))
+    step(
+        "5b. FDE demo clean-room (injected regression -> GATE FAIL -> diagnosis)",
+        ok,
+        demo_detail or (r.stderr[-120:] if not ok else ""),
+    )
 
     # 6. CI configuration
     try:
         import yaml
 
         wfs = ["ci.yml", "eval-gate.yml", "security.yml"]
-        parsed = all(yaml.safe_load(open(os.path.join(
-            extracted, "infra", ".github", "workflows", w), encoding="utf-8")) for w in wfs)
+        parsed = all(
+            yaml.safe_load(
+                open(os.path.join(extracted, "infra", ".github", "workflows", w), encoding="utf-8")
+            )
+            for w in wfs
+        )
     except Exception:
         parsed = False
-    step("6. CI workflows parse (ci/eval-gate/security)", parsed,
-         "3 workflows valid, eval-gate blocking via exit codes")
+    step(
+        "6. CI workflows parse (ci/eval-gate/security)",
+        parsed,
+        "3 workflows valid, eval-gate blocking via exit codes",
+    )
 
     # 7. documentation consistency: headline numbers in final-report match experiments.json
     consistent = False
     try:
-        exp = json.load(open(os.path.join(extracted, "evals", "results",
-                                          "experiments.json"), encoding="utf-8"))
+        exp = json.load(
+            open(os.path.join(extracted, "evals", "results", "experiments.json"), encoding="utf-8")
+        )
         report = open(os.path.join(extracted, "docs", "final-report.md"), encoding="utf-8").read()
         suite = exp["full_suite"]
         checks = [
-            ("react", "89.3%"), ("plan_execute", "73.2%"),
-            ("supervisor", "80.4%"), ("swarm", "82.1%"),
+            ("react", "89.3%"),
+            ("plan_execute", "73.2%"),
+            ("supervisor", "80.4%"),
+            ("swarm", "82.1%"),
             ("map_reduce", "76.8%"),
-            ("kappa", "1.000" if exp["calibration"]["cohens_kappa"] == 1.0 else
-             str(exp["calibration"]["cohens_kappa"])),
+            (
+                "kappa",
+                "1.000"
+                if exp["calibration"]["cohens_kappa"] == 1.0
+                else str(exp["calibration"]["cohens_kappa"]),
+            ),
         ]
         missing = [label for label, text in checks if text not in report]
         consistent = not missing
@@ -231,23 +307,43 @@ def main() -> int:
     step("7. final-report numbers match experiments.json", consistent, detail)
 
     # 8. secret scan on the extracted tree
-    r = run([sys.executable, os.path.join(extracted, "scripts", "scan_secrets.py"),
-             "--strict", "--root", extracted], WORK)
+    r = run(
+        [
+            sys.executable,
+            os.path.join(extracted, "scripts", "scan_secrets.py"),
+            "--strict",
+            "--root",
+            extracted,
+        ],
+        WORK,
+    )
     step("8. secret scan (strict)", r.returncode == 0, "clean")
 
     # 9. internal reproducibility: regenerate datasets, compare hashes
-    r = run([sys.executable, os.path.join(extracted, "scripts",
-                                          "generate_datasets.py"),
-             "--no-verify", "--out", os.path.join(WORK, "regen")], WORK,
-            env={"PYTHONPATH": os.path.join(extracted, "source", "src")})
+    r = run(
+        [
+            sys.executable,
+            os.path.join(extracted, "scripts", "generate_datasets.py"),
+            "--no-verify",
+            "--out",
+            os.path.join(WORK, "regen"),
+        ],
+        WORK,
+        env={"PYTHONPATH": os.path.join(extracted, "source", "src")},
+    )
     ok = r.returncode == 0
     if ok:
-        for pattern in ("react", "plan_execute", "supervisor", "swarm",
-                        "map_reduce"):
-            a = hashlib.sha256(open(os.path.join(WORK, "regen", pattern,
-                                                 "golden.jsonl"), "rb").read().replace(b"\r\n", b"\n")).hexdigest()
-            b = hashlib.sha256(open(os.path.join(extracted, "datasets", pattern,
-                                                 "golden.jsonl"), "rb").read().replace(b"\r\n", b"\n")).hexdigest()
+        for pattern in ("react", "plan_execute", "supervisor", "swarm", "map_reduce"):
+            a = hashlib.sha256(
+                open(os.path.join(WORK, "regen", pattern, "golden.jsonl"), "rb")
+                .read()
+                .replace(b"\r\n", b"\n")
+            ).hexdigest()
+            b = hashlib.sha256(
+                open(os.path.join(extracted, "datasets", pattern, "golden.jsonl"), "rb")
+                .read()
+                .replace(b"\r\n", b"\n")
+            ).hexdigest()
             if a != b:
                 ok = False
                 break
@@ -255,19 +351,27 @@ def main() -> int:
 
     # write checklist results
     all_ok = all(ok for _, ok, _ in results)
-    lines = ["", "## Executed validation results", "",
-             f"- Date: 2026-09-12 · Validator: scripts/validate_release.py",
-             f"- Zip: {ZIP}", ""]
+    lines = [
+        "",
+        "## Executed validation results",
+        "",
+        f"- Date: 2026-09-12 · Validator: scripts/validate_release.py",
+        f"- Zip: {ZIP}",
+        "",
+    ]
     for name, ok, detail in results:
-        lines.append(f"- {'✅' if ok else '❌'} **{name}**"
-                     + (f" — {detail}" if detail else ""))
+        lines.append(f"- {'✅' if ok else '❌'} **{name}**" + (f" — {detail}" if detail else ""))
     lines.append(f"- **OVERALL: {'RELEASE VALIDATED' if all_ok else 'VALIDATION FAILED'}**")
-    checklist = """# RELEASE CHECKLIST — v0.2.1
+    checklist = (
+        """# RELEASE CHECKLIST — v0.2.1
 
 Executed by `scripts/validate_release.py` against the EXTRACTED zip
 (clean-room: fresh directory, no repo state, PYTHONPATH-only install).
 
-""" + "\n".join(lines) + "\n"
+"""
+        + "\n".join(lines)
+        + "\n"
+    )
     if os.path.isdir(RELEASE):
         with open(os.path.join(RELEASE, "RELEASE_CHECKLIST.md"), "w", encoding="utf-8") as fh:
             fh.write(checklist)

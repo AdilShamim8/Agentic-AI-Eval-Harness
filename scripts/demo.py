@@ -12,6 +12,7 @@ FAILING on the injected regression — that is the product working).
 
 Equivalent CLI commands are echoed so a reviewer can re-run each act by hand.
 """
+
 from __future__ import annotations
 
 import json
@@ -47,11 +48,14 @@ def sh(args: list[str], expect_fail: bool = False) -> tuple[int, str]:
     """Run a CLI command from the tree root, streaming output; return (code, output)."""
     print(f"  $ {' '.join(args[3:])}" if args[:3] == CLI[:3] else f"  $ {' '.join(args)}")
     t0 = time.time()
-    env = {**os.environ,
-           "PYTHONPATH": SRC + os.pathsep + os.environ.get("PYTHONPATH", ""),
-           "PYTHONIOENCODING": "utf-8"}
-    proc = subprocess.run(args, cwd=REPO, capture_output=True, text=True,
-                          encoding="utf-8", errors="replace", env=env)
+    env = {
+        **os.environ,
+        "PYTHONPATH": SRC + os.pathsep + os.environ.get("PYTHONPATH", ""),
+        "PYTHONIOENCODING": "utf-8",
+    }
+    proc = subprocess.run(
+        args, cwd=REPO, capture_output=True, text=True, encoding="utf-8", errors="replace", env=env
+    )
     out = (proc.stdout or "") + (proc.stderr or "")
     print(out.rstrip())
     dt = time.time() - t0
@@ -71,14 +75,21 @@ def banner(title: str, sub: str = "") -> None:
         print(f"\n{line}\n{title}\n{sub}\n{line}" if sub else f"\n{line}\n{title}\n{line}")
     except UnicodeEncodeError:
         ascii_line = "-" * 74
-        print(f"\n{ascii_line}\n{title}\n{sub}\n{ascii_line}" if sub else f"\n{ascii_line}\n{title}\n{ascii_line}")
+        print(
+            f"\n{ascii_line}\n{title}\n{sub}\n{ascii_line}"
+            if sub
+            else f"\n{ascii_line}\n{title}\n{ascii_line}"
+        )
 
 
 def _snap(runs_dir: str) -> dict[str, float]:
     if not os.path.isdir(runs_dir):
         return {}
-    return {f: os.path.getmtime(os.path.join(runs_dir, f))
-            for f in os.listdir(runs_dir) if f.endswith(".json")}
+    return {
+        f: os.path.getmtime(os.path.join(runs_dir, f))
+        for f in os.listdir(runs_dir)
+        if f.endswith(".json")
+    }
 
 
 def latest_run_id(before: dict[str, float]) -> str:
@@ -96,15 +107,17 @@ def main() -> int:
     started = datetime.now(timezone.utc)
     print("=" * 74)
     print("agent-eval-harness — production evaluation platform for Agentic AI")
-    print(f"\"pytest for Agentic AI\" · demo recorded {started:%Y-%m-%d %H:%M} UTC")
+    print(f'"pytest for Agentic AI" · demo recorded {started:%Y-%m-%d %H:%M} UTC')
     print("Engagement context: docs/fde/00-ENGAGEMENT-BRIEF.md (fictional composite")
     print("customer: three teams shipped agents; nobody knew when they broke).")
     print("=" * 74)
 
     # ACT 1 — the system, healthy ------------------------------------------------
-    banner("ACT 1 · The system, healthy",
-           "Full golden-suite run: 56 machine-verified cases, deterministic seed.\n"
-           "This is what CI runs on every merge.")
+    banner(
+        "ACT 1 · The system, healthy",
+        "Full golden-suite run: 56 machine-verified cases, deterministic seed.\n"
+        "This is what CI runs on every merge.",
+    )
     before = _snap(os.path.join(REPO, "evals", "runs"))
     code, _ = sh(CLI + ["run", "--benchmark", "react_basic", "--seed", str(SEED)])
     if code != 0:
@@ -113,40 +126,46 @@ def main() -> int:
     print(f"  → healthy run id: {healthy_id}")
 
     # ACT 2 — the incident, injected on purpose ----------------------------------
-    banner("ACT 2 · The incident (injected on purpose)",
-           "Friday, 16:52. Someone ships a 'small prompt tweak'. The agent gets\n"
-           "worse at its job (--skill 0.60). Nobody notices — unless the gate works.\n"
-           "This act shows the failure path deliberately: a demo that never fails\n"
-           "reads as untested.")
+    banner(
+        "ACT 2 · The incident (injected on purpose)",
+        "Friday, 16:52. Someone ships a 'small prompt tweak'. The agent gets\n"
+        "worse at its job (--skill 0.60). Nobody notices — unless the gate works.\n"
+        "This act shows the failure path deliberately: a demo that never fails\n"
+        "reads as untested.",
+    )
     before = _snap(os.path.join(REPO, "evals", "runs"))
-    code, _ = sh(CLI + ["run", "--benchmark", "react_basic", "--skill", "0.60",
-                        "--seed", str(SEED)], expect_fail=True)
+    code, _ = sh(
+        CLI + ["run", "--benchmark", "react_basic", "--skill", "0.60", "--seed", str(SEED)],
+        expect_fail=True,
+    )
     if code == 0:
         print("  !! the regressed run unexpectedly PASSED its threshold gate")
         return 1
     regressed_id = latest_run_id(before)
     print(f"  → regressed run id: {regressed_id}")
 
-    banner("ACT 2b · The gate (this is the moment you find out)",
-           "The customer's incident: a broken agent ran silent for NINE DAYS.\n"
-           "With the gate wired into CI, this is found at merge time, in seconds.")
-    code, out = sh(CLI + ["regression", regressed_id, "--baseline", "main"],
-                   expect_fail=True)
+    banner(
+        "ACT 2b · The gate (this is the moment you find out)",
+        "The customer's incident: a broken agent ran silent for NINE DAYS.\n"
+        "With the gate wired into CI, this is found at merge time, in seconds.",
+    )
+    code, out = sh(CLI + ["regression", regressed_id, "--baseline", "main"], expect_fail=True)
     if code == 0:
         print("  !! the gate did NOT fail the regressed run — demo cannot continue")
         return 1
     print("  ✓ GATE FAIL with non-zero exit — CI would have blocked this merge.")
 
     # ACT 3 — the diagnosis ------------------------------------------------------
-    banner("ACT 3 · The diagnosis (failure localization)",
-           "Which cases flipped? Is it the agent (TEST FAILURE), the evaluator\n"
-           "(EVALUATOR ERROR), or the infrastructure (INFRASTRUCTURE FAILURE)?")
+    banner(
+        "ACT 3 · The diagnosis (failure localization)",
+        "Which cases flipped? Is it the agent (TEST FAILURE), the evaluator\n"
+        "(EVALUATOR ERROR), or the infrastructure (INFRASTRUCTURE FAILURE)?",
+    )
     code, _ = sh(CLI + ["compare", healthy_id, regressed_id])
     if code != 0:
         return 1
 
-    with open(os.path.join(REPO, "evals", "runs", f"{regressed_id}.json"),
-              encoding="utf-8") as fh:
+    with open(os.path.join(REPO, "evals", "runs", f"{regressed_id}.json"), encoding="utf-8") as fh:
         reg = json.load(fh)
     hist = reg["metrics"]["failure_histogram"]
     print("  failure taxonomy (regressed run):")
@@ -162,15 +181,21 @@ def main() -> int:
             exp = json.load(fh)
         cal = exp.get("calibration", {})
         repro = exp.get("repro", {}).get("react_same_seed_x5", {})
-        print(f"  judge vs hand labels : Cohen's kappa {cal.get('cohens_kappa')} "
-              f"(target >= {cal.get('kappa_target')}, n={cal.get('n')})")
+        print(
+            f"  judge vs hand labels : Cohen's kappa {cal.get('cohens_kappa')} "
+            f"(target >= {cal.get('kappa_target')}, n={cal.get('n')})"
+        )
         if repro:
-            print(f"  same-seed repro      : max spread {repro.get('max_spread_pp')}pp "
-                  f"(byte-identical: {repro.get('byte_identical_same_seed')})")
+            print(
+                f"  same-seed repro      : max spread {repro.get('max_spread_pp')}pp "
+                f"(byte-identical: {repro.get('byte_identical_same_seed')})"
+            )
         abl = exp.get("ablation", {}).get("skill_0.6", {}).get("attribution", {})
         if abl.get("no_retry"):
-            print(f"  harness ablation     : removing retry costs "
-                  f"{abl['no_retry']['pass_rate_delta']:+.3f} pass-rate (weak agents)")
+            print(
+                f"  harness ablation     : removing retry costs "
+                f"{abl['no_retry']['pass_rate_delta']:+.3f} pass-rate (weak agents)"
+            )
     print(f"""
   What a reviewer should check next:
     make test            full suite (unit → e2e → security → failure-injection)
@@ -181,8 +206,10 @@ def main() -> int:
 """)
     elapsed = (datetime.now(timezone.utc) - started).total_seconds()
     print("=" * 74)
-    print(f"demo complete · {elapsed:.1f}s elapsed · "
-          "all output above was measured live in this session")
+    print(
+        f"demo complete · {elapsed:.1f}s elapsed · "
+        "all output above was measured live in this session"
+    )
     print("=" * 74)
     return 0
 

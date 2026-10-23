@@ -5,6 +5,7 @@ benchmark -> case -> agent step -> tool call -> evaluator -> metric -> report.
 Events are span-like (name, ts, ids, payload) so an OTLP exporter can be added
 later without schema changes.
 """
+
 from __future__ import annotations
 
 import json
@@ -42,10 +43,10 @@ class EventRecorder:
         self.events: list[Event] = []
         self._redaction_count = 0
 
-    def emit(self, kind: str, payload: dict[str, Any], phase: str = "",
-             case_id: str = "") -> None:
-        self.events.append(Event(ts=time.time(), kind=kind, phase=phase,
-                                 case_id=case_id, payload=dict(payload)))
+    def emit(self, kind: str, payload: dict[str, Any], phase: str = "", case_id: str = "") -> None:
+        self.events.append(
+            Event(ts=time.time(), kind=kind, phase=phase, case_id=case_id, payload=dict(payload))
+        )
 
     # -- queries -------------------------------------------------------------
     def by_kind(self, kind: str) -> list[Event]:
@@ -80,5 +81,8 @@ class EventRecorder:
         finally:
             if os.path.exists(tmp):
                 os.unlink(tmp)
-        return {"events": lines, "redactions": self._redaction_count,
-                "path": os.path.normpath(path).replace("\\", "/")}
+        return {
+            "events": lines,
+            "redactions": self._redaction_count,
+            "path": os.path.normpath(path).replace("\\", "/"),
+        }

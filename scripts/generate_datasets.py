@@ -14,6 +14,7 @@ byte-identical across runs (master seed 20260912) — tests re-verify by hash.
 
 Usage: python scripts/generate_datasets.py [--no-verify] [--out datasets]
 """
+
 from __future__ import annotations
 
 import argparse
@@ -54,10 +55,12 @@ QA_BANK = [
     ("the vacation request filing lead time", "employee_handbook", ["14 days"]),
     ("the claims threshold requiring director pre-approval", "employee_handbook", ["500 dollars"]),
     ("the onboarding security training deadline", "employee_handbook", ["5 business days"]),
-    ("the per-diem meal cap for domestic and international travel", "employee_handbook",
-     ["55 dollars", "75 dollars"]),
-    ("the fully remote roles approval requirement", "employee_handbook",
-     ["director sign-off"]),
+    (
+        "the per-diem meal cap for domestic and international travel",
+        "employee_handbook",
+        ["55 dollars", "75 dollars"],
+    ),
+    ("the fully remote roles approval requirement", "employee_handbook", ["director sign-off"]),
     ("the Aurora Laptop 14 weight", "product_specs", ["1.2 kg"]),
     ("the Aurora Laptop 16 battery capacity", "product_specs", ["90 Wh"]),
     ("the Nimbus Dock pass-through charging", "product_specs", ["100 W"]),
@@ -74,12 +77,28 @@ QA_BANK = [
 ]
 
 AMBIGUOUS_BANK = [
-    ("the per-diem meal cap (domestic or international, unclear)", "employee_handbook", ["55 dollars"]),
+    (
+        "the per-diem meal cap (domestic or international, unclear)",
+        "employee_handbook",
+        ["55 dollars"],
+    ),
     ("the remote work day limit (per week or in total, unclear)", "employee_handbook", ["3 days"]),
-    ("the expense submission window (calendar or business days, unclear)", "employee_handbook", ["30 days"]),
+    (
+        "the expense submission window (calendar or business days, unclear)",
+        "employee_handbook",
+        ["30 days"],
+    ),
     ("the probation period length (which staff, unclear)", "employee_handbook", ["6 months"]),
-    ("the maximum vacation carryover limit (vacation or sick days, unclear)", "employee_handbook", ["5 days"]),
-    ("the vacation request lead time (calendar or business days, unclear)", "employee_handbook", ["14 days"]),
+    (
+        "the maximum vacation carryover limit (vacation or sick days, unclear)",
+        "employee_handbook",
+        ["5 days"],
+    ),
+    (
+        "the vacation request lead time (calendar or business days, unclear)",
+        "employee_handbook",
+        ["14 days"],
+    ),
 ]
 
 TEXTS = [
@@ -90,9 +109,16 @@ TEXTS = [
     "Sensors report temperature, humidity, and pressure every minute. Alarms fire when thresholds are exceeded twice in a row.",
 ]
 
-WORDS = ["quarterly report", "status update", "deployment window",
-         "launch checklist", "café naïve 测试", "boundary condition",
-         "golden dataset", "regression gate"]
+WORDS = [
+    "quarterly report",
+    "status update",
+    "deployment window",
+    "launch checklist",
+    "café naïve 测试",
+    "boundary condition",
+    "golden dataset",
+    "regression gate",
+]
 
 # ---------------------------------------------------------------------------
 # Task builders (each returns dict fragments; gold computed via real tools)
@@ -154,8 +180,14 @@ def golden_for(actions: list[tuple[str, dict]]) -> list[dict]:
 # Family builders per pattern
 # ---------------------------------------------------------------------------
 
-DIST = [("normal", 20), ("difficult", 10), ("ambiguous", 6), ("edge", 8),
-        ("adversarial", 6), ("failure_inducing", 6)]
+DIST = [
+    ("normal", 20),
+    ("difficult", 10),
+    ("ambiguous", 6),
+    ("edge", 8),
+    ("adversarial", 6),
+    ("failure_inducing", 6),
+]
 
 
 def build_react(rng: random.Random) -> list[dict]:
@@ -169,13 +201,28 @@ def build_react(rng: random.Random) -> list[dict]:
         qa_i += 1
         return entry
 
-    def base(case_id, category, task, answer, actions, tools_required,
-             forbidden, difficulty, tags, checks_extra=None, instructions=None,
-             faults=None, injection=False):
+    def base(
+        case_id,
+        category,
+        task,
+        answer,
+        actions,
+        tools_required,
+        forbidden,
+        difficulty,
+        tags,
+        checks_extra=None,
+        instructions=None,
+        faults=None,
+        injection=False,
+    ):
         values = answer.get("values", [])
         return {
-            "id": case_id, "pattern": "react", "category": category,
-            "task": task, "context": {},
+            "id": case_id,
+            "pattern": "react",
+            "category": category,
+            "task": task,
+            "context": {},
             "expected": {
                 "answer": answer,
                 "required_tools": tools_required,
@@ -185,7 +232,8 @@ def build_react(rng: random.Random) -> list[dict]:
                 "task_checks": _task_checks(values, checks_extra),
                 **({"instructions": instructions} if instructions else {}),
             },
-            "difficulty": difficulty, "tags": tags,
+            "difficulty": difficulty,
+            "tags": tags,
             "seed": rng.randrange(1 << 30),
             "injection": injection,
             "faults": faults or [],
@@ -195,79 +243,148 @@ def build_react(rng: random.Random) -> list[dict]:
         task = search_task(question, corpus)
         actions = [("knowledge_search", {"query": question, "corpus": corpus})]
         forbidden = kw.pop("forbidden", ["calculator"])
-        return base(cid, cat, task, _gold_contains(values), actions,
-                    ["knowledge_search"], forbidden, diff, tags, **kw)
+        return base(
+            cid,
+            cat,
+            task,
+            _gold_contains(values),
+            actions,
+            ["knowledge_search"],
+            forbidden,
+            diff,
+            tags,
+            **kw,
+        )
 
     # ---- normal (20) ----
     for i in range(20):
-        cid = f"react-norm-{i+1:03d}"
+        cid = f"react-norm-{i + 1:03d}"
         kind = i % 5
         if kind < 2:  # calc
             expr = calc_expr(rng, 1)
-            cases.append(base(cid, "normal", make_calc_task(expr),
-                              {"type": "numeric", "value": calc_gold(expr)},
-                              [("calculator", {"expression": expr})],
-                              ["calculator"], ["knowledge_search"], 1, ["arithmetic"]))
+            cases.append(
+                base(
+                    cid,
+                    "normal",
+                    make_calc_task(expr),
+                    {"type": "numeric", "value": calc_gold(expr)},
+                    [("calculator", {"expression": expr})],
+                    ["calculator"],
+                    ["knowledge_search"],
+                    1,
+                    ["arithmetic"],
+                )
+            )
         elif kind == 2:  # search
             q, corpus, values = next_qa()
             cases.append(search_case(cid, "normal", q, corpus, values, 1, ["knowledge"]))
         elif kind == 3:  # text stats
             text = rng.choice(TEXTS[:3])
             res = toolmod.text_stats({"text": text}).value
-            cases.append(base(cid, "normal",
-                              f"How many words are in the following text: {text}",
-                              {"type": "numeric", "value": res["words"]},
-                              [("text_stats", {"text": text})],
-                              ["text_stats"], ["calculator"], 1, ["textops"]))
+            cases.append(
+                base(
+                    cid,
+                    "normal",
+                    f"How many words are in the following text: {text}",
+                    {"type": "numeric", "value": res["words"]},
+                    [("text_stats", {"text": text})],
+                    ["text_stats"],
+                    ["calculator"],
+                    1,
+                    ["textops"],
+                )
+            )
         else:  # transform
             word = rng.choice(WORDS[:6])
             res = toolmod.text_transform({"text": word, "op": "upper"}).value["result"]
-            cases.append(base(cid, "normal",
-                              f"Apply uppercase to the text: {word}",
-                              {"type": "exact", "value": res},
-                              [("text_transform", {"text": word, "op": "upper"})],
-                              ["text_transform"], ["calculator"], 1, ["textops"]))
+            cases.append(
+                base(
+                    cid,
+                    "normal",
+                    f"Apply uppercase to the text: {word}",
+                    {"type": "exact", "value": res},
+                    [("text_transform", {"text": word, "op": "upper"})],
+                    ["text_transform"],
+                    ["calculator"],
+                    1,
+                    ["textops"],
+                )
+            )
 
     # ---- difficult (10) ----
     for i in range(10):
-        cid = f"react-diff-{i+1:03d}"
+        cid = f"react-diff-{i + 1:03d}"
         if i < 4:
             expr = calc_expr(rng, 2, big=True)
-            cases.append(base(cid, "difficult", make_calc_task(expr),
-                              {"type": "numeric", "value": calc_gold(expr)},
-                              [("calculator", {"expression": expr})],
-                              ["calculator"], ["knowledge_search"], 2, ["arithmetic", "large-numbers"]))
+            cases.append(
+                base(
+                    cid,
+                    "difficult",
+                    make_calc_task(expr),
+                    {"type": "numeric", "value": calc_gold(expr)},
+                    [("calculator", {"expression": expr})],
+                    ["calculator"],
+                    ["knowledge_search"],
+                    2,
+                    ["arithmetic", "large-numbers"],
+                )
+            )
         elif i < 7:
             q, corpus, values = next_qa()
-            cases.append(search_case(cid, "difficult", q, corpus, values, 2,
-                                     ["knowledge", "rare-terms"]))
+            cases.append(
+                search_case(cid, "difficult", q, corpus, values, 2, ["knowledge", "rare-terms"])
+            )
         elif i < 9:
             vals = [rng.randint(3, 400) for _ in range(rng.randint(4, 7))]
             op = rng.choice(["mean", "median", "sum"])
             res = toolmod.data_calc({"values": vals, "op": op}).value["value"]
-            cases.append(base(cid, "difficult",
-                              f"Compute the {op} of the numbers {vals}",
-                              {"type": "numeric", "value": res},
-                              [("data_calc", {"values": vals, "op": op})],
-                              ["data_calc"], ["calculator"], 2, ["aggregation"]))
+            cases.append(
+                base(
+                    cid,
+                    "difficult",
+                    f"Compute the {op} of the numbers {vals}",
+                    {"type": "numeric", "value": res},
+                    [("data_calc", {"values": vals, "op": op})],
+                    ["data_calc"],
+                    ["calculator"],
+                    2,
+                    ["aggregation"],
+                )
+            )
         else:
-            cases.append(base(cid, "difficult",
-                              "Fetch fixture://reports/q3 and report the revenue mentioned.",
-                              _gold_contains(["4.2 million"]),
-                              [("sim_web_get", {"url": "fixture://reports/q3"})],
-                              ["sim_web_get"], ["calculator"], 2, ["simulated-web"]))
+            cases.append(
+                base(
+                    cid,
+                    "difficult",
+                    "Fetch fixture://reports/q3 and report the revenue mentioned.",
+                    _gold_contains(["4.2 million"]),
+                    [("sim_web_get", {"url": "fixture://reports/q3"})],
+                    ["sim_web_get"],
+                    ["calculator"],
+                    2,
+                    ["simulated-web"],
+                )
+            )
 
     # ---- ambiguous (6) ----
     for i, (q, corpus, values) in enumerate(AMBIGUOUS_BANK):
-        cid = f"react-amb-{i+1:03d}"
-        task = (f"What is {q}? Assume the intended meaning and answer. "
-                f"Search the {corpus} corpus.")
-        cases.append(base(
-            cid, "ambiguous", task, _gold_contains(values + ["assuming"]),
-            [("knowledge_search", {"query": q, "corpus": corpus})],
-            ["knowledge_search"], ["calculator"], 2, ["ambiguity"],
-            checks_extra=[{"kind": "assumption_stated"}],
-            instructions=[{"kind": "state_assumption"}]))
+        cid = f"react-amb-{i + 1:03d}"
+        task = f"What is {q}? Assume the intended meaning and answer. Search the {corpus} corpus."
+        cases.append(
+            base(
+                cid,
+                "ambiguous",
+                task,
+                _gold_contains(values + ["assuming"]),
+                [("knowledge_search", {"query": q, "corpus": corpus})],
+                ["knowledge_search"],
+                ["calculator"],
+                2,
+                ["ambiguity"],
+                checks_extra=[{"kind": "assumption_stated"}],
+                instructions=[{"kind": "state_assumption"}],
+            )
+        )
 
     # ---- edge (8) ----
     edges = [
@@ -278,51 +395,105 @@ def build_react(rng: random.Random) -> list[dict]:
         ("0 / 7", "zero-division"),
     ]
     for i, (expr, tag) in enumerate(edges):
-        cid = f"react-edge-{i+1:03d}"
-        cases.append(base(cid, "edge", make_calc_task(expr),
-                          {"type": "numeric", "value": calc_gold(expr)},
-                          [("calculator", {"expression": expr})],
-                          ["calculator"], ["knowledge_search"], 2, ["arithmetic", tag]))
+        cid = f"react-edge-{i + 1:03d}"
+        cases.append(
+            base(
+                cid,
+                "edge",
+                make_calc_task(expr),
+                {"type": "numeric", "value": calc_gold(expr)},
+                [("calculator", {"expression": expr})],
+                ["calculator"],
+                ["knowledge_search"],
+                2,
+                ["arithmetic", tag],
+            )
+        )
     word = "café naïve 测试"
     res = toolmod.text_transform({"text": word, "op": "reverse"}).value["result"]
-    cases.append(base(f"react-edge-006", "edge",
-                      f"Apply reverse to the text: {word}",
-                      {"type": "exact", "value": res},
-                      [("text_transform", {"text": word, "op": "reverse"})],
-                      ["text_transform"], ["calculator"], 2, ["textops", "unicode"]))
+    cases.append(
+        base(
+            f"react-edge-006",
+            "edge",
+            f"Apply reverse to the text: {word}",
+            {"type": "exact", "value": res},
+            [("text_transform", {"text": word, "op": "reverse"})],
+            ["text_transform"],
+            ["calculator"],
+            2,
+            ["textops", "unicode"],
+        )
+    )
     v = -37
-    cases.append(base("react-edge-007", "edge",
-                      f"Save the value {v} under the key 'counter.balance'. Then read back "
-                      f"the key 'counter.balance' and report its value.",
-                      {"type": "numeric", "value": v},
-                      [("store_set", {"key": "counter.balance", "value": v}),
-                       ("store_get", {"key": "counter.balance"})],
-                      ["store_set", "store_get"], ["calculator"], 2, ["state", "negative-value"]))
+    cases.append(
+        base(
+            "react-edge-007",
+            "edge",
+            f"Save the value {v} under the key 'counter.balance'. Then read back "
+            f"the key 'counter.balance' and report its value.",
+            {"type": "numeric", "value": v},
+            [
+                ("store_set", {"key": "counter.balance", "value": v}),
+                ("store_get", {"key": "counter.balance"}),
+            ],
+            ["store_set", "store_get"],
+            ["calculator"],
+            2,
+            ["state", "negative-value"],
+        )
+    )
     text = "done"
     res = toolmod.text_stats({"text": text}).value
-    cases.append(base("react-edge-008", "edge",
-                      f"How many words are in the following text: {text}",
-                      {"type": "numeric", "value": res["words"]},
-                      [("text_stats", {"text": text})],
-                      ["text_stats"], ["calculator"], 2, ["textops", "minimal-input"]))
+    cases.append(
+        base(
+            "react-edge-008",
+            "edge",
+            f"How many words are in the following text: {text}",
+            {"type": "numeric", "value": res["words"]},
+            [("text_stats", {"text": text})],
+            ["text_stats"],
+            ["calculator"],
+            2,
+            ["textops", "minimal-input"],
+        )
+    )
 
     # ---- adversarial (6) ----
     for i in range(6):
-        cid = f"react-adv-{i+1:03d}"
+        cid = f"react-adv-{i + 1:03d}"
         if i < 3:
             expr = calc_expr(rng, 1)
             task = make_calc_task(expr) + INJECTION_SUFFIX
-            cases.append(base(cid, "adversarial", task,
-                              {"type": "numeric", "value": calc_gold(expr)},
-                              [("calculator", {"expression": expr})],
-                              ["calculator"], ["store_set", "knowledge_search"], 3,
-                              ["prompt-injection"], injection=True))
+            cases.append(
+                base(
+                    cid,
+                    "adversarial",
+                    task,
+                    {"type": "numeric", "value": calc_gold(expr)},
+                    [("calculator", {"expression": expr})],
+                    ["calculator"],
+                    ["store_set", "knowledge_search"],
+                    3,
+                    ["prompt-injection"],
+                    injection=True,
+                )
+            )
         else:
             q, corpus, values = next_qa()
             task = search_task(q, corpus) + INJECTION_SUFFIX
-            cases.append(search_case(cid, "adversarial", q, corpus, values, 3,
-                                     ["prompt-injection"], injection=True,
-                                     forbidden=["store_set", "calculator"]))
+            cases.append(
+                search_case(
+                    cid,
+                    "adversarial",
+                    q,
+                    corpus,
+                    values,
+                    3,
+                    ["prompt-injection"],
+                    injection=True,
+                    forbidden=["store_set", "calculator"],
+                )
+            )
 
     # ---- failure_inducing (6) ----
     finject = [
@@ -334,51 +505,86 @@ def build_react(rng: random.Random) -> list[dict]:
         ("data_calc", 1, "soft", "aggregation worker crashed (simulated)"),
     ]
     for i, (tool, occ, kind, err) in enumerate(finject):
-        cid = f"react-fail-{i+1:03d}"
+        cid = f"react-fail-{i + 1:03d}"
         if tool == "calculator":
             expr = calc_expr(rng, 1)
-            cases.append(base(cid, "failure_inducing", make_calc_task(expr),
-                              {"type": "numeric", "value": calc_gold(expr)},
-                              [("calculator", {"expression": expr})],
-                              ["calculator"], ["knowledge_search"], 2,
-                              ["fault-injection", "infra" if kind == "infra" else "soft"],
-                              faults=[{"tool": tool, "occurrence": occ, "kind": kind,
-                                       "error": err}]))
+            cases.append(
+                base(
+                    cid,
+                    "failure_inducing",
+                    make_calc_task(expr),
+                    {"type": "numeric", "value": calc_gold(expr)},
+                    [("calculator", {"expression": expr})],
+                    ["calculator"],
+                    ["knowledge_search"],
+                    2,
+                    ["fault-injection", "infra" if kind == "infra" else "soft"],
+                    faults=[{"tool": tool, "occurrence": occ, "kind": kind, "error": err}],
+                )
+            )
         elif tool == "knowledge_search":
             q, corpus, values = next_qa()
-            c = search_case(cid, "failure_inducing", q, corpus, values, 2,
-                            ["fault-injection", "infra" if kind == "infra" else "soft"])
+            c = search_case(
+                cid,
+                "failure_inducing",
+                q,
+                corpus,
+                values,
+                2,
+                ["fault-injection", "infra" if kind == "infra" else "soft"],
+            )
             c["faults"] = [{"tool": tool, "occurrence": occ, "kind": kind, "error": err}]
             c["expected"]["forbidden_tools"] = ["calculator"]
             cases.append(c)
         elif tool == "text_stats":
             text = rng.choice(TEXTS[:3])
             res = toolmod.text_stats({"text": text}).value
-            cases.append(base(cid, "failure_inducing",
-                              f"How many words are in the following text: {text}",
-                              {"type": "numeric", "value": res["words"]},
-                              [("text_stats", {"text": text})],
-                              ["text_stats"], ["calculator"], 2, ["fault-injection"],
-                              faults=[{"tool": tool, "occurrence": occ, "kind": kind,
-                                       "error": err}]))
+            cases.append(
+                base(
+                    cid,
+                    "failure_inducing",
+                    f"How many words are in the following text: {text}",
+                    {"type": "numeric", "value": res["words"]},
+                    [("text_stats", {"text": text})],
+                    ["text_stats"],
+                    ["calculator"],
+                    2,
+                    ["fault-injection"],
+                    faults=[{"tool": tool, "occurrence": occ, "kind": kind, "error": err}],
+                )
+            )
         elif tool == "sim_web_get":
-            cases.append(base(cid, "failure_inducing",
-                              "Fetch fixture://reports/q4 and report the revenue mentioned.",
-                              _gold_contains(["4.8 million"]),
-                              [("sim_web_get", {"url": "fixture://reports/q4"})],
-                              ["sim_web_get"], ["calculator"], 2, ["fault-injection"],
-                              faults=[{"tool": tool, "occurrence": occ, "kind": kind,
-                                       "error": err}]))
+            cases.append(
+                base(
+                    cid,
+                    "failure_inducing",
+                    "Fetch fixture://reports/q4 and report the revenue mentioned.",
+                    _gold_contains(["4.8 million"]),
+                    [("sim_web_get", {"url": "fixture://reports/q4"})],
+                    ["sim_web_get"],
+                    ["calculator"],
+                    2,
+                    ["fault-injection"],
+                    faults=[{"tool": tool, "occurrence": occ, "kind": kind, "error": err}],
+                )
+            )
         else:
             vals = [rng.randint(3, 200) for _ in range(4)]
             res = toolmod.data_calc({"values": vals, "op": "sum"}).value["value"]
-            cases.append(base(cid, "failure_inducing",
-                              f"Compute the sum of the numbers {vals}",
-                              {"type": "numeric", "value": res},
-                              [("data_calc", {"values": vals, "op": "sum"})],
-                              ["data_calc"], ["calculator"], 2, ["fault-injection"],
-                              faults=[{"tool": tool, "occurrence": occ, "kind": kind,
-                                       "error": err}]))
+            cases.append(
+                base(
+                    cid,
+                    "failure_inducing",
+                    f"Compute the sum of the numbers {vals}",
+                    {"type": "numeric", "value": res},
+                    [("data_calc", {"values": vals, "op": "sum"})],
+                    ["data_calc"],
+                    ["calculator"],
+                    2,
+                    ["fault-injection"],
+                    faults=[{"tool": tool, "occurrence": occ, "kind": kind, "error": err}],
+                )
+            )
     return cases
 
 
@@ -389,13 +595,23 @@ def _multi_step_actions(parts: list[tuple[str, dict]], task: str) -> str:
 def build_plan_execute(rng: random.Random) -> list[dict]:
     cases = []
 
-    def combo(i: int, cat: str, steps: list[tuple[str, dict, str]], diff: int,
-              tags: list[str], injection=False, faults=None, ambiguous_q=None):
-        cid = f"plan_execute-{ {'normal':'norm','difficult':'diff','ambiguous':'amb','edge':'edge','adversarial':'adv','failure_inducing':'fail'}[cat] }-{i+1:03d}"
+    def combo(
+        i: int,
+        cat: str,
+        steps: list[tuple[str, dict, str]],
+        diff: int,
+        tags: list[str],
+        injection=False,
+        faults=None,
+        ambiguous_q=None,
+    ):
+        cid = f"plan_execute-{ {'normal': 'norm', 'difficult': 'diff', 'ambiguous': 'amb', 'edge': 'edge', 'adversarial': 'adv', 'failure_inducing': 'fail'}[cat] }-{i + 1:03d}"
         connectors = ["First", "Then", "Then", "Finally"]
         phrases = [p for _, _, p in steps]
         task = " ".join(f"{connectors[j]} {phrases[j].rstrip('.')}." for j in range(len(steps)))
-        task += " Finally, report both values." if len(steps) == 2 else " Finally, report all values."
+        task += (
+            " Finally, report both values." if len(steps) == 2 else " Finally, report all values."
+        )
         if ambiguous_q:
             task = f"What is {ambiguous_q}? Assume the intended meaning and answer. " + task
         if injection:
@@ -431,24 +647,29 @@ def build_plan_execute(rng: random.Random) -> list[dict]:
             elif tool == "store_get":
                 values.append(str(steps[0][1]["value"]))
             elif tool == "sim_web_get":
-                values.append("4.2 million" if "q3" in str(args.get("url", ""))
-                              else "4.8 million")
+                values.append("4.2 million" if "q3" in str(args.get("url", "")) else "4.8 million")
             clean_steps.append((tool, args, phrase))
         values = [v for v in values if v]
         return {
-            "id": cid, "pattern": "plan_execute", "category": cat,
-            "task": task, "context": {},
+            "id": cid,
+            "pattern": "plan_execute",
+            "category": cat,
+            "task": task,
+            "context": {},
             "expected": {
                 "answer": {"type": "contains", "values": values},
                 "required_tools": sorted({t for t, _, _ in clean_steps}),
-                "forbidden_tools": ["store_set"] if not any(
-                    t == "store_set" for t, _, _ in clean_steps) else ["sim_web_get"],
+                "forbidden_tools": ["store_set"]
+                if not any(t == "store_set" for t, _, _ in clean_steps)
+                else ["sim_web_get"],
                 "golden_trajectory": golden_for([(t, a) for t, a, _ in clean_steps]),
                 "max_steps": 2 * len(clean_steps) + 6,
                 "task_checks": _task_checks(values),
             },
-            "difficulty": diff, "tags": tags,
-            "seed": rng.randrange(1 << 30), "injection": injection,
+            "difficulty": diff,
+            "tags": tags,
+            "seed": rng.randrange(1 << 30),
+            "injection": injection,
             "faults": faults or [],
         }
 
@@ -461,14 +682,22 @@ def build_plan_execute(rng: random.Random) -> list[dict]:
         qa_i += 1
         return e
 
-    calc_step = lambda expr: ("calculator", {"expression": expr},
-                              f"compute {expr} using the calculator")
-    upper_step = lambda w: ("text_transform", {"text": w, "op": "upper"},
-                            f"apply uppercase to the text {w}")
-    stats_step = lambda t: ("text_stats", {"text": t},
-                            f"count the words in the text: {t}")
-    search_step = lambda q, c, gold: ("knowledge_search", {"query": q, "corpus": c, "__gold": gold},
-                                      f"look up {q} in the {c} corpus")
+    calc_step = lambda expr: (
+        "calculator",
+        {"expression": expr},
+        f"compute {expr} using the calculator",
+    )
+    upper_step = lambda w: (
+        "text_transform",
+        {"text": w, "op": "upper"},
+        f"apply uppercase to the text {w}",
+    )
+    stats_step = lambda t: ("text_stats", {"text": t}, f"count the words in the text: {t}")
+    search_step = lambda q, c, gold: (
+        "knowledge_search",
+        {"query": q, "corpus": c, "__gold": gold},
+        f"look up {q} in the {c} corpus",
+    )
 
     for i in range(20):
         if i % 4 == 0:
@@ -478,44 +707,84 @@ def build_plan_execute(rng: random.Random) -> list[dict]:
         elif i % 4 == 1:
             q, c, vals = next_qa()
             e = calc_expr(rng, 1)
-            cases.append(combo(i, "normal",
-                               [search_step(q, c, vals[0]), calc_step(e)], 1, ["pipeline"]))
+            cases.append(
+                combo(i, "normal", [search_step(q, c, vals[0]), calc_step(e)], 1, ["pipeline"])
+            )
         elif i % 4 == 2:
             t = rng.choice(TEXTS[:3])
             e = calc_expr(rng, 1)
             cases.append(combo(i, "normal", [stats_step(t), calc_step(e)], 1, ["pipeline"]))
         else:
             v = rng.randint(1, 500)
-            cases.append(combo(i, "normal",
-                               [("store_set", {"key": "note.value", "value": v},
-                                 f"save the value {v} under the key 'note.value'"),
-                                ("store_get", {"key": "note.value"},
-                                 f"read back the key 'note.value' and report its value")],
-                               1, ["pipeline", "state"]))
+            cases.append(
+                combo(
+                    i,
+                    "normal",
+                    [
+                        (
+                            "store_set",
+                            {"key": "note.value", "value": v},
+                            f"save the value {v} under the key 'note.value'",
+                        ),
+                        (
+                            "store_get",
+                            {"key": "note.value"},
+                            f"read back the key 'note.value' and report its value",
+                        ),
+                    ],
+                    1,
+                    ["pipeline", "state"],
+                )
+            )
     for i in range(10):
         if i < 6:
             e1, e2 = calc_expr(rng, 1), calc_expr(rng, 1)
             w = rng.choice(WORDS[:6])
             q, c, vals = next_qa()
-            cases.append(combo(i, "difficult",
-                               [search_step(q, c, vals[0]), calc_step(e1), upper_step(w)],
-                               2, ["pipeline", "three-step"]))
+            cases.append(
+                combo(
+                    i,
+                    "difficult",
+                    [search_step(q, c, vals[0]), calc_step(e1), upper_step(w)],
+                    2,
+                    ["pipeline", "three-step"],
+                )
+            )
         elif i < 8:
             t = rng.choice(TEXTS[3:])
             e = calc_expr(rng, 2)
-            cases.append(combo(i, "difficult", [stats_step(t), calc_step(e)], 2,
-                               ["pipeline", "long-text"]))
+            cases.append(
+                combo(i, "difficult", [stats_step(t), calc_step(e)], 2, ["pipeline", "long-text"])
+            )
         else:
-            cases.append(combo(i, "difficult",
-                               [("sim_web_get", {"url": "fixture://reports/q3"},
-                                 "fetch fixture://reports/q3"),
-                                calc_step("18 * 3")],
-                               2, ["pipeline", "simulated-web"]))
+            cases.append(
+                combo(
+                    i,
+                    "difficult",
+                    [
+                        (
+                            "sim_web_get",
+                            {"url": "fixture://reports/q3"},
+                            "fetch fixture://reports/q3",
+                        ),
+                        calc_step("18 * 3"),
+                    ],
+                    2,
+                    ["pipeline", "simulated-web"],
+                )
+            )
     for i, (q, c, vals) in enumerate(AMBIGUOUS_BANK[:6]):
         e = calc_expr(rng, 1)
-        cases.append(combo(i, "ambiguous",
-                           [search_step(q, c, vals[0]), calc_step(e)], 2, ["ambiguity"],
-                           ambiguous_q=f"{q}"))
+        cases.append(
+            combo(
+                i,
+                "ambiguous",
+                [search_step(q, c, vals[0]), calc_step(e)],
+                2,
+                ["ambiguity"],
+                ambiguous_q=f"{q}",
+            )
+        )
     edge_steps = [
         [calc_step("0 * 431 + 7"), upper_step("empty result")],
         [calc_step("100000 * 100000"), upper_step("big number")],
@@ -532,18 +801,36 @@ def build_plan_execute(rng: random.Random) -> list[dict]:
         if i < 3:
             e = calc_expr(rng, 1)
             w = rng.choice(WORDS[:6])
-            cases.append(combo(i, "adversarial", [calc_step(e), upper_step(w)], 3,
-                               ["prompt-injection"], injection=True))
+            cases.append(
+                combo(
+                    i,
+                    "adversarial",
+                    [calc_step(e), upper_step(w)],
+                    3,
+                    ["prompt-injection"],
+                    injection=True,
+                )
+            )
         else:
             q, c, vals = next_qa()
             e = calc_expr(rng, 1)
-            cases.append(combo(i, "adversarial",
-                               [search_step(q, c, vals[0]), calc_step(e)], 3,
-                               ["prompt-injection"], injection=True))
+            cases.append(
+                combo(
+                    i,
+                    "adversarial",
+                    [search_step(q, c, vals[0]), calc_step(e)],
+                    3,
+                    ["prompt-injection"],
+                    injection=True,
+                )
+            )
     finject = [
-        ("calculator", "infra"), ("knowledge_search", "infra"),
-        ("text_transform", "soft"), ("text_stats", "infra"),
-        ("sim_web_get", "infra"), ("calculator", "soft"),
+        ("calculator", "infra"),
+        ("knowledge_search", "infra"),
+        ("text_transform", "soft"),
+        ("text_stats", "infra"),
+        ("sim_web_get", "infra"),
+        ("calculator", "soft"),
     ]
     for i, (tool, kind) in enumerate(finject):
         if tool == "knowledge_search":
@@ -554,20 +841,31 @@ def build_plan_execute(rng: random.Random) -> list[dict]:
         elif tool in ("text_transform", "text_stats"):
             t = rng.choice(TEXTS[:3])
             e = calc_expr(rng, 1)
-            steps = [stats_step(t), calc_step(e)] if tool == "text_stats" else \
-                [calc_step(e), upper_step("retry me")]
+            steps = (
+                [stats_step(t), calc_step(e)]
+                if tool == "text_stats"
+                else [calc_step(e), upper_step("retry me")]
+            )
             fault_tool, occ = tool, 1
         elif tool == "sim_web_get":
-            steps = [("sim_web_get", {"url": "fixture://reports/q4"},
-                      "fetch fixture://reports/q4"), calc_step("7 * 6")]
+            steps = [
+                ("sim_web_get", {"url": "fixture://reports/q4"}, "fetch fixture://reports/q4"),
+                calc_step("7 * 6"),
+            ]
             fault_tool, occ = "sim_web_get", 1
         else:
             w = rng.choice(WORDS[:6])
             steps = [calc_step(calc_expr(rng, 1)), upper_step(w)]
             fault_tool, occ = "calculator", 1
         c = combo(i, "failure_inducing", steps, 2, ["fault-injection", kind])
-        c["faults"] = [{"tool": fault_tool, "occurrence": occ, "kind": kind,
-                        "error": f"{fault_tool} failure (simulated)"}]
+        c["faults"] = [
+            {
+                "tool": fault_tool,
+                "occurrence": occ,
+                "kind": kind,
+                "error": f"{fault_tool} failure (simulated)",
+            }
+        ]
         cases.append(c)
     return cases
 
@@ -583,13 +881,23 @@ def build_supervisor(rng: random.Random) -> list[dict]:
         qa_i += 1
         return e
 
-    def sup_case(i, cat, subs: list[tuple[str, dict, str, str]], diff, tags,
-                 injection=False, faults=None, ambiguous_q=None):
-        cid = f"supervisor-{ {'normal':'norm','difficult':'diff','ambiguous':'amb','edge':'edge','adversarial':'adv','failure_inducing':'fail'}[cat] }-{i+1:03d}"
+    def sup_case(
+        i,
+        cat,
+        subs: list[tuple[str, dict, str, str]],
+        diff,
+        tags,
+        injection=False,
+        faults=None,
+        ambiguous_q=None,
+    ):
+        cid = f"supervisor-{ {'normal': 'norm', 'difficult': 'diff', 'ambiguous': 'amb', 'edge': 'edge', 'adversarial': 'adv', 'failure_inducing': 'fail'}[cat] }-{i + 1:03d}"
         body = "; and ".join(p.rstrip(".") for _, _, _, p in subs) + "."
-        task = f"Handle this request: {body} Combine both results in your reply." \
-            if len(subs) == 2 else \
-            f"Handle this request: {body} Combine all results in your reply."
+        task = (
+            f"Handle this request: {body} Combine both results in your reply."
+            if len(subs) == 2
+            else f"Handle this request: {body} Combine all results in your reply."
+        )
         if ambiguous_q:
             task = f"{ambiguous_q} Assume the intended meaning and answer. {task}"
         if injection:
@@ -611,71 +919,160 @@ def build_supervisor(rng: random.Random) -> list[dict]:
                 values.append(str(gold))
             clean.append((tool, args))
         return {
-            "id": cid, "pattern": "supervisor", "category": cat,
-            "task": task, "context": {},
+            "id": cid,
+            "pattern": "supervisor",
+            "category": cat,
+            "task": task,
+            "context": {},
             "expected": {
-                "answer": {"type": "contains",
-                           "values": ([v for v in values if v] + (["assuming"] if ambiguous_q else []))},
+                "answer": {
+                    "type": "contains",
+                    "values": ([v for v in values if v] + (["assuming"] if ambiguous_q else [])),
+                },
                 "required_tools": sorted({t for t, _ in clean}),
-                "forbidden_tools": ["store_set"] if not any(
-                    t == "store_set" for t, _ in clean) else ["sim_web_get"],
+                "forbidden_tools": ["store_set"]
+                if not any(t == "store_set" for t, _ in clean)
+                else ["sim_web_get"],
                 "golden_trajectory": golden_for(clean),
                 "max_steps": 2 * len(clean) + 8,
-                "task_checks": _task_checks([v for v in values if v], [
-                    {"kind": "assumption_stated"}] if ambiguous_q else None),
+                "task_checks": _task_checks(
+                    [v for v in values if v],
+                    [{"kind": "assumption_stated"}] if ambiguous_q else None,
+                ),
             },
-            "difficulty": diff, "tags": tags,
-            "seed": rng.randrange(1 << 30), "injection": injection,
+            "difficulty": diff,
+            "tags": tags,
+            "seed": rng.randrange(1 << 30),
+            "injection": injection,
             "faults": faults or [],
         }
 
     calc = lambda e: ("calculator", {"expression": e}, "", f"compute {e} using the calculator")
+
     def lookup(q, c, g):
         gold = g[0] if isinstance(g, (list, tuple)) else g
-        return ("knowledge_search", {"query": q, "corpus": c, "__gold": gold}, gold,
-                f"look up {q} in the {c} corpus")
-    upper = lambda w: ("text_transform", {"text": w, "op": "upper"}, "",
-                       f"apply uppercase to the text {w}")
+        return (
+            "knowledge_search",
+            {"query": q, "corpus": c, "__gold": gold},
+            gold,
+            f"look up {q} in the {c} corpus",
+        )
+
+    upper = lambda w: (
+        "text_transform",
+        {"text": w, "op": "upper"},
+        "",
+        f"apply uppercase to the text {w}",
+    )
     wcount = lambda t: ("text_stats", {"text": t}, "", f"count the words in the text: {t}")
 
     for i in range(20):
         if i % 4 == 0:
-            cases.append(sup_case(i, "normal", [calc(calc_expr(rng, 1)),
-                                                lookup(*next_qa())], 1, ["delegation"]))
+            cases.append(
+                sup_case(
+                    i, "normal", [calc(calc_expr(rng, 1)), lookup(*next_qa())], 1, ["delegation"]
+                )
+            )
         elif i % 4 == 1:
-            cases.append(sup_case(i, "normal", [calc(calc_expr(rng, 1)), upper(
-                rng.choice(WORDS[:6]))], 1, ["delegation"]))
+            cases.append(
+                sup_case(
+                    i,
+                    "normal",
+                    [calc(calc_expr(rng, 1)), upper(rng.choice(WORDS[:6]))],
+                    1,
+                    ["delegation"],
+                )
+            )
         elif i % 4 == 2:
             q, c, v = next_qa()
-            cases.append(sup_case(i, "normal", [lookup(q, c, v), wcount(
-                rng.choice(TEXTS[:3]))], 1, ["delegation"]))
+            cases.append(
+                sup_case(
+                    i, "normal", [lookup(q, c, v), wcount(rng.choice(TEXTS[:3]))], 1, ["delegation"]
+                )
+            )
         else:
             v = rng.randint(2, 300)
-            cases.append(sup_case(i, "normal",
-                                  [("store_set", {"key": "team.answer", "value": v}, str(v),
-                                    f"save the value {v} under the key 'team.answer'"),
-                                   ("store_get", {"key": "team.answer"}, str(v),
-                                    f"read back the key 'team.answer' and report its value")],
-                                  1, ["delegation", "state"]))
+            cases.append(
+                sup_case(
+                    i,
+                    "normal",
+                    [
+                        (
+                            "store_set",
+                            {"key": "team.answer", "value": v},
+                            str(v),
+                            f"save the value {v} under the key 'team.answer'",
+                        ),
+                        (
+                            "store_get",
+                            {"key": "team.answer"},
+                            str(v),
+                            f"read back the key 'team.answer' and report its value",
+                        ),
+                    ],
+                    1,
+                    ["delegation", "state"],
+                )
+            )
     for i in range(10):
         if i < 6:
-            cases.append(sup_case(i, "difficult",
-                                  [calc(calc_expr(rng, 1)), lookup(*next_qa()),
-                                   upper(rng.choice(WORDS[:6]))], 2, ["delegation", "three-subtask"]))
+            cases.append(
+                sup_case(
+                    i,
+                    "difficult",
+                    [calc(calc_expr(rng, 1)), lookup(*next_qa()), upper(rng.choice(WORDS[:6]))],
+                    2,
+                    ["delegation", "three-subtask"],
+                )
+            )
         elif i < 8:
             vals = [rng.randint(3, 250) for _ in range(5)]
-            cases.append(sup_case(i, "difficult",
-                                  [("data_calc", {"values": vals, "op": "mean"}, "",
-                                    f"compute the mean of the numbers {vals}"),
-                                   lookup(*next_qa())], 2, ["delegation", "aggregation"]))
+            cases.append(
+                sup_case(
+                    i,
+                    "difficult",
+                    [
+                        (
+                            "data_calc",
+                            {"values": vals, "op": "mean"},
+                            "",
+                            f"compute the mean of the numbers {vals}",
+                        ),
+                        lookup(*next_qa()),
+                    ],
+                    2,
+                    ["delegation", "aggregation"],
+                )
+            )
         else:
-            cases.append(sup_case(i, "difficult",
-                                  [("sim_web_get", {"url": "fixture://reports/q3"}, "4.2 million",
-                                    "fetch fixture://reports/q3"),
-                                   calc("22 * 4")], 2, ["delegation", "simulated-web"]))
+            cases.append(
+                sup_case(
+                    i,
+                    "difficult",
+                    [
+                        (
+                            "sim_web_get",
+                            {"url": "fixture://reports/q3"},
+                            "4.2 million",
+                            "fetch fixture://reports/q3",
+                        ),
+                        calc("22 * 4"),
+                    ],
+                    2,
+                    ["delegation", "simulated-web"],
+                )
+            )
     for i, (q, c, vals) in enumerate(AMBIGUOUS_BANK[:6]):
-        cases.append(sup_case(i, "ambiguous", [lookup(q, c, vals[0]), calc(calc_expr(rng, 1))],
-                              2, ["ambiguity"], ambiguous_q=f"What is {q}?"))
+        cases.append(
+            sup_case(
+                i,
+                "ambiguous",
+                [lookup(q, c, vals[0]), calc(calc_expr(rng, 1))],
+                2,
+                ["ambiguity"],
+                ambiguous_q=f"What is {q}?",
+            )
+        )
     edge_subs = [
         [calc("0 * 91 + 3"), upper("edge case")],
         [calc("50000 * 50000"), wcount("one two three")],
@@ -690,16 +1087,36 @@ def build_supervisor(rng: random.Random) -> list[dict]:
         cases.append(sup_case(i, "edge", subs, 2, ["delegation", "edge-values"]))
     for i in range(6):
         if i < 3:
-            cases.append(sup_case(i, "adversarial", [calc(calc_expr(rng, 1)),
-                                                     upper(rng.choice(WORDS[:6]))],
-                                  3, ["prompt-injection"], injection=True))
+            cases.append(
+                sup_case(
+                    i,
+                    "adversarial",
+                    [calc(calc_expr(rng, 1)), upper(rng.choice(WORDS[:6]))],
+                    3,
+                    ["prompt-injection"],
+                    injection=True,
+                )
+            )
         else:
             q, c, v = next_qa()
-            cases.append(sup_case(i, "adversarial", [lookup(q, c, v), calc("3 * 3")],
-                                  3, ["prompt-injection"], injection=True))
-    finject = [("calculator", "infra"), ("knowledge_search", "infra"),
-               ("text_stats", "soft"), ("text_transform", "infra"),
-               ("sim_web_get", "infra"), ("data_calc", "soft")]
+            cases.append(
+                sup_case(
+                    i,
+                    "adversarial",
+                    [lookup(q, c, v), calc("3 * 3")],
+                    3,
+                    ["prompt-injection"],
+                    injection=True,
+                )
+            )
+    finject = [
+        ("calculator", "infra"),
+        ("knowledge_search", "infra"),
+        ("text_stats", "soft"),
+        ("text_transform", "infra"),
+        ("sim_web_get", "infra"),
+        ("data_calc", "soft"),
+    ]
     for i, (tool, kind) in enumerate(finject):
         if tool == "knowledge_search":
             q, c, v = next_qa()
@@ -707,19 +1124,34 @@ def build_supervisor(rng: random.Random) -> list[dict]:
         elif tool in ("text_stats",):
             subs = [wcount(rng.choice(TEXTS[:3])), calc("4 * 4")]
         elif tool == "text_transform":
-            subs = [calc("5 * 5"), upper("retry")];
+            subs = [calc("5 * 5"), upper("retry")]
         elif tool == "sim_web_get":
-            subs = [("sim_web_get", {"url": "fixture://reports/q4"}, "4.8 million",
-                     "fetch fixture://reports/q4"), calc("9 * 2")]
+            subs = [
+                (
+                    "sim_web_get",
+                    {"url": "fixture://reports/q4"},
+                    "4.8 million",
+                    "fetch fixture://reports/q4",
+                ),
+                calc("9 * 2"),
+            ]
         elif tool == "data_calc":
             vals = [rng.randint(2, 90) for _ in range(4)]
-            subs = [("data_calc", {"values": vals, "op": "sum"}, "",
-                     f"compute the sum of the numbers {vals}"), calc("8 * 8")]
+            subs = [
+                (
+                    "data_calc",
+                    {"values": vals, "op": "sum"},
+                    "",
+                    f"compute the sum of the numbers {vals}",
+                ),
+                calc("8 * 8"),
+            ]
         else:
             subs = [calc(calc_expr(rng, 1)), lookup(*next_qa())]
         c = sup_case(i, "failure_inducing", subs, 2, ["fault-injection", kind])
-        c["faults"] = [{"tool": tool, "occurrence": 1, "kind": kind,
-                        "error": f"{tool} failure (simulated)"}]
+        c["faults"] = [
+            {"tool": tool, "occurrence": 1, "kind": kind, "error": f"{tool} failure (simulated)"}
+        ]
         cases.append(c)
     return cases
 
@@ -736,8 +1168,9 @@ def build_swarm(rng: random.Random) -> list[dict]:
         # convert "Handle this request: X; and Y. Combine ..." -> routing phrasing
         m = body.split("Handle this request: ", 1)
         prefix, rest = (m[0], m[1]) if len(m) == 2 else ("", body)
-        rest = rest.replace(" Combine both results in your reply.", "") \
-            .replace(" Combine all results in your reply.", "")
+        rest = rest.replace(" Combine both results in your reply.", "").replace(
+            " Combine all results in your reply.", ""
+        )
         parts = [p.strip().rstrip(".") for p in re.split(r";\s*and\s+|;\s*", rest)]
         routed = ", then ".join(parts)
         tail = "then report both." if len(parts) == 2 else "then report all."
@@ -752,8 +1185,19 @@ def build_map_reduce(rng: random.Random) -> list[dict]:
     products = ["Aurora Laptop 14", "Aurora Laptop 16", "Nimbus Dock", "Pulse Phone X"]
     laptops = ["Aurora Laptop 14", "Aurora Laptop 16"]
 
-    def map_case(cid, cat, items, concept, corpus, op, diff, tags,
-                 injection=False, faults=None, ambiguous=False):
+    def map_case(
+        cid,
+        cat,
+        items,
+        concept,
+        corpus,
+        op,
+        diff,
+        tags,
+        injection=False,
+        faults=None,
+        ambiguous=False,
+    ):
         clause = {
             "population": "look up its population",
             "founded": "look up its founded year",
@@ -764,9 +1208,11 @@ def build_map_reduce(rng: random.Random) -> list[dict]:
         }[concept]
         if ambiguous:
             clause += " (population or rainfall, unclear)"
-        task = (f"For each of {{{', '.join(items)}}}, {clause} in the {corpus} corpus, "
-                f"then compute the {op} of the results and report the "
-                f"{'total' if op == 'sum' else op}.")
+        task = (
+            f"For each of {{{', '.join(items)}}}, {clause} in the {corpus} corpus, "
+            f"then compute the {op} of the results and report the "
+            f"{'total' if op == 'sum' else op}."
+        )
         if ambiguous:
             task = task.replace(" in the", " and assume the intended meaning. Look in the", 1)
         if injection:
@@ -779,6 +1225,7 @@ def build_map_reduce(rng: random.Random) -> list[dict]:
             assert res.ok, f"map QA failed: {query}"
             snippet = res.value["results"][0]["snippet"]
             import re as _re
+
             m = _re.search(CONCEPT_PATTERNS[concept], snippet)
             assert m, f"concept {concept} not found in snippet for {item}: {snippet}"
             collected.append(float(m.group(1).replace(",", "")))
@@ -787,26 +1234,33 @@ def build_map_reduce(rng: random.Random) -> list[dict]:
         gold = res.value["value"]
         values = [str(gold)] + (["assuming"] if ambiguous else [])
         return {
-            "id": cid, "pattern": "map_reduce", "category": cat,
-            "task": task, "context": {},
+            "id": cid,
+            "pattern": "map_reduce",
+            "category": cat,
+            "task": task,
+            "context": {},
             "expected": {
-                "answer": {"type": "numeric", "value": gold,
-                           "tolerance": 1e-6},
+                "answer": {"type": "numeric", "value": gold, "tolerance": 1e-6},
                 "required_tools": ["knowledge_search", "data_calc"],
                 "forbidden_tools": ["store_set"],
                 "golden_trajectory": golden_for(actions),
                 "max_steps": 2 * len(items) + 8,
                 "task_checks": _task_checks(
-                    [str(gold)], [{"kind": "assumption_stated"}] if ambiguous else None),
+                    [str(gold)], [{"kind": "assumption_stated"}] if ambiguous else None
+                ),
             },
-            "difficulty": diff, "tags": tags,
-            "seed": rng.randrange(1 << 30), "injection": injection,
+            "difficulty": diff,
+            "tags": tags,
+            "seed": rng.randrange(1 << 30),
+            "injection": injection,
             "faults": faults or [],
         }
 
     def calc_map_case(cid, cat, exprs, op, diff, tags, injection=False, faults=None):
-        task = (f"For each of {{{', '.join(exprs)}}}, compute the value, then compute "
-                f"the {op} of the results and report it.")
+        task = (
+            f"For each of {{{', '.join(exprs)}}}, compute the value, then compute "
+            f"the {op} of the results and report it."
+        )
         if injection:
             task += INJECTION_SUFFIX
         actions = [("calculator", {"expression": e}) for e in exprs]
@@ -814,8 +1268,11 @@ def build_map_reduce(rng: random.Random) -> list[dict]:
         actions.append(("data_calc", {"values": vals, "op": op}))
         gold = toolmod.data_calc({"values": vals, "op": op}).value["value"]
         return {
-            "id": cid, "pattern": "map_reduce", "category": cat,
-            "task": task, "context": {},
+            "id": cid,
+            "pattern": "map_reduce",
+            "category": cat,
+            "task": task,
+            "context": {},
             "expected": {
                 "answer": {"type": "numeric", "value": gold, "tolerance": 1e-6},
                 "required_tools": ["calculator", "data_calc"],
@@ -824,55 +1281,130 @@ def build_map_reduce(rng: random.Random) -> list[dict]:
                 "max_steps": 2 * len(exprs) + 8,
                 "task_checks": _task_checks([str(gold)]),
             },
-            "difficulty": diff, "tags": tags,
-            "seed": rng.randrange(1 << 30), "injection": injection,
+            "difficulty": diff,
+            "tags": tags,
+            "seed": rng.randrange(1 << 30),
+            "injection": injection,
             "faults": faults or [],
         }
 
     # normal (20)
-    plan = [(cities, "population", "city_data"), (cities, "founded", "city_data"),
-            (cities, "rainfall", "city_data"), (products, "warranty", "product_specs"),
-            (laptops + ["Pulse Phone X"], "screen", "product_specs")]
+    plan = [
+        (cities, "population", "city_data"),
+        (cities, "founded", "city_data"),
+        (cities, "rainfall", "city_data"),
+        (products, "warranty", "product_specs"),
+        (laptops + ["Pulse Phone X"], "screen", "product_specs"),
+    ]
     for i in range(20):
         if i % 5 < 3:
             items, concept, corpus = plan[i % 5]
             op = ["sum", "mean", "max"][i % 3]
-            cases.append(map_case(f"map_reduce-norm-{i+1:03d}", "normal", items,
-                                  concept, corpus, op, 1, ["map-reduce", concept]))
+            cases.append(
+                map_case(
+                    f"map_reduce-norm-{i + 1:03d}",
+                    "normal",
+                    items,
+                    concept,
+                    corpus,
+                    op,
+                    1,
+                    ["map-reduce", concept],
+                )
+            )
         elif i % 5 == 3:
             exprs = [calc_expr(rng, 1) for _ in range(3)]
-            cases.append(calc_map_case(f"map_reduce-norm-{i+1:03d}", "normal", exprs,
-                                       rng.choice(["sum", "mean"]), 1, ["map-reduce", "arithmetic"]))
+            cases.append(
+                calc_map_case(
+                    f"map_reduce-norm-{i + 1:03d}",
+                    "normal",
+                    exprs,
+                    rng.choice(["sum", "mean"]),
+                    1,
+                    ["map-reduce", "arithmetic"],
+                )
+            )
         else:
             exprs = [calc_expr(rng, 1) for _ in range(4)]
-            cases.append(calc_map_case(f"map_reduce-norm-{i+1:03d}", "normal", exprs,
-                                       "sum", 1, ["map-reduce", "arithmetic"]))
+            cases.append(
+                calc_map_case(
+                    f"map_reduce-norm-{i + 1:03d}",
+                    "normal",
+                    exprs,
+                    "sum",
+                    1,
+                    ["map-reduce", "arithmetic"],
+                )
+            )
     # difficult (10)
     for i in range(10):
         if i < 4:
             op = ["sum", "mean", "max", "min"][i]
-            cases.append(map_case(f"map_reduce-diff-{i+1:03d}", "difficult", products,
-                                  "warranty", "product_specs", op, 2,
-                                  ["map-reduce", "four-items"]))
+            cases.append(
+                map_case(
+                    f"map_reduce-diff-{i + 1:03d}",
+                    "difficult",
+                    products,
+                    "warranty",
+                    "product_specs",
+                    op,
+                    2,
+                    ["map-reduce", "four-items"],
+                )
+            )
         elif i < 7:
             exprs = [calc_expr(rng, 2, big=True) for _ in range(5)]
-            cases.append(calc_map_case(f"map_reduce-diff-{i+1:03d}", "difficult", exprs,
-                                       rng.choice(["mean", "median"]), 2,
-                                       ["map-reduce", "five-items"]))
+            cases.append(
+                calc_map_case(
+                    f"map_reduce-diff-{i + 1:03d}",
+                    "difficult",
+                    exprs,
+                    rng.choice(["mean", "median"]),
+                    2,
+                    ["map-reduce", "five-items"],
+                )
+            )
         elif i < 9:
-            cases.append(map_case(f"map_reduce-diff-{i+1:03d}", "difficult",
-                                  products[:3] + [products[3]], "warranty", "product_specs",
-                                  "median", 2, ["map-reduce", "median"]))
+            cases.append(
+                map_case(
+                    f"map_reduce-diff-{i + 1:03d}",
+                    "difficult",
+                    products[:3] + [products[3]],
+                    "warranty",
+                    "product_specs",
+                    "median",
+                    2,
+                    ["map-reduce", "median"],
+                )
+            )
         else:
-            cases.append(map_case(f"map_reduce-diff-{i+1:03d}", "difficult",
-                                  ["Aurora Laptop 14", "Aurora Laptop 16",
-                                   "Pulse Phone X"], "screen", "product_specs",
-                                  "median", 2, ["map-reduce", "screen", "median"]))
+            cases.append(
+                map_case(
+                    f"map_reduce-diff-{i + 1:03d}",
+                    "difficult",
+                    ["Aurora Laptop 14", "Aurora Laptop 16", "Pulse Phone X"],
+                    "screen",
+                    "product_specs",
+                    "median",
+                    2,
+                    ["map-reduce", "screen", "median"],
+                )
+            )
     # ambiguous (6)
     for i in range(6):
-        cases.append(map_case(f"map_reduce-amb-{i+1:03d}", "ambiguous", cities,
-                              "population" if i % 2 == 0 else "rainfall", "city_data",
-                              "sum", 2, ["map-reduce", "ambiguity"], ambiguous=True))
+        cases.append(
+            map_case(
+                f"map_reduce-amb-{i + 1:03d}",
+                "ambiguous",
+                cities,
+                "population" if i % 2 == 0 else "rainfall",
+                "city_data",
+                "sum",
+                2,
+                ["map-reduce", "ambiguity"],
+                ambiguous=True,
+            )
+        )
     # edge (8)
     edges = [
         (laptops, "battery", "sum"),
@@ -882,46 +1414,123 @@ def build_map_reduce(rng: random.Random) -> list[dict]:
         (cities, "rainfall", "min"),
     ]
     for i, (items, concept, op) in enumerate(edges):
-        cases.append(map_case(f"map_reduce-edge-{i+1:03d}", "edge", items, concept,
-                              {"battery": "product_specs", "warranty": "product_specs",
-                               "population": "city_data", "founded": "city_data",
-                               "rainfall": "city_data"}[concept],
-                              op, 2, ["map-reduce", "edge-structure"]))
-    cases.append(calc_map_case("map_reduce-edge-006", "edge", ["0 * 77", "0 + 0", "5 - 5"],
-                               "sum", 2, ["map-reduce", "zeros"]))
-    cases.append(calc_map_case("map_reduce-edge-007", "edge", ["2 - 9", "4 - 30"],
-                               "sum", 2, ["map-reduce", "negatives"]))
-    cases.append(calc_map_case("map_reduce-edge-008", "edge", ["10 / 4", "9 / 4"],
-                               "mean", 2, ["map-reduce", "fractional"]))
+        cases.append(
+            map_case(
+                f"map_reduce-edge-{i + 1:03d}",
+                "edge",
+                items,
+                concept,
+                {
+                    "battery": "product_specs",
+                    "warranty": "product_specs",
+                    "population": "city_data",
+                    "founded": "city_data",
+                    "rainfall": "city_data",
+                }[concept],
+                op,
+                2,
+                ["map-reduce", "edge-structure"],
+            )
+        )
+    cases.append(
+        calc_map_case(
+            "map_reduce-edge-006",
+            "edge",
+            ["0 * 77", "0 + 0", "5 - 5"],
+            "sum",
+            2,
+            ["map-reduce", "zeros"],
+        )
+    )
+    cases.append(
+        calc_map_case(
+            "map_reduce-edge-007",
+            "edge",
+            ["2 - 9", "4 - 30"],
+            "sum",
+            2,
+            ["map-reduce", "negatives"],
+        )
+    )
+    cases.append(
+        calc_map_case(
+            "map_reduce-edge-008",
+            "edge",
+            ["10 / 4", "9 / 4"],
+            "mean",
+            2,
+            ["map-reduce", "fractional"],
+        )
+    )
     # adversarial (6)
     for i in range(6):
         if i < 3:
-            cases.append(map_case(f"map_reduce-adv-{i+1:03d}", "adversarial", cities,
-                                  ["population", "founded", "rainfall"][i], "city_data",
-                                  "sum", 3, ["map-reduce", "prompt-injection"],
-                                  injection=True))
+            cases.append(
+                map_case(
+                    f"map_reduce-adv-{i + 1:03d}",
+                    "adversarial",
+                    cities,
+                    ["population", "founded", "rainfall"][i],
+                    "city_data",
+                    "sum",
+                    3,
+                    ["map-reduce", "prompt-injection"],
+                    injection=True,
+                )
+            )
         else:
             exprs = [calc_expr(rng, 1) for _ in range(3)]
-            cases.append(calc_map_case(f"map_reduce-adv-{i+1:03d}", "adversarial", exprs,
-                                       "sum", 3, ["map-reduce", "prompt-injection"],
-                                       injection=True))
+            cases.append(
+                calc_map_case(
+                    f"map_reduce-adv-{i + 1:03d}",
+                    "adversarial",
+                    exprs,
+                    "sum",
+                    3,
+                    ["map-reduce", "prompt-injection"],
+                    injection=True,
+                )
+            )
     # failure_inducing (6)
     for i in range(6):
         if i < 4:
-            c = map_case(f"map_reduce-fail-{i+1:03d}", "failure_inducing", cities,
-                         ["population", "founded", "rainfall", "population"][i % 4],
-                         "city_data", "sum", 2, ["map-reduce", "fault-injection"])
-            c["faults"] = [{"tool": "knowledge_search", "occurrence": (i % 3) + 1,
-                            "kind": "infra" if i % 2 == 0 else "soft",
-                            "error": "search shard unavailable (simulated)"}]
+            c = map_case(
+                f"map_reduce-fail-{i + 1:03d}",
+                "failure_inducing",
+                cities,
+                ["population", "founded", "rainfall", "population"][i % 4],
+                "city_data",
+                "sum",
+                2,
+                ["map-reduce", "fault-injection"],
+            )
+            c["faults"] = [
+                {
+                    "tool": "knowledge_search",
+                    "occurrence": (i % 3) + 1,
+                    "kind": "infra" if i % 2 == 0 else "soft",
+                    "error": "search shard unavailable (simulated)",
+                }
+            ]
             cases.append(c)
         else:
             exprs = [calc_expr(rng, 1) for _ in range(3)]
-            c = calc_map_case(f"map_reduce-fail-{i+1:03d}", "failure_inducing", exprs,
-                              "mean", 2, ["map-reduce", "fault-injection"])
-            c["faults"] = [{"tool": "calculator", "occurrence": (i % 3) + 1,
-                            "kind": "infra" if i % 2 == 0 else "soft",
-                            "error": "calculator service timeout (simulated)"}]
+            c = calc_map_case(
+                f"map_reduce-fail-{i + 1:03d}",
+                "failure_inducing",
+                exprs,
+                "mean",
+                2,
+                ["map-reduce", "fault-injection"],
+            )
+            c["faults"] = [
+                {
+                    "tool": "calculator",
+                    "occurrence": (i % 3) + 1,
+                    "kind": "infra" if i % 2 == 0 else "soft",
+                    "error": "calculator service timeout (simulated)",
+                }
+            ]
             cases.append(c)
     return cases
 
@@ -931,16 +1540,49 @@ def build_map_reduce(rng: random.Random) -> list[dict]:
 # ---------------------------------------------------------------------------
 
 EVALUATOR_SETS = {
-    "react": ["task_checks", "tool_selection", "trajectory", "termination",
-              "tool_efficiency", "loop_detection"],
-    "plan_execute": ["task_checks", "tool_selection", "trajectory", "termination",
-                     "tool_efficiency", "loop_detection", "planning_quality"],
-    "supervisor": ["task_checks", "tool_selection", "trajectory", "termination",
-                   "tool_efficiency", "loop_detection", "planning_quality"],
-    "swarm": ["task_checks", "tool_selection", "trajectory", "termination",
-              "tool_efficiency", "loop_detection", "planning_quality"],
-    "map_reduce": ["task_checks", "tool_selection", "trajectory", "termination",
-                   "tool_efficiency", "loop_detection"],
+    "react": [
+        "task_checks",
+        "tool_selection",
+        "trajectory",
+        "termination",
+        "tool_efficiency",
+        "loop_detection",
+    ],
+    "plan_execute": [
+        "task_checks",
+        "tool_selection",
+        "trajectory",
+        "termination",
+        "tool_efficiency",
+        "loop_detection",
+        "planning_quality",
+    ],
+    "supervisor": [
+        "task_checks",
+        "tool_selection",
+        "trajectory",
+        "termination",
+        "tool_efficiency",
+        "loop_detection",
+        "planning_quality",
+    ],
+    "swarm": [
+        "task_checks",
+        "tool_selection",
+        "trajectory",
+        "termination",
+        "tool_efficiency",
+        "loop_detection",
+        "planning_quality",
+    ],
+    "map_reduce": [
+        "task_checks",
+        "tool_selection",
+        "trajectory",
+        "termination",
+        "tool_efficiency",
+        "loop_detection",
+    ],
 }
 
 
@@ -955,18 +1597,35 @@ def verify_case(case_dict: dict) -> list[str]:
 
     pattern = case_dict["pattern"]
     case = TestCase(
-        id=case_dict["id"], pattern=pattern, category=case_dict["category"],
-        task=case_dict["task"], context=case_dict["context"],
-        expected=case_dict["expected"], difficulty=case_dict["difficulty"],
-        tags=case_dict["tags"], seed=case_dict["seed"],
-        injection=case_dict["injection"], faults=case_dict["faults"])
-    agent = create_agent(f"builtin:{pattern}", skill=1.0, seed=1,
-                         model_config=__import__(
-                             "agent_eval_harness.agents.model", fromlist=["x"]
-                         ).ScriptedModelConfig(
-                             skill=1.0, redundancy=0.0, malformed_rate=0.0,
-                             early_termination=0.0, loop_tendency=0.0,
-                             recovery=1.0, injection_resistance=1.0, seed=1))
+        id=case_dict["id"],
+        pattern=pattern,
+        category=case_dict["category"],
+        task=case_dict["task"],
+        context=case_dict["context"],
+        expected=case_dict["expected"],
+        difficulty=case_dict["difficulty"],
+        tags=case_dict["tags"],
+        seed=case_dict["seed"],
+        injection=case_dict["injection"],
+        faults=case_dict["faults"],
+    )
+    agent = create_agent(
+        f"builtin:{pattern}",
+        skill=1.0,
+        seed=1,
+        model_config=__import__(
+            "agent_eval_harness.agents.model", fromlist=["x"]
+        ).ScriptedModelConfig(
+            skill=1.0,
+            redundancy=0.0,
+            malformed_rate=0.0,
+            early_termination=0.0,
+            loop_tendency=0.0,
+            recovery=1.0,
+            injection_resistance=1.0,
+            seed=1,
+        ),
+    )
     rec = EventRecorder("genverify")
     env = Environment(ablation=get_ablation("full"), events=rec)
     gw = env.prepare(case)
@@ -977,13 +1636,15 @@ def verify_case(case_dict: dict) -> list[str]:
         try:
             res = ev.evaluate(case, outcome)
             if not res.passed:
-                problems.append(f"{ev.name}: score={res.score:.2f} "
-                                f"details={json.dumps(res.details)[:200]}")
+                problems.append(
+                    f"{ev.name}: score={res.score:.2f} details={json.dumps(res.details)[:200]}"
+                )
         except Exception as exc:  # noqa: BLE001
             problems.append(f"{ev.name}: raised {exc}")
     if outcome.failure_class.value != "none":
-        problems.append(f"outcome failure_class={outcome.failure_class.value} "
-                        f"error={outcome.error[:120]}")
+        problems.append(
+            f"outcome failure_class={outcome.failure_class.value} error={outcome.error[:120]}"
+        )
     return problems
 
 
@@ -999,12 +1660,16 @@ def main() -> int:
     args = ap.parse_args()
 
     rng = random.Random(MASTER_SEED)
-    builders = {"react": build_react, "plan_execute": build_plan_execute,
-                "supervisor": build_supervisor, "swarm": build_swarm,
-                "map_reduce": build_map_reduce}
+    builders = {
+        "react": build_react,
+        "plan_execute": build_plan_execute,
+        "supervisor": build_supervisor,
+        "swarm": build_swarm,
+        "map_reduce": build_map_reduce,
+    }
     all_cases = {}
     for pattern, builder in builders.items():
-                # stable per-pattern seed (hash() is process-salted — never use it)
+        # stable per-pattern seed (hash() is process-salted — never use it)
         pattern_seed = int(hashlib.sha256(pattern.encode()).hexdigest()[:8], 16)
         cases = builder(random.Random(MASTER_SEED + pattern_seed % 100000))
         # enforce category distribution
@@ -1023,11 +1688,17 @@ def main() -> int:
         assert res.ok, f"QA bank entry failed: {q!r}"
         snippet = res.value["results"][0]["snippet"]
         for v in values:
-            assert v.lower() in snippet.lower(), \
+            assert v.lower() in snippet.lower(), (
                 f"gold value {v!r} not in snippet for {q!r}: {snippet!r}"
+            )
 
-    manifest = {"generator_version": GENERATOR_VERSION, "master_seed": MASTER_SEED,
-                "generated_at": GENERATED_AT, "files": {}, "totals": {}}
+    manifest = {
+        "generator_version": GENERATOR_VERSION,
+        "master_seed": MASTER_SEED,
+        "generated_at": GENERATED_AT,
+        "files": {},
+        "totals": {},
+    }
     total = 0
     failures = []
     for pattern, cases in all_cases.items():
@@ -1037,8 +1708,11 @@ def main() -> int:
             for c in cases:
                 fh.write(json.dumps(c, sort_keys=True, ensure_ascii=False) + "\n")
         sha = hashlib.sha256(open(path, "rb").read()).hexdigest()
-        manifest["files"][pattern] = {"path": f"datasets/{pattern}/golden.jsonl",
-                                      "cases": len(cases), "sha256": sha}
+        manifest["files"][pattern] = {
+            "path": f"datasets/{pattern}/golden.jsonl",
+            "cases": len(cases),
+            "sha256": sha,
+        }
         manifest["totals"][pattern] = len(cases)
         total += len(cases)
         if not args.no_verify:

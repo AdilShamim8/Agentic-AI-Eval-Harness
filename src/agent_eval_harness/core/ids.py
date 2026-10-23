@@ -12,6 +12,7 @@ overwrote the earlier run's artifacts (e.g. a --limit 8 smoke run replaced a
 full 56-case record). v2 ids never collide with v1 ids (different preimage
 tag), so historical records are safe from re-runs of the same benchmark.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -46,8 +47,17 @@ def run_id(
     preimage, otherwise distinct experiments overwrite each other's records.
     """
     preimage = "|".join(
-        ["v2", benchmark, agent, str(seed), ablation, dataset_sha[:16],
-         case_selection, model_identity, extra]
+        [
+            "v2",
+            benchmark,
+            agent,
+            str(seed),
+            ablation,
+            dataset_sha[:16],
+            case_selection,
+            model_identity,
+            extra,
+        ]
     )
     return _h(preimage)[:16]
 

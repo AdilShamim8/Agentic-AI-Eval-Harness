@@ -4,6 +4,7 @@ A benchmark defines: name/version/pattern, dataset path, evaluator list,
 thresholds (pass gates per evaluator), execution settings (limits, ablation,
 permissions), and regression gates. Validated at load time.
 """
+
 from __future__ import annotations
 
 import os
@@ -99,10 +100,8 @@ class BenchmarkDef:
         return issues
 
 
-def load_benchmark(name_or_path: str,
-                   registry_dirs: list[str] | None = None) -> BenchmarkDef:
-    dirs = registry_dirs or [os.environ.get("AEH_BENCHMARKS_DIR",
-                                            DEFAULT_REGISTRY_DIR)]
+def load_benchmark(name_or_path: str, registry_dirs: list[str] | None = None) -> BenchmarkDef:
+    dirs = registry_dirs or [os.environ.get("AEH_BENCHMARKS_DIR", DEFAULT_REGISTRY_DIR)]
     candidates: list[str] = []
     if os.path.isfile(name_or_path):
         candidates.append(name_or_path)
@@ -125,8 +124,7 @@ def load_benchmark(name_or_path: str,
             if not isinstance(data, dict):
                 raise InfraError(f"benchmark file '{path}' is not a mapping")
             return BenchmarkDef(data, source=path)
-    raise InfraError(
-        f"benchmark '{name_or_path}' not found (searched: {candidates})")
+    raise InfraError(f"benchmark '{name_or_path}' not found (searched: {candidates})")
 
 
 def list_benchmarks(registry_dir: str | None = None) -> list[dict]:
@@ -140,10 +138,25 @@ def list_benchmarks(registry_dir: str | None = None) -> list[dict]:
         path = os.path.join(d, fname)
         try:
             bm = load_benchmark(path)
-            out.append({"name": bm.name, "version": bm.version,
-                        "pattern": bm.pattern, "dataset": bm.dataset_path,
-                        "source": path, "description": bm.description})
+            out.append(
+                {
+                    "name": bm.name,
+                    "version": bm.version,
+                    "pattern": bm.pattern,
+                    "dataset": bm.dataset_path,
+                    "source": path,
+                    "description": bm.description,
+                }
+            )
         except InfraError:
-            out.append({"name": fname, "version": "?", "pattern": "?",
-                        "dataset": "?", "source": path, "description": "INVALID"})
+            out.append(
+                {
+                    "name": fname,
+                    "version": "?",
+                    "pattern": "?",
+                    "dataset": "?",
+                    "source": path,
+                    "description": "INVALID",
+                }
+            )
     return out

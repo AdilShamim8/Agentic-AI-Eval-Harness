@@ -2,6 +2,7 @@
 
 Exit codes: 0 ok · 1 gate/regression failure · 2 usage/infrastructure error.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -67,6 +68,7 @@ _MARKUP_RE = None
 def _strip_markup(msg: str) -> str:
     global _MARKUP_RE
     import re
+
     if _MARKUP_RE is None:
         _MARKUP_RE = re.compile(r"\[/?[a-zA-Z #][^\]]*\]")
     return _MARKUP_RE.sub("", msg)
@@ -117,31 +119,42 @@ def _load_run(run_id: str, runs_dir: str | None = None):
     from agent_eval_harness.core.schemas import RunRecord, CaseVerdict
     from agent_eval_harness.core.errors import FailureClass
 
-    verdicts = [CaseVerdict(
-        case_id=v["case_id"],
-        pattern=v.get("pattern", ""),
-        category=v.get("category", ""),
-        passed=v.get("passed", False),
-        failure_class=FailureClass(v.get("failure_class", "none")),
-        scores=v.get("scores", {}),
-        failed_evaluators=v.get("failed_evaluators", []),
-        evaluator_errors=v.get("evaluator_errors", []),
-        final_answer=v.get("final_answer", ""),
-        latency_ms=v.get("latency_ms", 0.0),
-        tokens_in_est=v.get("tokens_in_est", 0),
-        tokens_out_est=v.get("tokens_out_est", 0),
-        tool_calls=v.get("tool_calls", 0),
-        loop_detected=v.get("loop_detected", False),
-        termination=v.get("termination", ""))
-        for v in d.get("verdicts", [])]
+    verdicts = [
+        CaseVerdict(
+            case_id=v["case_id"],
+            pattern=v.get("pattern", ""),
+            category=v.get("category", ""),
+            passed=v.get("passed", False),
+            failure_class=FailureClass(v.get("failure_class", "none")),
+            scores=v.get("scores", {}),
+            failed_evaluators=v.get("failed_evaluators", []),
+            evaluator_errors=v.get("evaluator_errors", []),
+            final_answer=v.get("final_answer", ""),
+            latency_ms=v.get("latency_ms", 0.0),
+            tokens_in_est=v.get("tokens_in_est", 0),
+            tokens_out_est=v.get("tokens_out_est", 0),
+            tool_calls=v.get("tool_calls", 0),
+            loop_detected=v.get("loop_detected", False),
+            termination=v.get("termination", ""),
+        )
+        for v in d.get("verdicts", [])
+    ]
     return RunRecord(
-        run_id=d.get("run_id", ""), benchmark=d.get("benchmark", ""),
-        benchmark_version=d.get("benchmark_version", ""), agent=d.get("agent", ""),
-        agent_pattern=d.get("agent_pattern", ""), seed=d.get("seed", 0),
-        ablation=d.get("ablation", "full"), versions=d.get("versions", {}),
-        config=d.get("config", {}), verdicts=verdicts,
-        metrics=d.get("metrics", {}), recorded_at=d.get("recorded_at", ""),
-        events_path=d.get("events_path", ""), command=d.get("command", ""))
+        run_id=d.get("run_id", ""),
+        benchmark=d.get("benchmark", ""),
+        benchmark_version=d.get("benchmark_version", ""),
+        agent=d.get("agent", ""),
+        agent_pattern=d.get("agent_pattern", ""),
+        seed=d.get("seed", 0),
+        ablation=d.get("ablation", "full"),
+        versions=d.get("versions", {}),
+        config=d.get("config", {}),
+        verdicts=verdicts,
+        metrics=d.get("metrics", {}),
+        recorded_at=d.get("recorded_at", ""),
+        events_path=d.get("events_path", ""),
+        command=d.get("command", ""),
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -152,10 +165,18 @@ def _load_run(run_id: str, runs_dir: str | None = None):
 def cmd_run(args) -> int:
     bm = load_benchmark(args.benchmark, args.registry)
     out_dir = args.out_dir or default_runs_dir()
-    runner = BenchmarkRunner(bm, RunConfig(
-        benchmark=args.benchmark, agent_spec=args.agent, seed=args.seed,
-        ablation=args.ablation, skill=args.skill, limit=args.limit,
-        out_dir=out_dir))
+    runner = BenchmarkRunner(
+        bm,
+        RunConfig(
+            benchmark=args.benchmark,
+            agent_spec=args.agent,
+            seed=args.seed,
+            ablation=args.ablation,
+            skill=args.skill,
+            limit=args.limit,
+            out_dir=out_dir,
+        ),
+    )
     rec = runner.run()
     m = rec.metrics
     if args.json:
@@ -164,20 +185,21 @@ def cmd_run(args) -> int:
         _print_table(
             f"Run {rec.run_id} — {rec.benchmark}",
             ["Metric", "Value"],
-            [["Pass rate", f"{m['passed']}/{m['cases']} = {m['pass_rate']:.1%}"],
-             ["95% CI", f"[{m['pass_rate_ci95'][0]:.1%}, {m['pass_rate_ci95'][1]:.1%}]"],
-             ["Runtime", f"{m['runtime_s']:.2f}s"],
-             ["Loop rate", f"{m['behavior']['loop_rate']:.1%}"],
-             ["Termination", f"{m['behavior']['termination_success']:.1%}"],
-             ["Events", rec.events_path]])
-        failed_gates = [g for g, s in m["threshold_gates"].items()
-                        if not s.get("passed")]
+            [
+                ["Pass rate", f"{m['passed']}/{m['cases']} = {m['pass_rate']:.1%}"],
+                ["95% CI", f"[{m['pass_rate_ci95'][0]:.1%}, {m['pass_rate_ci95'][1]:.1%}]"],
+                ["Runtime", f"{m['runtime_s']:.2f}s"],
+                ["Loop rate", f"{m['behavior']['loop_rate']:.1%}"],
+                ["Termination", f"{m['behavior']['termination_success']:.1%}"],
+                ["Events", rec.events_path],
+            ],
+        )
+        failed_gates = [g for g, s in m["threshold_gates"].items() if not s.get("passed")]
         if failed_gates and not args.limit:
             _err(f"[red]threshold gates FAILED: {', '.join(failed_gates)}[/red]")
             return 1
     if args.baseline:
-        baselines_dir = (getattr(args, "baselines", None)
-                         or default_baselines_dir())
+        baselines_dir = getattr(args, "baselines", None) or default_baselines_dir()
         path = save_baseline(rec, args.baseline, out_dir=baselines_dir)
         print(f"baseline '{args.baseline}' saved -> {path}")
     return 0
@@ -185,8 +207,10 @@ def cmd_run(args) -> int:
 
 def cmd_list(args) -> int:
     if args.what == "benchmarks":
-        rows = [[b["name"], b["version"], b["pattern"], b["dataset"], b["description"]]
-                for b in list_benchmarks(args.registry)]
+        rows = [
+            [b["name"], b["version"], b["pattern"], b["dataset"], b["description"]]
+            for b in list_benchmarks(args.registry)
+        ]
         _print_table("Benchmarks", ["Name", "Ver", "Pattern", "Dataset", "Description"], rows)
     elif args.what == "evaluators":
         _print_table("Evaluators", ["Name"], [[e] for e in available_evaluators()])
@@ -196,9 +220,14 @@ def cmd_list(args) -> int:
             path = f"datasets/{pattern}/golden.jsonl"
             if os.path.isfile(path):
                 st = dataset_stats(path)
-                rows.append([pattern, str(st["cases"]),
-                             ", ".join(f"{k}:{v}" for k, v in sorted(st["by_category"].items())),
-                             st["sha256"]])
+                rows.append(
+                    [
+                        pattern,
+                        str(st["cases"]),
+                        ", ".join(f"{k}:{v}" for k, v in sorted(st["by_category"].items())),
+                        st["sha256"],
+                    ]
+                )
         _print_table("Datasets", ["Pattern", "Cases", "Categories", "sha256"], rows)
     return 0
 
@@ -227,8 +256,11 @@ def cmd_validate(args) -> int:
 
 
 def _resolve_dataset(path: str) -> str:
-    for cand in (path, os.path.join("datasets", path),
-                 os.path.join("datasets", os.path.basename(path))):
+    for cand in (
+        path,
+        os.path.join("datasets", path),
+        os.path.join("datasets", os.path.basename(path)),
+    ):
         if os.path.isfile(cand):
             return cand
     return path
@@ -244,14 +276,27 @@ def cmd_compare(args) -> int:
     _print_table(
         f"{a.benchmark}: {comp.run_a} vs {comp.run_b}",
         ["Metric", "A", "B", "Delta"],
-        [["Pass rate", f"{comp.pass_rate_a:.1%}", f"{comp.pass_rate_b:.1%}",
-          f"{comp.delta:+.3f}"],
-         ["McNemar p", str(comp.mcnemar["p_value"]), "", ""],
-         ["Flips P→F", str(len(comp.flips_pass_to_fail)),
-          "; ".join(comp.flips_pass_to_fail[:6]), ""],
-         ["Flips F→P", str(len(comp.flips_fail_to_pass)), "", ""]]
-        + [[f"eval:{ev}", f"{s['mean_a']:.3f}", f"{s['mean_b']:.3f}",
-            f"{s['delta']:+.3f}"] for ev, s in comp.per_evaluator.items()])
+        [
+            [
+                "Pass rate",
+                f"{comp.pass_rate_a:.1%}",
+                f"{comp.pass_rate_b:.1%}",
+                f"{comp.delta:+.3f}",
+            ],
+            ["McNemar p", str(comp.mcnemar["p_value"]), "", ""],
+            [
+                "Flips P→F",
+                str(len(comp.flips_pass_to_fail)),
+                "; ".join(comp.flips_pass_to_fail[:6]),
+                "",
+            ],
+            ["Flips F→P", str(len(comp.flips_fail_to_pass)), "", ""],
+        ]
+        + [
+            [f"eval:{ev}", f"{s['mean_a']:.3f}", f"{s['mean_b']:.3f}", f"{s['delta']:+.3f}"]
+            for ev, s in comp.per_evaluator.items()
+        ],
+    )
     for w in comp.version_warnings:
         _err(f"[yellow]version drift: {w}[/yellow]")
     return 0
@@ -261,12 +306,11 @@ def cmd_report(args) -> int:
     rec = _load_run(args.run_id, args.runs or default_runs_dir())
     comparison = gate = None
     if args.compare:
-        comparison = compare_runs(
-            _load_run(args.compare, args.runs or default_runs_dir()), rec)
+        comparison = compare_runs(_load_run(args.compare, args.runs or default_runs_dir()), rec)
     if args.baseline:
         gate = check_regression(
-            rec, load_baseline(args.baseline,
-                               args.baselines or default_baselines_dir()))
+            rec, load_baseline(args.baseline, args.baselines or default_baselines_dir())
+        )
     if args.format == "json":
         text = build_json_report(rec, comparison, gate)
     else:
@@ -291,26 +335,47 @@ def cmd_regression(args) -> int:
         _print_table(
             f"Regression gate vs '{base.name}' ({rec.benchmark})",
             ["Metric", "Baseline", "New", "Delta", "Threshold", "Verdict"],
-            [[f.metric, f"{f.baseline:.3f}", f"{f.new:.3f}", f"{f.delta:+.3f}",
-              f"{f.threshold:+.3f}", f.verdict] for f in gate.findings])
+            [
+                [
+                    f.metric,
+                    f"{f.baseline:.3f}",
+                    f"{f.new:.3f}",
+                    f"{f.delta:+.3f}",
+                    f"{f.threshold:+.3f}",
+                    f.verdict,
+                ]
+                for f in gate.findings
+            ],
+        )
         print(f"{verdict}: {gate.summary}")
     return gate.exit_code
 
 
 def cmd_ablate(args) -> int:
-    result = run_ablation(args.benchmark,
-                          args.profiles.split(",") if args.profiles else None,
-                          skill=args.skill, seed=args.seed)
+    result = run_ablation(
+        args.benchmark,
+        args.profiles.split(",") if args.profiles else None,
+        skill=args.skill,
+        seed=args.seed,
+    )
     if args.json:
         print(json.dumps(result, indent=2))
         return 0
-    rows = [[p, f"{r['pass_rate']:.1%}",
-             f"{r['recovery_rate']:.0%}" if r["recovery_rate"] is not None else "n/a",
-             f"{r['tool_efficiency']:.2f}" if r["tool_efficiency"] is not None else "n/a",
-             f"{r['loop_rate']:.1%}"]
-            for p, r in result["profiles"].items()]
-    _print_table(f"Ablation study — {args.benchmark}",
-                 ["Profile", "Pass rate", "Recovery", "Efficiency", "Loop rate"], rows)
+    rows = [
+        [
+            p,
+            f"{r['pass_rate']:.1%}",
+            f"{r['recovery_rate']:.0%}" if r["recovery_rate"] is not None else "n/a",
+            f"{r['tool_efficiency']:.2f}" if r["tool_efficiency"] is not None else "n/a",
+            f"{r['loop_rate']:.1%}",
+        ]
+        for p, r in result["profiles"].items()
+    ]
+    _print_table(
+        f"Ablation study — {args.benchmark}",
+        ["Profile", "Pass rate", "Recovery", "Efficiency", "Loop rate"],
+        rows,
+    )
     for p, a in result["attribution"].items():
         print(f"  {p}: pass-rate delta {a['pass_rate_delta']:+.3f}")
     return 0
@@ -321,7 +386,8 @@ def cmd_calibrate(args) -> int:
         result = compute_calibration(args.labels)
     else:
         result = export_calibration_sample(
-            args.benchmark, sample_n=args.sample, seed=args.seed, skill=args.skill)
+            args.benchmark, sample_n=args.sample, seed=args.seed, skill=args.skill
+        )
     if args.json:
         print(json.dumps(result, indent=2))
     else:
@@ -333,17 +399,26 @@ def cmd_calibrate(args) -> int:
 
 
 def cmd_repro(args) -> int:
-    result = run_repro(args.benchmark, repeats=args.repeats, seed=args.seed,
-                       vary_seed=args.vary_seed, skill=args.skill)
+    result = run_repro(
+        args.benchmark,
+        repeats=args.repeats,
+        seed=args.seed,
+        vary_seed=args.vary_seed,
+        skill=args.skill,
+    )
     if args.json:
         print(json.dumps(result, indent=2))
         return 0
-    _print_table(f"Reproducibility — {args.benchmark}",
-                 ["Run", "Pass rate"],
-                 [[str(i + 1), f"{r:.1%}"] for i, r in enumerate(result["pass_rates"])])
-    print(f"  max spread: {result['max_spread_pp']}pp "
-          f"(target <= {result['target_within_pp']}pp: "
-          f"{'MET' if result['target_met'] else 'MISSED'})")
+    _print_table(
+        f"Reproducibility — {args.benchmark}",
+        ["Run", "Pass rate"],
+        [[str(i + 1), f"{r:.1%}"] for i, r in enumerate(result["pass_rates"])],
+    )
+    print(
+        f"  max spread: {result['max_spread_pp']}pp "
+        f"(target <= {result['target_within_pp']}pp: "
+        f"{'MET' if result['target_met'] else 'MISSED'})"
+    )
     print(f"  byte-identical (same seed): {result['byte_identical_same_seed']}")
     return 0 if result["target_met"] else 1
 
@@ -351,17 +426,24 @@ def cmd_repro(args) -> int:
 def cmd_info(args) -> int:
     runs_dir = getattr(args, "runs", None) or default_runs_dir()
     rec = _load_run(args.run_id, runs_dir)
-    print(dumps({k: v for k, v in rec.__dict__.items() if k != "verdicts"}
-                if hasattr(rec, "__dict__") else rec))
+    print(
+        dumps(
+            {k: v for k, v in rec.__dict__.items() if k != "verdicts"}
+            if hasattr(rec, "__dict__")
+            else rec
+        )
+    )
     m = rec.metrics
-    print(f"verdicts: {len(rec.verdicts)} | failures: "
-          f"{sum(1 for v in rec.verdicts if not v.passed)}")
+    print(
+        f"verdicts: {len(rec.verdicts)} | failures: {sum(1 for v in rec.verdicts if not v.passed)}"
+    )
     return 0
 
 
 # ---------------------------------------------------------------------------
 # status — operator one-glance health view (FDE handover: what ops checks)
 # ---------------------------------------------------------------------------
+
 
 def _scan_runs(runs_dir: str) -> dict[str, dict]:
     """Lightweight scan of run records: latest run per benchmark."""
@@ -381,12 +463,14 @@ def _scan_runs(runs_dir: str) -> dict[str, dict]:
             continue
         ts = d.get("recorded_at", "")
         if bm not in latest or ts > latest[bm].get("recorded_at", ""):
-            latest[bm] = {"run_id": d.get("run_id", fname[:-5]),
-                          "recorded_at": ts,
-                          "pass_rate": d.get("metrics", {}).get("pass_rate"),
-                          "cases": d.get("metrics", {}).get("cases"),
-                          "agent": d.get("agent", ""),
-                          "skill": d.get("config", {}).get("skill")}
+            latest[bm] = {
+                "run_id": d.get("run_id", fname[:-5]),
+                "recorded_at": ts,
+                "pass_rate": d.get("metrics", {}).get("pass_rate"),
+                "cases": d.get("metrics", {}).get("cases"),
+                "agent": d.get("agent", ""),
+                "skill": d.get("config", {}).get("skill"),
+            }
     return latest
 
 
@@ -398,8 +482,7 @@ def cmd_status(args) -> int:
             if not fname.endswith(".json"):
                 continue
             try:
-                with open(os.path.join(args.baselines, fname),
-                          encoding="utf-8") as fh:
+                with open(os.path.join(args.baselines, fname), encoding="utf-8") as fh:
                     b = json.load(fh)
             except (OSError, ValueError):
                 continue
@@ -419,8 +502,11 @@ def cmd_status(args) -> int:
     degraded: list[str] = []
     for bm in sorted(bm_names):
         r = runs.get(bm)
-        base_pr = (base.get("metrics", {}).get("pass_rate")
-                   if base and bm == base.get("benchmark") else None)
+        base_pr = (
+            base.get("metrics", {}).get("pass_rate")
+            if base and bm == base.get("benchmark")
+            else None
+        )
         if r is None:
             rows.append([bm, "—", "—", "—", "no runs yet"])
             continue
@@ -435,14 +521,14 @@ def cmd_status(args) -> int:
                 degraded.append(bm)
             elif dpp <= -1.0:
                 verdict = "watch"
-        rows.append([bm, r["run_id"][:12], f"{pr:.1%}" if pr is not None else "—",
-                     delta, verdict])
+        rows.append([bm, r["run_id"][:12], f"{pr:.1%}" if pr is not None else "—", delta, verdict])
 
     _print_table(
         "agent-eval status — latest run per benchmark"
         + (f" vs baseline '{base_name}'" if base else ""),
         ["Benchmark", "Latest run", "Pass rate", "vs baseline", "Verdict"],
-        rows)
+        rows,
+    )
 
     # dataset health (hash-verified golden sets)
     ds_rows = []
@@ -452,8 +538,9 @@ def cmd_status(args) -> int:
             st = dataset_stats(path)
             ds_rows.append([pattern, str(st["cases"]), st["sha256"]])
     if ds_rows:
-        _print_table("Golden datasets (sha256-verified)",
-                     ["Pattern", "Cases", "sha256[:16]"], ds_rows)
+        _print_table(
+            "Golden datasets (sha256-verified)", ["Pattern", "Cases", "sha256[:16]"], ds_rows
+        )
 
     # judge calibration state, if experiments have been run
     cal_note = "not measured yet (run: agent-eval calibrate)"
@@ -464,14 +551,18 @@ def cmd_status(args) -> int:
                 exp = json.load(fh)
             cal = exp.get("calibration", {})
             if cal.get("cohens_kappa") is not None:
-                cal_note = (f"kappa {cal['cohens_kappa']:.3f} "
-                            f"(n={cal.get('n')}, target >= {cal.get('kappa_target')})")
+                cal_note = (
+                    f"kappa {cal['cohens_kappa']:.3f} "
+                    f"(n={cal.get('n')}, target >= {cal.get('kappa_target')})"
+                )
         except (OSError, ValueError):
             pass
     print(f"judge calibration: {cal_note}")
     if degraded:
-        _err(f"[red]REGRESSION in: {', '.join(degraded)} — "
-             "run `agent-eval regression <run_id> --baseline main` for the gate[/red]")
+        _err(
+            f"[red]REGRESSION in: {', '.join(degraded)} — "
+            "run `agent-eval regression <run_id> --baseline main` for the gate[/red]"
+        )
         return 1
     print("handover: see RUNBOOK.md (operations) · docs/fde/ (engagement record)")
     return 0
@@ -492,7 +583,8 @@ def cmd_serve(args: argparse.Namespace) -> int:
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="agent-eval",
-        description="pytest for Agentic AI — evaluation harness & benchmark runner")
+        description="pytest for Agentic AI — evaluation harness & benchmark runner",
+    )
     p.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     sub = p.add_subparsers(dest="command", required=True)
 
@@ -501,14 +593,21 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--agent", default="")
     run.add_argument("--seed", type=int, default=20260912)
     run.add_argument("--skill", type=float, default=0.85)
-    run.add_argument("--ablation", default=None,
-                     help="override benchmark ablation profile")
+    run.add_argument("--ablation", default=None, help="override benchmark ablation profile")
     run.add_argument("--limit", type=int, default=None)
-    run.add_argument("--out", dest="out_dir", default=None,
-                     help="runs directory (default: $AEH_RUNS_DIR or evals/runs)")
+    run.add_argument(
+        "--out",
+        dest="out_dir",
+        default=None,
+        help="runs directory (default: $AEH_RUNS_DIR or evals/runs)",
+    )
     run.add_argument("--registry", default=None)
     run.add_argument("--baseline", default=None, help="save run as named baseline")
-    run.add_argument("--baselines", default=None, help="output directory for saved baselines (default: $AEH_BASELINES_DIR or evals/baselines)")
+    run.add_argument(
+        "--baselines",
+        default=None,
+        help="output directory for saved baselines (default: $AEH_BASELINES_DIR or evals/baselines)",
+    )
     run.add_argument("--json", action="store_true")
     run.set_defaults(func=cmd_run)
 
@@ -581,15 +680,16 @@ def build_parser() -> argparse.ArgumentParser:
     info.set_defaults(func=cmd_info)
 
     status = sub.add_parser(
-        "status", help="operator health view: latest runs vs baseline, datasets, judge")
+        "status", help="operator health view: latest runs vs baseline, datasets, judge"
+    )
     status.add_argument("--runs", default=None)
     status.add_argument("--baselines", default=None)
-    status.add_argument("--baseline", default=None,
-                        help="baseline name to compare against (default: main)")
+    status.add_argument(
+        "--baseline", default=None, help="baseline name to compare against (default: main)"
+    )
     status.set_defaults(func=cmd_status)
 
-    srv = sub.add_parser(
-        "serve", help="launch interactive web dashboard and API server")
+    srv = sub.add_parser("serve", help="launch interactive web dashboard and API server")
     srv.add_argument("--host", default="127.0.0.1", help="host address (default: 127.0.0.1)")
     srv.add_argument("--port", type=int, default=8000, help="port number (default: 8000)")
     srv.add_argument("--runs", default=None, help="path to runs directory")

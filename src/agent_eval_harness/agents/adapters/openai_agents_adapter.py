@@ -10,6 +10,7 @@ Integration contract:
   hint; a stub runner is used by unit tests (real-SDK support: Not measured
   yet).
 """
+
 from __future__ import annotations
 
 from typing import Any, Callable
@@ -32,7 +33,8 @@ class OpenAIAgentsAdapter:
             except ImportError as exc:  # pragma: no cover - depends on env
                 raise InfraError(
                     "openai-agents is not installed; `pip install openai-agents` "
-                    "or pass runner_fn explicitly (stub tests do)") from exc
+                    "or pass runner_fn explicitly (stub tests do)"
+                ) from exc
         self.runner_fn = runner_fn
 
     def describe(self) -> str:
@@ -48,9 +50,13 @@ class OpenAIAgentsAdapter:
                 kind = type(item).__name__.lower().replace("_", "")
                 if "toolcall" in kind and "output" not in kind:
                     name = getattr(item, "name", "") or getattr(
-                        getattr(item, "tool_call", None), "name", kind)
-                    args = getattr(item, "arguments", None) or getattr(
-                        getattr(item, "tool_call", None), "arguments", {}) or {}
+                        getattr(item, "tool_call", None), "name", kind
+                    )
+                    args = (
+                        getattr(item, "arguments", None)
+                        or getattr(getattr(item, "tool_call", None), "arguments", {})
+                        or {}
+                    )
                     if isinstance(args, str):
                         import json
 
@@ -58,31 +64,56 @@ class OpenAIAgentsAdapter:
                             args = json.loads(args)
                         except ValueError:
                             args = {"_raw": args}
-                    traj.tool_calls.append(ToolCallRecord(
-                        name=str(name), arguments=dict(args), ok=True))
-                    traj.steps.append(StepRecord(
-                        index=traj.step_count(), phase="act",
-                        summary=f"tool {name}", agent=self.id))
+                    traj.tool_calls.append(
+                        ToolCallRecord(name=str(name), arguments=dict(args), ok=True)
+                    )
+                    traj.steps.append(
+                        StepRecord(
+                            index=traj.step_count(),
+                            phase="act",
+                            summary=f"tool {name}",
+                            agent=self.id,
+                        )
+                    )
                 elif "handoff" in kind:
-                    target = getattr(item, "target_agent", None) or getattr(
-                        item, "to", "?")
-                    traj.handoffs.append({"from": self.id, "to": str(target),
-                                          "reason": "sdk handoff"})
+                    target = getattr(item, "target_agent", None) or getattr(item, "to", "?")
+                    traj.handoffs.append(
+                        {"from": self.id, "to": str(target), "reason": "sdk handoff"}
+                    )
                 elif "message" in kind:
-                    traj.steps.append(StepRecord(
-                        index=traj.step_count(), phase="think",
-                        summary=str(getattr(item, "content", ""))[:200], agent=self.id))
-            traj.steps.append(StepRecord(index=traj.step_count(), phase="final",
-                                         summary=f"final: {final[:200]}", agent=self.id))
+                    traj.steps.append(
+                        StepRecord(
+                            index=traj.step_count(),
+                            phase="think",
+                            summary=str(getattr(item, "content", ""))[:200],
+                            agent=self.id,
+                        )
+                    )
+            traj.steps.append(
+                StepRecord(
+                    index=traj.step_count(),
+                    phase="final",
+                    summary=f"final: {final[:200]}",
+                    agent=self.id,
+                )
+            )
             stats = ctx.gateway.stats()
             return AgentRunOutcome(
-                case_id=ctx.case.id, ok=bool(final), final_answer=final,
-                trajectory=traj, security_flags=list(stats.get("security_flags", [])))
+                case_id=ctx.case.id,
+                ok=bool(final),
+                final_answer=final,
+                trajectory=traj,
+                security_flags=list(stats.get("security_flags", [])),
+            )
         except Exception as exc:  # noqa: BLE001
             from agent_eval_harness.core.errors import FailureClass, classify_exception
 
             traj.termination = "error"
-            return AgentRunOutcome(case_id=ctx.case.id, ok=False, final_answer="",
-                                   trajectory=traj,
-                                   failure_class=classify_exception(exc),
-                                   error=str(exc))
+            return AgentRunOutcome(
+                case_id=ctx.case.id,
+                ok=False,
+                final_answer="",
+                trajectory=traj,
+                failure_class=classify_exception(exc),
+                error=str(exc),
+            )

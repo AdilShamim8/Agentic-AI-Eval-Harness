@@ -13,6 +13,7 @@ Integration contract (see docs/research/05-framework-eval-approaches.md):
   used by unit tests when langgraph is not installed — support status of a
   real graph: Not measured yet).
 """
+
 from __future__ import annotations
 
 from typing import Any
@@ -29,7 +30,8 @@ def _require_langgraph() -> None:
     except ImportError as exc:  # pragma: no cover - depends on env
         raise InfraError(
             "langgraph is not installed; install with `pip install langgraph` "
-            "or use builtin: agents on the scripted backend") from exc
+            "or use builtin: agents on the scripted backend"
+        ) from exc
 
 
 def _msg_field(msg: Any, field: str) -> Any:
@@ -42,8 +44,13 @@ class LangGraphAdapter:
     id = "langgraph"
     pattern = "langgraph"
 
-    def __init__(self, graph: Any, agent_id: str = "langgraph_agent",
-                 state_key: str = "messages", require_import: bool = True):
+    def __init__(
+        self,
+        graph: Any,
+        agent_id: str = "langgraph_agent",
+        state_key: str = "messages",
+        require_import: bool = True,
+    ):
         if require_import:
             _require_langgraph()
         self.graph = graph
@@ -55,8 +62,7 @@ class LangGraphAdapter:
 
     def run(self, ctx: RunContext) -> AgentRunOutcome:
         traj = Trajectory()
-        state: dict[str, Any] = {self.state_key: [
-            {"role": "user", "content": ctx.task}]}
+        state: dict[str, Any] = {self.state_key: [{"role": "user", "content": ctx.task}]}
         max_steps = ctx.case.max_steps or 12
         try:
             for step in range(max_steps):
@@ -70,25 +76,44 @@ class LangGraphAdapter:
                 tool_calls = self._tool_calls_of(messages)
                 if not tool_calls:
                     content = self._last_ai_content(messages)
-                    traj.steps.append(StepRecord(index=traj.step_count(), phase="final",
-                                                 summary=f"final: {str(content)[:200]}",
-                                                 agent=self.id))
+                    traj.steps.append(
+                        StepRecord(
+                            index=traj.step_count(),
+                            phase="final",
+                            summary=f"final: {str(content)[:200]}",
+                            agent=self.id,
+                        )
+                    )
                     return self._finish(ctx, traj, "answer", str(content or ""))
                 for name, args in tool_calls:
                     if ctx.gateway.remaining_tool_budget() <= 0:
                         traj.termination = "tool_limit"
                         return self._finish(ctx, traj, "tool_limit", "")
                     res: ToolResult = ctx.gateway.call(name, dict(args or {}))
-                    traj.tool_calls.append(ToolCallRecord(
-                        name=name, arguments=dict(args or {}), ok=res.ok,
-                        value=res.value, error=res.error))
-                    traj.steps.append(StepRecord(
-                        index=traj.step_count(), phase="act",
-                        summary=f"tool {name} -> {'ok' if res.ok else 'error'}",
-                        agent=self.id))
-                    state[self.state_key].append({
-                        "role": "tool", "name": name,
-                        "content": str(res.value if res.ok else res.error)})
+                    traj.tool_calls.append(
+                        ToolCallRecord(
+                            name=name,
+                            arguments=dict(args or {}),
+                            ok=res.ok,
+                            value=res.value,
+                            error=res.error,
+                        )
+                    )
+                    traj.steps.append(
+                        StepRecord(
+                            index=traj.step_count(),
+                            phase="act",
+                            summary=f"tool {name} -> {'ok' if res.ok else 'error'}",
+                            agent=self.id,
+                        )
+                    )
+                    state[self.state_key].append(
+                        {
+                            "role": "tool",
+                            "name": name,
+                            "content": str(res.value if res.ok else res.error),
+                        }
+                    )
             traj.termination = "step_limit"
             return self._finish(ctx, traj, "step_limit", "")
         except Exception as exc:  # noqa: BLE001 - classified
@@ -115,11 +140,14 @@ class LangGraphAdapter:
             for tc in tcs:
                 if isinstance(tc, dict):
                     fn = tc.get("function", {})
-                    calls.append((fn.get("name", tc.get("name", "")),
-                                  fn.get("arguments", tc.get("args", {})) or {}))
+                    calls.append(
+                        (
+                            fn.get("name", tc.get("name", "")),
+                            fn.get("arguments", tc.get("args", {})) or {},
+                        )
+                    )
                 else:
-                    calls.append((getattr(tc, "name", ""),
-                                  getattr(tc, "args", {}) or {}))
+                    calls.append((getattr(tc, "name", ""), getattr(tc, "args", {}) or {}))
         return calls
 
     def _last_ai_content(self, messages: list[Any]) -> Any:
@@ -131,16 +159,26 @@ class LangGraphAdapter:
                     return content
         return ""
 
-    def _finish(self, ctx: RunContext, traj: Trajectory, termination: str,
-                answer: str, error: str = "", fc=None) -> AgentRunOutcome:
+    def _finish(
+        self,
+        ctx: RunContext,
+        traj: Trajectory,
+        termination: str,
+        answer: str,
+        error: str = "",
+        fc=None,
+    ) -> AgentRunOutcome:
         from agent_eval_harness.core.errors import FailureClass
 
         traj.termination = termination
         stats = ctx.gateway.stats()
         return AgentRunOutcome(
-            case_id=ctx.case.id, ok=termination == "answer" and not error,
-            final_answer=answer, trajectory=traj,
-            failure_class=fc or FailureClass.NONE, error=error,
+            case_id=ctx.case.id,
+            ok=termination == "answer" and not error,
+            final_answer=answer,
+            trajectory=traj,
+            failure_class=fc or FailureClass.NONE,
+            error=error,
             tokens_in_est=stats.get("tokens_in_est", 0),
             tokens_out_est=stats.get("tokens_out_est", 0),
             security_flags=list(stats.get("security_flags", [])),

@@ -9,6 +9,7 @@ Structure (per the master build contract):
 Outputs: release/ tree + a per-file sha256 manifest, then zips to
     /home/z/my-project/download/production-agentic-ai-eval-harness-v0.2.0-fde.zip
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -30,8 +31,7 @@ ZIP_OUT = os.environ.get("RELEASE_ZIP", DEFAULT_ZIP)
 def copy_tree(src: str, dst: str, ignore=None) -> int:
     if not os.path.isdir(src):
         return 0
-    shutil.copytree(src, dst,
-                    ignore=shutil.ignore_patterns(*(ignore or [])))
+    shutil.copytree(src, dst, ignore=shutil.ignore_patterns(*(ignore or [])))
     return sum(len(files) for _, _, files in os.walk(dst))
 
 
@@ -47,23 +47,48 @@ def main() -> int:
 
     n = 0
     # source/ — the platform itself
-    n += copy_tree(os.path.join(REPO, "src"), os.path.join(RELEASE, "source", "src"),
-                   ignore=["__pycache__", "*.egg-info", "py.typed.bak"])
-    for f in ("pyproject.toml", "Makefile", ".env.example", "AGENTS.md",
-              "README.md", "QUICKSTART.md", "SECURITY.md", "CHANGELOG.md",
-              "RUNBOOK.md", "INCIDENTS.md", "DECISIONS.md",
-              "Dockerfile", "docker-compose.yml", ".dockerignore"):
+    n += copy_tree(
+        os.path.join(REPO, "src"),
+        os.path.join(RELEASE, "source", "src"),
+        ignore=["__pycache__", "*.egg-info", "py.typed.bak"],
+    )
+    for f in (
+        "pyproject.toml",
+        "Makefile",
+        ".env.example",
+        "AGENTS.md",
+        "README.md",
+        "QUICKSTART.md",
+        "SECURITY.md",
+        "CHANGELOG.md",
+        "RUNBOOK.md",
+        "INCIDENTS.md",
+        "DECISIONS.md",
+        "Dockerfile",
+        "docker-compose.yml",
+        ".dockerignore",
+    ):
         if os.path.exists(os.path.join(REPO, f)):
             copy_file(os.path.join(REPO, f), os.path.join(RELEASE, "source", f))
             n += 1
-    copy_file(os.path.join(REPO, "docs", "ARCHITECTURE.md"),
-              os.path.join(RELEASE, "ARCHITECTURE.md"))
+    copy_file(
+        os.path.join(REPO, "docs", "ARCHITECTURE.md"), os.path.join(RELEASE, "ARCHITECTURE.md")
+    )
     n += 1
 
     # top-level doc copies required by the contract (+ FDE handover artifacts)
-    for f in ("README.md", "QUICKSTART.md", "SECURITY.md", "CHANGELOG.md",
-              "RUNBOOK.md", "INCIDENTS.md", "DECISIONS.md",
-              "Dockerfile", "docker-compose.yml", ".dockerignore"):
+    for f in (
+        "README.md",
+        "QUICKSTART.md",
+        "SECURITY.md",
+        "CHANGELOG.md",
+        "RUNBOOK.md",
+        "INCIDENTS.md",
+        "DECISIONS.md",
+        "Dockerfile",
+        "docker-compose.yml",
+        ".dockerignore",
+    ):
         if os.path.exists(os.path.join(REPO, f)):
             copy_file(os.path.join(REPO, f), os.path.join(RELEASE, f))
             n += 1
@@ -74,35 +99,48 @@ def main() -> int:
     # content trees
     n += copy_tree(os.path.join(REPO, "benchmarks"), os.path.join(RELEASE, "benchmarks"))
     n += copy_tree(os.path.join(REPO, "datasets"), os.path.join(RELEASE, "datasets"))
-    n += copy_tree(os.path.join(REPO, "tests"), os.path.join(RELEASE, "tests"),
-                   ignore=["__pycache__"])
+    n += copy_tree(
+        os.path.join(REPO, "tests"), os.path.join(RELEASE, "tests"), ignore=["__pycache__"]
+    )
     n += copy_tree(os.path.join(REPO, "configs"), os.path.join(RELEASE, "configs"))
     n += copy_tree(os.path.join(REPO, "prompts"), os.path.join(RELEASE, "prompts"))
-    n += copy_tree(os.path.join(REPO, "docs"), os.path.join(RELEASE, "docs"),
-                   ignore=["__pycache__"])
-    n += copy_tree(os.path.join(REPO, "scripts"), os.path.join(RELEASE, "scripts"),
-                   ignore=["__pycache__"])
+    n += copy_tree(
+        os.path.join(REPO, "docs"), os.path.join(RELEASE, "docs"), ignore=["__pycache__"]
+    )
+    n += copy_tree(
+        os.path.join(REPO, "scripts"), os.path.join(RELEASE, "scripts"), ignore=["__pycache__"]
+    )
     n += copy_tree(os.path.join(REPO, "diagrams"), os.path.join(RELEASE, "diagrams"))
     n += copy_tree(os.path.join(REPO, ".github"), os.path.join(RELEASE, "infra", ".github"))
 
     # evaluators/ — the evaluator contract surface for consumers
     os.makedirs(os.path.join(RELEASE, "evaluators"), exist_ok=True)
-    copy_file(os.path.join(REPO, "src", "agent_eval_harness", "evaluators", "base.py"),
-              os.path.join(RELEASE, "evaluators", "base.py"))
-    copy_file(os.path.join(REPO, "src", "agent_eval_harness", "evaluators", "__init__.py"),
-              os.path.join(RELEASE, "evaluators", "registry.py"))
-    copy_file(os.path.join(REPO, "src", "agent_eval_harness", "evaluators",
-                           "deterministic", "outcome.py"),
-              os.path.join(RELEASE, "evaluators", "deterministic_outcome.py"))
-    copy_file(os.path.join(REPO, "src", "agent_eval_harness", "evaluators",
-                           "deterministic", "tools.py"),
-              os.path.join(RELEASE, "evaluators", "deterministic_tools.py"))
-    copy_file(os.path.join(REPO, "src", "agent_eval_harness", "evaluators",
-                           "trajectory", "behavior.py"),
-              os.path.join(RELEASE, "evaluators", "trajectory_behavior.py"))
-    copy_file(os.path.join(REPO, "src", "agent_eval_harness", "evaluators",
-                           "llm_judge", "judge.py"),
-              os.path.join(RELEASE, "evaluators", "llm_judge.py"))
+    copy_file(
+        os.path.join(REPO, "src", "agent_eval_harness", "evaluators", "base.py"),
+        os.path.join(RELEASE, "evaluators", "base.py"),
+    )
+    copy_file(
+        os.path.join(REPO, "src", "agent_eval_harness", "evaluators", "__init__.py"),
+        os.path.join(RELEASE, "evaluators", "registry.py"),
+    )
+    copy_file(
+        os.path.join(
+            REPO, "src", "agent_eval_harness", "evaluators", "deterministic", "outcome.py"
+        ),
+        os.path.join(RELEASE, "evaluators", "deterministic_outcome.py"),
+    )
+    copy_file(
+        os.path.join(REPO, "src", "agent_eval_harness", "evaluators", "deterministic", "tools.py"),
+        os.path.join(RELEASE, "evaluators", "deterministic_tools.py"),
+    )
+    copy_file(
+        os.path.join(REPO, "src", "agent_eval_harness", "evaluators", "trajectory", "behavior.py"),
+        os.path.join(RELEASE, "evaluators", "trajectory_behavior.py"),
+    )
+    copy_file(
+        os.path.join(REPO, "src", "agent_eval_harness", "evaluators", "llm_judge", "judge.py"),
+        os.path.join(RELEASE, "evaluators", "llm_judge.py"),
+    )
     with open(os.path.join(RELEASE, "evaluators", "README.md"), "w", encoding="utf-8") as fh:
         fh.write("""# Evaluators (release copies)
 
@@ -120,12 +158,15 @@ evaluation logic without walking the package tree.
     n += 7
 
     # evals/ — evidence (baselines, calibration, results) + selected runs
-    n += copy_tree(os.path.join(REPO, "evals", "baselines"),
-                   os.path.join(RELEASE, "evals", "baselines"))
-    n += copy_tree(os.path.join(REPO, "evals", "calibration"),
-                   os.path.join(RELEASE, "evals", "calibration"))
-    n += copy_tree(os.path.join(REPO, "evals", "results"),
-                   os.path.join(RELEASE, "evals", "results"))
+    n += copy_tree(
+        os.path.join(REPO, "evals", "baselines"), os.path.join(RELEASE, "evals", "baselines")
+    )
+    n += copy_tree(
+        os.path.join(REPO, "evals", "calibration"), os.path.join(RELEASE, "evals", "calibration")
+    )
+    n += copy_tree(
+        os.path.join(REPO, "evals", "results"), os.path.join(RELEASE, "evals", "results")
+    )
     # curate: keep the canonical full-suite run records (5 patterns), drop exploratory
     keep_prefixes = []
     exp = os.path.join(REPO, "evals", "results", "experiments.json")
@@ -139,8 +180,7 @@ evaluation logic without walking the package tree.
     for fname in os.listdir(os.path.join(REPO, "evals", "runs")):
         rid = fname.split(".")[0]
         if rid in keep_prefixes:
-            copy_file(os.path.join(REPO, "evals", "runs", fname),
-                      os.path.join(runs_out, fname))
+            copy_file(os.path.join(REPO, "evals", "runs", fname), os.path.join(runs_out, fname))
             n += 1
     with open(os.path.join(RELEASE, "evals", "README.md"), "w", encoding="utf-8") as fh:
         fh.write("""# Evaluation evidence
@@ -214,6 +254,7 @@ Completed by `scripts/validate_release.py` against the extracted zip
 
     # zip using Python stdlib zipfile for cross-platform portability
     import zipfile
+
     os.makedirs(os.path.dirname(ZIP_OUT), exist_ok=True)
     if os.path.exists(ZIP_OUT):
         os.remove(ZIP_OUT)
@@ -224,8 +265,7 @@ Completed by `scripts/validate_release.py` against the extracted zip
                 rel_path = os.path.relpath(full_path, RELEASE)
                 zf.write(full_path, rel_path)
     size_mb = os.path.getsize(ZIP_OUT) / 1e6
-    print(f"release tree: {n} files copied + manifest "
-          f"({len(manifest)} hashed)")
+    print(f"release tree: {n} files copied + manifest ({len(manifest)} hashed)")
     print(f"zip -> {ZIP_OUT} ({size_mb:.2f} MB)")
     return 0
 

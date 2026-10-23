@@ -9,6 +9,7 @@ This module is where "harness engineering" becomes concrete: retry, tool
 validation, and context optimization are the capabilities the ablation study
 attributes performance to.
 """
+
 from __future__ import annotations
 
 import json
@@ -66,8 +67,11 @@ def _repair_args(name: str, args: dict[str, Any]) -> dict[str, Any]:
         for key in ("text", "query"):
             if key in args and not isinstance(args[key], str):
                 args[key] = str(args[key])
-    if name == "summarize" and "max_sentences" in args and isinstance(
-            args.get("max_sentences"), str):
+    if (
+        name == "summarize"
+        and "max_sentences" in args
+        and isinstance(args.get("max_sentences"), str)
+    ):
         try:
             args["max_sentences"] = int(args["max_sentences"])
         except ValueError:
@@ -126,50 +130,57 @@ class ToolGateway:
 
     # ------------------------------------------------------------------ call
     def call(self, name: str, args: dict[str, Any]) -> toolmod.ToolResult:
-        self._events.emit("tool_call", {"tool": name, "args": args},
-                          phase="act", case_id=self._case.id)
+        self._events.emit(
+            "tool_call", {"tool": name, "args": args}, phase="act", case_id=self._case.id
+        )
         self._tokens_in += estimate_tokens(json.dumps(args, sort_keys=True, default=str))
 
         if self._calls >= self._limits.max_tool_calls:
-            self._events.emit("tool_limit", {"calls": self._calls}, phase="act",
-                              case_id=self._case.id)
+            self._events.emit(
+                "tool_limit", {"calls": self._calls}, phase="act", case_id=self._case.id
+            )
             return toolmod.ToolResult(ok=False, error="tool-call budget exhausted")
 
         denial = self._policy.check_tool(name)
         if not denial and name in self._case.forbidden_tools:
-            denial = (f"tool '{name}' is forbidden for this case "
-                      f"(case-level policy)")
+            denial = f"tool '{name}' is forbidden for this case (case-level policy)"
         if denial:
             self._denials += 1
             self.security_flags.append(f"denied_tool:{name}")
-            self._events.emit("security", {"kind": "denied_tool", "tool": name,
-                                           "detail": denial},
-                              phase="act", case_id=self._case.id)
+            self._events.emit(
+                "security",
+                {"kind": "denied_tool", "tool": name, "detail": denial},
+                phase="act",
+                case_id=self._case.id,
+            )
             if self._denials >= self._policy.max_denials_before_violation:
                 from agent_eval_harness.core.errors import SecurityViolation
 
                 raise SecurityViolation(
-                    f"repeated policy denials ({self._denials}) on tool '{name}'")
+                    f"repeated policy denials ({self._denials}) on tool '{name}'"
+                )
             return toolmod.ToolResult(ok=False, error=f"permission denied: {denial}")
 
         spec = toolmod.TOOLS.get(name)
         if spec is None:
-            return toolmod.ToolResult(ok=False,
-                                      error=f"unknown tool '{name}'")
+            return toolmod.ToolResult(ok=False, error=f"unknown tool '{name}'")
 
         # argument guards (always on — security, not ablatable)
         for key in args:
             if key in self._policy.forbidden_arg_keys:
                 self.security_flags.append(f"forbidden_arg:{name}.{key}")
-                self._events.emit("security",
-                                  {"kind": "forbidden_arg", "tool": name, "arg": key},
-                                  phase="act", case_id=self._case.id)
+                self._events.emit(
+                    "security",
+                    {"kind": "forbidden_arg", "tool": name, "arg": key},
+                    phase="act",
+                    case_id=self._case.id,
+                )
                 return toolmod.ToolResult(
-                    ok=False, error=f"argument '{key}' is forbidden by policy")
+                    ok=False, error=f"argument '{key}' is forbidden by policy"
+                )
         for key, val in args.items():
             if isinstance(val, str) and len(val) > self._limits.max_args_chars:
-                return toolmod.ToolResult(
-                    ok=False, error=f"argument '{key}' exceeds length cap")
+                return toolmod.ToolResult(ok=False, error=f"argument '{key}' exceeds length cap")
 
         # ablatable validation + repair
         if self._ablation.tool_validation:
@@ -189,23 +200,32 @@ class ToolGateway:
             fault = self._match_fault(name)
             if fault is not None:
                 self.fault_injected = True
-                self._events.emit("fault_injected",
-                                  {"tool": name, "kind": fault.get("kind"),
-                                   "attempt": attempt},
-                                  phase="act", case_id=self._case.id)
+                self._events.emit(
+                    "fault_injected",
+                    {"tool": name, "kind": fault.get("kind"), "attempt": attempt},
+                    phase="act",
+                    case_id=self._case.id,
+                )
                 if fault.get("kind") == "infra":
                     if self._ablation.retry and attempt <= self._limits.max_retries_per_call:
                         self._retried_calls += 1
-                        self._events.emit("tool_retry", {"tool": name, "attempt": attempt},
-                                          phase="act", case_id=self._case.id)
+                        self._events.emit(
+                            "tool_retry",
+                            {"tool": name, "attempt": attempt},
+                            phase="act",
+                            case_id=self._case.id,
+                        )
                         continue  # fault occurrence consumed -> retry succeeds
-                    self._events.emit("infra_fault_surfaced", {"tool": name},
-                                      phase="act", case_id=self._case.id)
+                    self._events.emit(
+                        "infra_fault_surfaced", {"tool": name}, phase="act", case_id=self._case.id
+                    )
                     return toolmod.ToolResult(
                         ok=False,
-                        error=f"infrastructure error: {fault.get('error', 'tool unavailable')}")
+                        error=f"infrastructure error: {fault.get('error', 'tool unavailable')}",
+                    )
                 return toolmod.ToolResult(
-                    ok=False, error=f"tool error: {fault.get('error', 'tool failed')}")
+                    ok=False, error=f"tool error: {fault.get('error', 'tool failed')}"
+                )
 
             t0 = time.perf_counter()
             try:
@@ -220,12 +240,19 @@ class ToolGateway:
                 return toolmod.ToolResult(
                     ok=False,
                     error=f"tool '{name}' exceeded per-call timeout "
-                          f"({latency_ms:.0f}ms > {self._limits.per_tool_timeout_ms}ms)")
+                    f"({latency_ms:.0f}ms > {self._limits.per_tool_timeout_ms}ms)",
+                )
 
-            res = value if isinstance(value, toolmod.ToolResult) else toolmod.ToolResult(
-                ok=True, value=value)
-            if res.ok and self.fault_injected and name in {
-                    f.get("tool") for f in self._case.faults}:
+            res = (
+                value
+                if isinstance(value, toolmod.ToolResult)
+                else toolmod.ToolResult(ok=True, value=value)
+            )
+            if (
+                res.ok
+                and self.fault_injected
+                and name in {f.get("tool") for f in self._case.faults}
+            ):
                 self.recovered_from_fault = True
             # output size cap
             try:
@@ -236,11 +263,17 @@ class ToolGateway:
                 res = toolmod.ToolResult(ok=False, error="tool output exceeded size cap")
 
             self._tokens_out += estimate_tokens(blob)
-            self._events.emit("tool_result",
-                              {"tool": name, "ok": res.ok,
-                               "error": res.error[:200] if res.error else "",
-                               "latency_ms": round(latency_ms, 3)},
-                              phase="observe", case_id=self._case.id)
+            self._events.emit(
+                "tool_result",
+                {
+                    "tool": name,
+                    "ok": res.ok,
+                    "error": res.error[:200] if res.error else "",
+                    "latency_ms": round(latency_ms, 3),
+                },
+                phase="observe",
+                case_id=self._case.id,
+            )
             # injection screening on tool outputs
             if res.ok:
                 text = blob if isinstance(blob, str) else str(res.value)
@@ -248,10 +281,12 @@ class ToolGateway:
                 if flags:
                     for f in flags:
                         self.security_flags.append(f"injection_in_tool_output:{f}")
-                    self._events.emit("security",
-                                      {"kind": "injection_flagged", "tool": name,
-                                       "patterns": flags},
-                                      phase="observe", case_id=self._case.id)
+                    self._events.emit(
+                        "security",
+                        {"kind": "injection_flagged", "tool": name, "patterns": flags},
+                        phase="observe",
+                        case_id=self._case.id,
+                    )
             return res
 
     # ------------------------------------------------------------------ obs
@@ -261,11 +296,13 @@ class ToolGateway:
         if not self._ablation.context_optimization:
             return obs
         # dedup identical successful observations
-        canon = json.dumps({"tool": name, "value": res.value}, sort_keys=True,
-                           default=str)
+        canon = json.dumps({"tool": name, "value": res.value}, sort_keys=True, default=str)
         if res.ok and canon in self._obs_seen:
-            return {"tool": name, "ok": True,
-                    "value": {"note": "(repeat observation; see earlier step)"}}
+            return {
+                "tool": name,
+                "ok": True,
+                "value": {"note": "(repeat observation; see earlier step)"},
+            }
         if res.ok:
             self._obs_seen[canon] = "1"
         # trim long string payloads

@@ -5,6 +5,7 @@ a ModelBackend (scripted deterministic, or any live LLM implementation of the
 same protocol). Framework adapters (LangGraph / OpenAI Agents SDK / CrewAI)
 translate foreign runtimes into this protocol.
 """
+
 from __future__ import annotations
 
 import json
@@ -45,7 +46,9 @@ LOOP_THRESHOLD = 3  # identical calls before we declare a loop
 
 @runtime_checkable
 class EventSink(Protocol):
-    def emit(self, kind: str, payload: dict[str, Any], phase: str = "", case_id: str = "") -> None: ...
+    def emit(
+        self, kind: str, payload: dict[str, Any], phase: str = "", case_id: str = ""
+    ) -> None: ...
 
 
 @runtime_checkable
@@ -127,7 +130,9 @@ class BasePatternAgent:
 
         while state.step_index < max_steps:
             decision = ctx.model.decide(state)
-            tokens_out += estimate_tokens(type(decision).__name__ + str(getattr(decision, "content", "") or ""))
+            tokens_out += estimate_tokens(
+                type(decision).__name__ + str(getattr(decision, "content", "") or "")
+            )
             tokens_in += estimate_tokens(state.task)
 
             if isinstance(decision, Think):
@@ -174,8 +179,13 @@ class BasePatternAgent:
                 if ctx.gateway.remaining_tool_budget() <= 0:
                     traj.termination = "tool_limit"
                     return "tool_limit", ""
-                self._step(traj, state, "act", f"call {decision.name}({json.dumps(decision.args, sort_keys=True)[:160]})",
-                           phase_label)
+                self._step(
+                    traj,
+                    state,
+                    "act",
+                    f"call {decision.name}({json.dumps(decision.args, sort_keys=True)[:160]})",
+                    phase_label,
+                )
                 res = ctx.gateway.call(decision.name, dict(decision.args))
                 traj.tool_calls.append(
                     ToolCallRecord(
@@ -191,18 +201,26 @@ class BasePatternAgent:
                 obs = ctx.gateway.observation(decision.name, res)
                 state.history.append(obs)
                 tokens_in += estimate_tokens(json.dumps(obs, sort_keys=True, default=str))
-                self._step(traj, state, "observe",
-                           f"{decision.name} -> {'ok' if res.ok else 'error: ' + res.error[:120]}",
-                           phase_label)
+                self._step(
+                    traj,
+                    state,
+                    "observe",
+                    f"{decision.name} -> {'ok' if res.ok else 'error: ' + res.error[:120]}",
+                    phase_label,
+                )
 
-                canon = json.dumps({"name": decision.name, "arguments": decision.args},
-                                   sort_keys=True, separators=(",", ":"))
+                canon = json.dumps(
+                    {"name": decision.name, "arguments": decision.args},
+                    sort_keys=True,
+                    separators=(",", ":"),
+                )
                 if canon in loop_seen:
                     loop_seen[canon] += 1
                     if loop_seen[canon] >= LOOP_THRESHOLD:
                         traj.loop_detected = True
                         raise LoopDetected(
-                            f"identical call repeated {loop_seen[canon]}x: {decision.name}")
+                            f"identical call repeated {loop_seen[canon]}x: {decision.name}"
+                        )
                 else:
                     loop_seen[canon] = 1
 
@@ -211,7 +229,8 @@ class BasePatternAgent:
                     self._maybe_retry_action(ctx, state, decision, res.error)
                 else:
                     traj.redundant_calls += sum(
-                        1 for c in traj.tool_calls[:-1]
+                        1
+                        for c in traj.tool_calls[:-1]
                         if c.name == decision.name and c.arguments == decision.args
                     )
                 state.step_index += 1
@@ -223,8 +242,9 @@ class BasePatternAgent:
         return "step_limit", ""
 
     # ------------------------------------------------------------------
-    def _maybe_retry_action(self, ctx: RunContext, state: ModelState,
-                            decision: ToolCallDecision, error: str = "") -> None:
+    def _maybe_retry_action(
+        self, ctx: RunContext, state: ModelState, decision: ToolCallDecision, error: str = ""
+    ) -> None:
         """Recovery from a failed tool call.
 
         Validation/denial errors are deterministic: re-issuing the identical
@@ -232,10 +252,16 @@ class BasePatternAgent:
         action instead. Transient errors (tool errors, surfaced infra faults)
         are retried when the model's recovery policy fires.
         """
-        validation_like = error.startswith((
-            "invalid arguments", "unknown tool", "unknown argument",
-            "permission denied", "argument '", "tool-call budget",
-        ))
+        validation_like = error.startswith(
+            (
+                "invalid arguments",
+                "unknown tool",
+                "unknown argument",
+                "permission denied",
+                "argument '",
+                "tool-call budget",
+            )
+        )
         if validation_like:
             unemit = getattr(ctx.model, "retry_last_action", None)
             if unemit is not None:
@@ -249,12 +275,18 @@ class BasePatternAgent:
             if unemit is not None:
                 unemit(action)
 
-    def _step(self, traj: Trajectory, state: ModelState, phase: str, summary: str,
-              label: str = "act") -> None:
+    def _step(
+        self, traj: Trajectory, state: ModelState, phase: str, summary: str, label: str = "act"
+    ) -> None:
         idx = traj.step_count()
         traj.steps.append(
-            StepRecord(index=idx, phase=phase, summary=summary[:240],
-                       tool_call=None, agent=label if label != "act" else self.id)
+            StepRecord(
+                index=idx,
+                phase=phase,
+                summary=summary[:240],
+                tool_call=None,
+                agent=label if label != "act" else self.id,
+            )
         )
 
     # ------------------------------------------------------------------

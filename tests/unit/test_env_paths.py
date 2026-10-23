@@ -1,6 +1,7 @@
 """AEH_RUNS_DIR / AEH_BASELINES_DIR wiring — the Dockerfile declares these;
 they are the single source of truth for storage defaults (container
 deployments configure locations exclusively through them)."""
+
 import json
 import os
 
@@ -48,10 +49,22 @@ def test_cli_run_respects_env_runs_dir(tmp_path, monkeypatch):
     monkeypatch.setenv("AEH_BASELINES_DIR", str(tmp_path / "env_baselines"))
     env = dict(os.environ)
     r = subprocess.run(
-        [sys.executable, "-m", "agent_eval_harness.cli.app",
-         "run", "--benchmark", "react_basic", "--limit", "2", "--json"],
-        capture_output=True, text=True, env=env, timeout=120)
+        [
+            sys.executable,
+            "-m",
+            "agent_eval_harness.cli.app",
+            "run",
+            "--benchmark",
+            "react_basic",
+            "--limit",
+            "2",
+            "--json",
+        ],
+        capture_output=True,
+        text=True,
+        env=env,
+        timeout=120,
+    )
     assert r.returncode == 0, r.stderr[-500:]
     rec = json.loads(r.stdout)
-    assert (runs / f"{rec['run_id']}.json").is_file(), \
-        "CLI run must persist into $AEH_RUNS_DIR"
+    assert (runs / f"{rec['run_id']}.json").is_file(), "CLI run must persist into $AEH_RUNS_DIR"

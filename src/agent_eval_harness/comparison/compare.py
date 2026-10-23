@@ -1,4 +1,5 @@
 """Run comparison: A vs B with per-case flips and a paired significance test."""
+
 from __future__ import annotations
 
 import math
@@ -28,19 +29,23 @@ class ComparisonResult:
 
 def compare_runs(a: RunRecord, b: RunRecord) -> ComparisonResult:
     if a.benchmark != b.benchmark:
-        raise ValueError(f"cannot compare different benchmarks: "
-                         f"{a.benchmark} vs {b.benchmark}")
+        raise ValueError(f"cannot compare different benchmarks: {a.benchmark} vs {b.benchmark}")
     res = ComparisonResult(
-        run_a=a.run_id, run_b=b.run_id, benchmark=a.benchmark,
-        pass_rate_a=a.pass_rate, pass_rate_b=b.pass_rate,
-        delta=round(b.pass_rate - a.pass_rate, 4))
+        run_a=a.run_id,
+        run_b=b.run_id,
+        benchmark=a.benchmark,
+        pass_rate_a=a.pass_rate,
+        pass_rate_b=b.pass_rate,
+        delta=round(b.pass_rate - a.pass_rate, 4),
+    )
 
     # version drift warnings (comparisons are only meaningful on shared parts)
     for comp in ("dataset", "benchmark"):
         ra, rb = a.versions.get(comp, {}), b.versions.get(comp, {})
         if ra.get("revision") != rb.get("revision"):
             res.version_warnings.append(
-                f"{comp} revision differs: {ra.get('revision')} vs {rb.get('revision')}")
+                f"{comp} revision differs: {ra.get('revision')} vs {rb.get('revision')}"
+            )
 
     va = {v.case_id: v for v in a.verdicts}
     vb = {v.case_id: v for v in b.verdicts}
@@ -48,10 +53,8 @@ def compare_runs(a: RunRecord, b: RunRecord) -> ComparisonResult:
     res.same_cases = len(common)
     b01 = sum(1 for cid in common if va[cid].passed and not vb[cid].passed)
     c10 = sum(1 for cid in common if not va[cid].passed and vb[cid].passed)
-    res.flips_pass_to_fail = [cid for cid in common
-                              if va[cid].passed and not vb[cid].passed]
-    res.flips_fail_to_pass = [cid for cid in common
-                              if not va[cid].passed and vb[cid].passed]
+    res.flips_pass_to_fail = [cid for cid in common if va[cid].passed and not vb[cid].passed]
+    res.flips_fail_to_pass = [cid for cid in common if not va[cid].passed and vb[cid].passed]
     res.mcnemar = _mcnemar(b01, c10)
 
     evals = sorted({ev for cid in common for v in (va[cid], vb[cid]) for ev in v.scores})
@@ -67,9 +70,11 @@ def compare_runs(a: RunRecord, b: RunRecord) -> ComparisonResult:
         ga, gb = a.metrics.get(group, {}), b.metrics.get(group, {})
         out = {}
         for key in sorted(set(ga) & set(gb)):
-            out[key] = {"a": ga[key].get("pass_rate"), "b": gb[key].get("pass_rate"),
-                        "delta": round((gb[key].get("pass_rate", 0)
-                                        - ga[key].get("pass_rate", 0)), 4)}
+            out[key] = {
+                "a": ga[key].get("pass_rate"),
+                "b": gb[key].get("pass_rate"),
+                "delta": round((gb[key].get("pass_rate", 0) - ga[key].get("pass_rate", 0)), 4),
+            }
         if group == "per_pattern":
             res.per_pattern = out
         elif group == "per_category":
@@ -81,10 +86,21 @@ def _mcnemar(b01: int, c10: int) -> dict[str, Any]:
     """Exact McNemar test (two-sided) on paired pass/fail outcomes."""
     n = b01 + c10
     if n == 0:
-        return {"b01": 0, "c10": 0, "n_discordant": 0, "p_value": 1.0,
-                "significant_at_0.05": False, "note": "no discordant pairs"}
+        return {
+            "b01": 0,
+            "c10": 0,
+            "n_discordant": 0,
+            "p_value": 1.0,
+            "significant_at_0.05": False,
+            "note": "no discordant pairs",
+        }
     k = min(b01, c10)
-    p = sum(math.comb(n, i) for i in range(0, k + 1)) / (2 ** n) * 2
+    p = sum(math.comb(n, i) for i in range(0, k + 1)) / (2**n) * 2
     p = min(1.0, p)
-    return {"b01": b01, "c10": c10, "n_discordant": n,
-            "p_value": round(p, 6), "significant_at_0.05": p < 0.05}
+    return {
+        "b01": b01,
+        "c10": c10,
+        "n_discordant": n,
+        "p_value": round(p, 6),
+        "significant_at_0.05": p < 0.05,
+    }

@@ -4,6 +4,7 @@ The Environment is the composition root the runner uses per case:
 fresh store, fresh gateway, model begin_case, RunContext wiring. Total
 wall-clock budget is enforced cooperatively between agent steps.
 """
+
 from __future__ import annotations
 
 import time
@@ -42,13 +43,19 @@ class Environment:
         return ToolGateway(case, self.limits, self.policy, self.ablation, self.events)
 
     def run_context(self, case: TestCase, model: Any, gateway: ToolGateway) -> RunContext:
-        return RunContext(case=case, model=model, gateway=gateway,
-                          events=self.events, limits=self.limits,
-                          ablation=self.ablation)
+        return RunContext(
+            case=case,
+            model=model,
+            gateway=gateway,
+            events=self.events,
+            limits=self.limits,
+            ablation=self.ablation,
+        )
 
     def check_total_timeout(self) -> None:
         elapsed_ms = (time.perf_counter() - self._t0) * 1000
         if elapsed_ms > self.limits.total_timeout_ms:
             raise TimeoutExceeded(
                 f"case exceeded total timeout "
-                f"({elapsed_ms:.0f}ms > {self.limits.total_timeout_ms}ms)")
+                f"({elapsed_ms:.0f}ms > {self.limits.total_timeout_ms}ms)"
+            )

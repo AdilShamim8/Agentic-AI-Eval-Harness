@@ -5,6 +5,7 @@ Usage: python scripts/run_experiments.py [--quick]
 Writes results to evals/results/ and refreshes the 'main' baseline.
 Every number in docs/final-report.md comes from a run of this script.
 """
+
 from __future__ import annotations
 
 import json
@@ -28,8 +29,13 @@ from agent_eval_harness.runner.runner import (  # noqa: E402
 )
 
 RESULTS = "evals/results"
-BENCHMARKS = ["react_basic", "plan_execute_basic", "supervisor_basic",
-              "swarm_basic", "map_reduce_basic"]
+BENCHMARKS = [
+    "react_basic",
+    "plan_execute_basic",
+    "supervisor_basic",
+    "swarm_basic",
+    "map_reduce_basic",
+]
 
 
 def main() -> int:
@@ -42,46 +48,63 @@ def main() -> int:
     suite = {}
     for name in BENCHMARKS:
         bm = load_benchmark(name)
-        rec = BenchmarkRunner(bm, RunConfig(benchmark=name, skill=0.85,
-                                            seed=20260912)).run()
+        rec = BenchmarkRunner(bm, RunConfig(benchmark=name, skill=0.85, seed=20260912)).run()
         m = rec.metrics
         suite[name] = {
-            "run_id": rec.run_id, "cases": m["cases"], "passed": m["passed"],
-            "pass_rate": m["pass_rate"], "ci95": m["pass_rate_ci95"],
-            "per_category": m["per_category"], "per_evaluator": m["per_evaluator"],
-            "behavior": m["behavior"], "latency_p50_ms": m["latency_p50_ms"],
+            "run_id": rec.run_id,
+            "cases": m["cases"],
+            "passed": m["passed"],
+            "pass_rate": m["pass_rate"],
+            "ci95": m["pass_rate_ci95"],
+            "per_category": m["per_category"],
+            "per_evaluator": m["per_evaluator"],
+            "behavior": m["behavior"],
+            "latency_p50_ms": m["latency_p50_ms"],
             "latency_p95_ms": m["latency_p95_ms"],
-            "tokens_in_est": m["tokens_in_est"], "tokens_out_est": m["tokens_out_est"],
+            "tokens_in_est": m["tokens_in_est"],
+            "tokens_out_est": m["tokens_out_est"],
             "cost_estimate_usd": m["cost_estimate_usd"],
             "runtime_s": m["runtime_s"],
         }
-        print(f"  {name}: {m['passed']}/{m['cases']} = {m['pass_rate']:.1%} "
-              f"CI={m['pass_rate_ci95']}")
-    save_baseline(BenchmarkRunner(load_benchmark("react_basic"), RunConfig(
-        benchmark="react_basic", skill=0.85, seed=20260912)).run(), "main")
+        print(
+            f"  {name}: {m['passed']}/{m['cases']} = {m['pass_rate']:.1%} CI={m['pass_rate_ci95']}"
+        )
+    save_baseline(
+        BenchmarkRunner(
+            load_benchmark("react_basic"),
+            RunConfig(benchmark="react_basic", skill=0.85, seed=20260912),
+        ).run(),
+        "main",
+    )
     summary["full_suite"] = suite
 
     # ---- 2. harness ablation ----------------------------------------------
     print("== Harness ablation (failure_recovery: fault+difficult, 16 cases) ==")
     ablation = {}
-    for skill in ((0.85,) if quick else (0.85, 0.60)):
+    for skill in (0.85,) if quick else (0.85, 0.60):
         res = run_ablation("failure_recovery", skill=skill)
         ablation[f"skill_{skill}"] = res
-        print(f"  skill={skill}: " + " ".join(
-            f"{p}={r['pass_rate']:.1%}" for p, r in res["profiles"].items()))
+        print(
+            f"  skill={skill}: "
+            + " ".join(f"{p}={r['pass_rate']:.1%}" for p, r in res["profiles"].items())
+        )
     if not quick:
         res = run_ablation("react_basic", skill=0.85)
         ablation["react_basic_skill_0.85"] = res
-        print("  react_basic: " + " ".join(
-            f"{p}={r['pass_rate']:.1%}" for p, r in res["profiles"].items()))
+        print(
+            "  react_basic: "
+            + " ".join(f"{p}={r['pass_rate']:.1%}" for p, r in res["profiles"].items())
+        )
     summary["ablation"] = ablation
 
     # ---- 3. judge calibration ----------------------------------------------
     print("== Judge calibration (rubric v1.1 vs hand labels, n=56) ==")
     cal = compute_calibration("evals/calibration/hand_labels.csv")
     summary["calibration"] = cal
-    print(f"  kappa={cal['cohens_kappa']} agreement={cal['agreement']} "
-          f"FN={cal['judge_false_negatives']} FP={cal['judge_false_positives']}")
+    print(
+        f"  kappa={cal['cohens_kappa']} agreement={cal['agreement']} "
+        f"FN={cal['judge_false_negatives']} FP={cal['judge_false_positives']}"
+    )
 
     # ---- 4. reproducibility --------------------------------------------------
     print("== Reproducibility ==")
@@ -90,18 +113,18 @@ def main() -> int:
     if not quick:
         repro["supervisor_same_seed_x3"] = run_repro("supervisor_basic", repeats=3)
         repro["supervisor_varied_seed_x3"] = run_repro(
-            "supervisor_basic", repeats=3, vary_seed=True)
+            "supervisor_basic", repeats=3, vary_seed=True
+        )
     summary["repro"] = repro
     for key, r in repro.items():
-        print(f"  {key}: spread={r['max_spread_pp']}pp "
-              f"identical={r['byte_identical_same_seed']}")
+        print(f"  {key}: spread={r['max_spread_pp']}pp identical={r['byte_identical_same_seed']}")
 
     # ---- 5. regression demo ---------------------------------------------------
     print("== Regression demo (baseline vs degraded challenger) ==")
     bm = load_benchmark("react_basic")
-    challenger = BenchmarkRunner(bm, RunConfig(
-        benchmark="react_basic", skill=0.70, seed=20260912,
-        ablation="no_retry")).run()
+    challenger = BenchmarkRunner(
+        bm, RunConfig(benchmark="react_basic", skill=0.70, seed=20260912, ablation="no_retry")
+    ).run()
     from agent_eval_harness.regression.engine import check_regression, load_baseline
 
     gate = check_regression(challenger, load_baseline("main"))
@@ -111,11 +134,20 @@ def main() -> int:
         "gate_passed": gate.passed,
         "summary": gate.summary,
         "findings": [
-            {"metric": f.metric, "baseline": f.baseline, "new": f.new,
-             "delta": f.delta, "verdict": f.verdict} for f in gate.findings],
+            {
+                "metric": f.metric,
+                "baseline": f.baseline,
+                "new": f.new,
+                "delta": f.delta,
+                "verdict": f.verdict,
+            }
+            for f in gate.findings
+        ],
     }
-    print(f"  challenger {challenger.pass_rate:.1%} -> "
-          f"{'GATE FAIL (expected)' if not gate.passed else 'GATE PASS (unexpected!)'}")
+    print(
+        f"  challenger {challenger.pass_rate:.1%} -> "
+        f"{'GATE FAIL (expected)' if not gate.passed else 'GATE PASS (unexpected!)'}"
+    )
 
     with open(os.path.join(RESULTS, "experiments.json"), "w") as fh:
         json.dump(summary, fh, indent=2, sort_keys=True)

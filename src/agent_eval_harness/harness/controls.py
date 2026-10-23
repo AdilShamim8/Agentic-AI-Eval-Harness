@@ -1,4 +1,5 @@
 """Execution controls: limits, permission policy, ablation profiles."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -28,17 +29,25 @@ class ExecutionLimits:
         return cls(**{k: v for k, v in d.items() if k in valid})
 
 
-_DEFAULT_FORBIDDEN_ARG_KEYS = frozenset({
-    "cmd", "command", "shell", "eval", "exec", "subprocess", "os", "code",
-})
+_DEFAULT_FORBIDDEN_ARG_KEYS = frozenset(
+    {
+        "cmd",
+        "command",
+        "shell",
+        "eval",
+        "exec",
+        "subprocess",
+        "os",
+        "code",
+    }
+)
 
 
 @dataclass
 class PermissionPolicy:
     allowed_tools: set[str] | None = None  # None = every registry tool
     denied_tools: set[str] = field(default_factory=set)
-    forbidden_arg_keys: set[str] = field(
-        default_factory=lambda: set(_DEFAULT_FORBIDDEN_ARG_KEYS))
+    forbidden_arg_keys: set[str] = field(default_factory=lambda: set(_DEFAULT_FORBIDDEN_ARG_KEYS))
     max_denials_before_violation: int = 3
 
     @classmethod
@@ -62,8 +71,7 @@ class PermissionPolicy:
             allowed_tools=set(allowed) if allowed is not None else None,
             denied_tools=set(d.get("denied_tools", [])),
             forbidden_arg_keys=set(forbidden),
-            max_denials_before_violation=(
-                int(max_denials) if max_denials is not None else 3),
+            max_denials_before_violation=(int(max_denials) if max_denials is not None else 3),
         )
 
     def check_tool(self, name: str) -> str:
@@ -79,6 +87,7 @@ class PermissionPolicy:
 class AblationProfile:
     """Which harness capabilities are active. The ablation experiment matrix
     toggles exactly these four flags."""
+
     name: str = "full"
     verification: bool = True
     retry: bool = True
@@ -92,12 +101,14 @@ ABLATION_PROFILES: dict[str, AblationProfile] = {
     "no_retry": AblationProfile("no_retry", retry=False),
     "no_tool_validation": AblationProfile("no_tool_validation", tool_validation=False),
     "no_context_optimization": AblationProfile(
-        "no_context_optimization", context_optimization=False),
+        "no_context_optimization", context_optimization=False
+    ),
 }
 
 
 def get_ablation(name: str) -> AblationProfile:
     if name not in ABLATION_PROFILES:
         raise InfraError(
-            f"unknown ablation profile '{name}' (available: {sorted(ABLATION_PROFILES)})")
+            f"unknown ablation profile '{name}' (available: {sorted(ABLATION_PROFILES)})"
+        )
     return ABLATION_PROFILES[name]

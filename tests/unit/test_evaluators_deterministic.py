@@ -1,4 +1,5 @@
 """Deterministic evaluator unit tests (table-driven)."""
+
 from agent_eval_harness.core.schemas import AgentRunOutcome, Trajectory
 from agent_eval_harness.evaluators.deterministic.outcome import (
     ContainsAll,
@@ -20,13 +21,12 @@ from agent_eval_harness.core.schemas import TestCase
 def case(answer=None, **expected):
     exp = {"answer": answer or {}, "max_steps": 12}
     exp.update(expected)
-    return TestCase(id="c", pattern="react", category="normal", task="t",
-                    expected=exp)
+    return TestCase(id="c", pattern="react", category="normal", task="t", expected=exp)
 
 
 def outcome(answer="42", tools=None, termination="answer", steps=None):
     traj = Trajectory(termination=termination)
-    for name, args in (tools or []):
+    for name, args in tools or []:
         from agent_eval_harness.core.schemas import ToolCallRecord
 
         traj.tool_calls.append(ToolCallRecord(name=name, arguments=args, ok=True))
@@ -34,8 +34,7 @@ def outcome(answer="42", tools=None, termination="answer", steps=None):
         from agent_eval_harness.core.schemas import StepRecord
 
         traj.steps.append(StepRecord(index=i, phase="act", summary="s"))
-    return AgentRunOutcome(case_id="c", ok=True, final_answer=answer,
-                           trajectory=traj)
+    return AgentRunOutcome(case_id="c", ok=True, final_answer=answer, trajectory=traj)
 
 
 def test_exact_match():
@@ -68,23 +67,25 @@ def test_forbidden_content():
 
 def test_schema_validation():
     ev = SchemaValidation()
-    schema = {"type": "object", "required": ["value"],
-              "properties": {"value": {"type": "number"}}}
-    assert ev.evaluate(case({"type": "schema", "schema": schema}),
-                       outcome('{"value": 5}')).passed
-    assert not ev.evaluate(case({"type": "schema", "schema": schema}),
-                           outcome('{"value": "x"}')).passed
-    assert not ev.evaluate(case({"type": "schema", "schema": schema}),
-                           outcome("not json")).passed
+    schema = {"type": "object", "required": ["value"], "properties": {"value": {"type": "number"}}}
+    assert ev.evaluate(case({"type": "schema", "schema": schema}), outcome('{"value": 5}')).passed
+    assert not ev.evaluate(
+        case({"type": "schema", "schema": schema}), outcome('{"value": "x"}')
+    ).passed
+    assert not ev.evaluate(case({"type": "schema", "schema": schema}), outcome("not json")).passed
 
 
 def test_task_checks_kinds():
     ev = TaskChecks()
-    c = case(task_checks=[{"kind": "answer_contains", "value": "5"},
-                          {"kind": "answer_numeric", "value": 10},
-                          {"kind": "answer_regex", "pattern": r"\d+"},
-                          {"kind": "answer_min_words", "value": 2},
-                          {"kind": "assumption_stated"}])
+    c = case(
+        task_checks=[
+            {"kind": "answer_contains", "value": "5"},
+            {"kind": "answer_numeric", "value": 10},
+            {"kind": "answer_regex", "pattern": r"\d+"},
+            {"kind": "answer_min_words", "value": 2},
+            {"kind": "assumption_stated"},
+        ]
+    )
     good = outcome("assuming 5 out of 10 things")
     assert ev.evaluate(c, good).passed
     bad = outcome("x")
@@ -104,8 +105,7 @@ def test_tool_selection():
 
 def test_tool_arguments():
     ev = ToolArguments()
-    c = case(tool_args=[{"tool": "calculator", "arg": "expression",
-                         "contains": "23 * 47"}])
+    c = case(tool_args=[{"tool": "calculator", "arg": "expression", "contains": "23 * 47"}])
     assert ev.evaluate(c, outcome(tools=[("calculator", {"expression": "23 * 47 + 1"})])).passed
     assert not ev.evaluate(c, outcome(tools=[("calculator", {"expression": "1 + 1"})])).passed
 
@@ -126,4 +126,3 @@ def test_task_checks_invalid_regex_graceful():
     res = ev.evaluate(c, outcome("test text"))
     assert not res.passed
     assert res.score == 0.0
-

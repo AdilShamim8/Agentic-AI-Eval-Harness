@@ -14,6 +14,7 @@ Boundary contract (v0.2, see THREAT-MODEL.md):
   in-process control (it cannot constrain ctypes/os-level tricks), not OS
   isolation.
 """
+
 from __future__ import annotations
 
 import socket
@@ -40,8 +41,7 @@ class NetworkGuard:
             return self._orig_socket(*args, **kwargs)
         peer = repr(args[:1]) if args else "?"
         self.attempts.append(f"socket({peer})")
-        raise SecurityViolation(
-            "network access is disabled inside the evaluation sandbox")
+        raise SecurityViolation("network access is disabled inside the evaluation sandbox")
 
     def __enter__(self) -> "NetworkGuard":
         if self._orig_socket is None:

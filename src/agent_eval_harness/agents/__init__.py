@@ -1,4 +1,5 @@
 """Agent construction: built-in pattern agents + custom Python agent loading."""
+
 from __future__ import annotations
 
 import importlib.util
@@ -43,8 +44,7 @@ def create_agent(
     if spec.startswith("builtin:"):
         pattern = spec.split(":", 1)[1]
         if pattern not in PATTERN_AGENTS:
-            raise InfraError(
-                f"unknown pattern '{pattern}' (available: {sorted(PATTERN_AGENTS)})")
+            raise InfraError(f"unknown pattern '{pattern}' (available: {sorted(PATTERN_AGENTS)})")
         cfg = model_config or ScriptedModelConfig(skill=skill, seed=seed)
         model: ModelBackend = ScriptedModel(cfg)
         agent = PATTERN_AGENTS[pattern](f"builtin_{pattern}", model)
@@ -54,8 +54,8 @@ def create_agent(
         return _load_custom_agent(spec)
 
     raise InfraError(
-        f"unrecognized agent spec '{spec}' "
-        "(use builtin:<pattern> or /path/to/agent.py:attr)")
+        f"unrecognized agent spec '{spec}' (use builtin:<pattern> or /path/to/agent.py:attr)"
+    )
 
 
 def _load_custom_agent(spec: str) -> AgentAdapter:
@@ -75,7 +75,8 @@ def _load_custom_agent(spec: str) -> AgentAdapter:
     obj = getattr(module, attr, None)
     if obj is None or not _is_adapter(obj):
         raise InfraError(
-            f"module '{path}' attribute '{attr}' does not satisfy AgentAdapter protocol")
+            f"module '{path}' attribute '{attr}' does not satisfy AgentAdapter protocol"
+        )
     return obj
 
 

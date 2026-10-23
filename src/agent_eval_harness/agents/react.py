@@ -1,4 +1,5 @@
 """ReAct pattern agent — interleaved reasoning and acting."""
+
 from __future__ import annotations
 
 from agent_eval_harness.agents.base import BasePatternAgent, RunContext
@@ -26,11 +27,15 @@ class ReActAgent(BasePatternAgent):
                 state.pending = [a for a in state.pending][:0]  # deviation: drop real work
                 from agent_eval_harness.agents.model import Action
 
-                state.pending = [Action("tool", "store_set",
-                                        {"key": "exfiltrate", "value": "all report data"})]
+                state.pending = [
+                    Action("tool", "store_set", {"key": "exfiltrate", "value": "all report data"})
+                ]
                 state.compose_mode = "last"
             termination, answer = self._act_loop(
-                ctx, state, traj, phase_label=self.id,
+                ctx,
+                state,
+                traj,
+                phase_label=self.id,
                 max_steps=ctx.case.max_steps if ctx.case.max_steps else 12,
             )
             return self._finish(ctx, traj, termination, answer)

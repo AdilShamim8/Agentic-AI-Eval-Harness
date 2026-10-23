@@ -1,23 +1,44 @@
 """Tool unit tests — correctness, errors, and safety properties."""
+
 import pytest
 
 from agent_eval_harness.agents import tools as t
 
 
-@pytest.mark.parametrize("expr,expected", [
-    ("2 + 3", 5), ("10 / 4", 2.5), ("23 * 47 + 11", 1092),
-    ("0 * 999 + 19", 19), ("3 - 87 - 41", -125), ("9999 * 9999", 99980001),
-    ("0 / 7", 0), ("2 ** 10", 1024), ("(2 + 3) * 4", 20), ("-5 + 3", -2),
-])
+@pytest.mark.parametrize(
+    "expr,expected",
+    [
+        ("2 + 3", 5),
+        ("10 / 4", 2.5),
+        ("23 * 47 + 11", 1092),
+        ("0 * 999 + 19", 19),
+        ("3 - 87 - 41", -125),
+        ("9999 * 9999", 99980001),
+        ("0 / 7", 0),
+        ("2 ** 10", 1024),
+        ("(2 + 3) * 4", 20),
+        ("-5 + 3", -2),
+    ],
+)
 def test_calculator_correct(expr, expected):
     res = t.calculator({"expression": expr})
     assert res.ok and res.value["value"] == expected
 
 
-@pytest.mark.parametrize("expr", [
-    "__import__('os')", "open('/etc/passwd')", "1 +", "1 / 0",
-    "2 ** 9999", "abc", "", "1;2", "exec('x')",
-])
+@pytest.mark.parametrize(
+    "expr",
+    [
+        "__import__('os')",
+        "open('/etc/passwd')",
+        "1 +",
+        "1 / 0",
+        "2 ** 9999",
+        "abc",
+        "",
+        "1;2",
+        "exec('x')",
+    ],
+)
 def test_calculator_rejects_unsafe(expr):
     res = t.calculator({"expression": expr})
     assert not res.ok and res.error
@@ -28,8 +49,7 @@ def test_calculator_int_normalization():
 
 
 def test_search_relevance():
-    res = t.knowledge_search({"query": "maximum vacation carryover",
-                              "corpus": "employee_handbook"})
+    res = t.knowledge_search({"query": "maximum vacation carryover", "corpus": "employee_handbook"})
     assert res.ok
     top = res.value["results"][0]
     assert top["doc_id"] == "HB-1"
@@ -37,7 +57,9 @@ def test_search_relevance():
 
 
 def test_search_unknown_corpus_and_no_match():
-    assert not t.knowledge_search({"query": "x", "corpus: ": ""}.get("query", "x") and {"query": "x", "corpus": "nope"}).ok
+    assert not t.knowledge_search(
+        {"query": "x", "corpus: ": ""}.get("query", "x") and {"query": "x", "corpus": "nope"}
+    ).ok
     res = t.knowledge_search({"query": "zzzz qq", "corpus": "employee_handbook"})
     assert not res.ok
 
@@ -87,9 +109,18 @@ def test_tool_specs_validate_args():
 
 
 def test_all_tools_registered():
-    for name in ("calculator", "knowledge_search", "text_stats", "text_transform",
-                 "summarize", "data_calc", "store_set", "store_get", "clock_now",
-                 "sim_web_get"):
+    for name in (
+        "calculator",
+        "knowledge_search",
+        "text_stats",
+        "text_transform",
+        "summarize",
+        "data_calc",
+        "store_set",
+        "store_get",
+        "clock_now",
+        "sim_web_get",
+    ):
         assert name in t.TOOLS
 
 
@@ -120,5 +151,3 @@ def test_repair_args_data_calc():
     repaired = _repair_args("data_calc", {"values": ["1", "2.5"], "op": "AVERAGE"})
     assert repaired["op"] == "mean"
     assert repaired["values"] == [1, 2.5]
-
-

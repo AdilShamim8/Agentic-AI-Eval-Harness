@@ -1,5 +1,6 @@
 """Failure-injection tests: evaluator crashes, agent crashes, tool faults,
 malformed outputs, loops — the harness must classify and survive all of them."""
+
 import pytest
 
 from agent_eval_harness.agents import create_agent
@@ -15,16 +16,24 @@ from agent_eval_harness.runner.runner import BenchmarkRunner, RunConfig
 
 
 def small_case(cid="f1", task="Compute 5 * 5 using the calculator and report the final value."):
-    return TestCase(id=cid, pattern="react", category="normal", task=task,
-                    expected={"answer": {"type": "numeric", "value": 25},
-                              "required_tools": ["calculator"], "max_steps": 12})
+    return TestCase(
+        id=cid,
+        pattern="react",
+        category="normal",
+        task=task,
+        expected={
+            "answer": {"type": "numeric", "value": 25},
+            "required_tools": ["calculator"],
+            "max_steps": 12,
+        },
+    )
 
 
 def test_evaluator_crash_classified_and_survived(tmp_path):
     bm = load_benchmark("react_basic")
-    runner = BenchmarkRunner(bm, RunConfig(benchmark="react_basic", skill=0.9,
-                                           seed=5, limit=3,
-                                           out_dir=str(tmp_path)))
+    runner = BenchmarkRunner(
+        bm, RunConfig(benchmark="react_basic", skill=0.9, seed=5, limit=3, out_dir=str(tmp_path))
+    )
 
     class ExplodingEvaluator:
         name, version = "exploding", "1.0"
@@ -66,15 +75,25 @@ def test_agent_crash_classified():
 
 
 def test_soft_tool_fault_surfaced_without_retry():
-    case = small_case("soft", )
-    case.faults = [{"tool": "calculator", "occurrence": 1, "kind": "soft",
-                    "error": "tool flaky"}]
+    case = small_case(
+        "soft",
+    )
+    case.faults = [{"tool": "calculator", "occurrence": 1, "kind": "soft", "error": "tool flaky"}]
     rec = EventRecorder("soft")
     env = Environment(ablation=get_ablation("no_retry"), events=rec)
-    agent = create_agent("builtin:react", skill=0.99, seed=1,
-                         model_config=ScriptedModelConfig(
-                             skill=0.99, redundancy=0, malformed_rate=0,
-                             early_termination=0, loop_tendency=0, recovery=1.0))
+    agent = create_agent(
+        "builtin:react",
+        skill=0.99,
+        seed=1,
+        model_config=ScriptedModelConfig(
+            skill=0.99,
+            redundancy=0,
+            malformed_rate=0,
+            early_termination=0,
+            loop_tendency=0,
+            recovery=1.0,
+        ),
+    )
     gw = env.prepare(case)
     agent.model.begin_case(case.id, case_seed(7, case.id))
     outcome = agent.run(env.run_context(case, agent.model, gw))
@@ -88,9 +107,14 @@ def test_looping_model_hits_step_limit_with_loop_flag():
     case = small_case("loop")
     rec = EventRecorder("loop")
     env = Environment(ablation=get_ablation("full"), events=rec)
-    cfg = ScriptedModelConfig(skill=1.0, redundancy=0, malformed_rate=0,
-                              early_termination=0, loop_tendency=1.0,
-                              recovery=0.0)
+    cfg = ScriptedModelConfig(
+        skill=1.0,
+        redundancy=0,
+        malformed_rate=0,
+        early_termination=0,
+        loop_tendency=1.0,
+        recovery=0.0,
+    )
     agent = create_agent("builtin:react", model_config=cfg)
     gw = env.prepare(case)
     agent.model.begin_case(case.id, case_seed(7, case.id))
@@ -101,12 +125,19 @@ def test_looping_model_hits_step_limit_with_loop_flag():
 
 def test_infra_fault_without_retry_and_weak_agent_fails():
     case = small_case("infra")
-    case.faults = [{"tool": "calculator", "occurrence": 1, "kind": "infra",
-                    "error": "calc backend down"}]
+    case.faults = [
+        {"tool": "calculator", "occurrence": 1, "kind": "infra", "error": "calc backend down"}
+    ]
     rec = EventRecorder("infra")
     env = Environment(ablation=get_ablation("no_retry"), events=rec)
-    cfg = ScriptedModelConfig(skill=0.9, redundancy=0, malformed_rate=0,
-                              early_termination=0, loop_tendency=0, recovery=0.0)
+    cfg = ScriptedModelConfig(
+        skill=0.9,
+        redundancy=0,
+        malformed_rate=0,
+        early_termination=0,
+        loop_tendency=0,
+        recovery=0.0,
+    )
     agent = create_agent("builtin:react", model_config=cfg)
     gw = env.prepare(case)
     agent.model.begin_case(case.id, case_seed(7, case.id))
@@ -119,8 +150,14 @@ def test_malformed_final_answer_fails_checks():
     case = small_case("mal")
     rec = EventRecorder("mal")
     env = Environment(ablation=get_ablation("no_verification"), events=rec)
-    cfg = ScriptedModelConfig(skill=1.0, redundancy=0, malformed_rate=1.0,
-                              early_termination=0, loop_tendency=0, recovery=1.0)
+    cfg = ScriptedModelConfig(
+        skill=1.0,
+        redundancy=0,
+        malformed_rate=1.0,
+        early_termination=0,
+        loop_tendency=0,
+        recovery=1.0,
+    )
     agent = create_agent("builtin:react", model_config=cfg)
     gw = env.prepare(case)
     agent.model.begin_case(case.id, case_seed(7, case.id))

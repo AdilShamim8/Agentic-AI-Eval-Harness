@@ -6,6 +6,7 @@ Design notes:
 - Observability events live in observability/events.py; this module defines the
   *domain* records (case, result, trajectory, verdict, run, baseline, regression).
 """
+
 from __future__ import annotations
 
 import json
@@ -223,8 +224,7 @@ class RunMetrics:
     cost_estimate_usd: float = 0.0
     runtime_s: float = 0.0
 
-    def points(self) -> list[MetricPoint]:
-        ...  # built by metrics module
+    def points(self) -> list[MetricPoint]: ...  # built by metrics module
 
 
 # ---------------------------------------------------------------------------

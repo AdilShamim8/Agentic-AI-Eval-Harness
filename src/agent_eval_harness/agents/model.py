@@ -11,6 +11,7 @@ Honesty contract: every run using this backend labels itself
 backends implement the same protocol; their measurements are reported
 separately (or "Not measured yet").
 """
+
 from __future__ import annotations
 
 import random
@@ -143,14 +144,17 @@ def _understand_core(task: str, context: dict[str, Any] | None = None) -> TaskUn
     u = TaskUnderstanding(description=t[:80])
 
     # --- map-reduce family -----------------------------------------------
-    m = re.search(r"[Ff]or each of \{([^}]+)\}[, ]*(.+?), then (?:compute|report) "
-                  r"the (sum|total|mean|average|max|maximum|min|minimum|median|count)",
-                  t)
+    m = re.search(
+        r"[Ff]or each of \{([^}]+)\}[, ]*(.+?), then (?:compute|report) "
+        r"the (sum|total|mean|average|max|maximum|min|minimum|median|count)",
+        t,
+    )
     if m:
         items = [i.strip() for i in m.group(1).split(",") if i.strip()]
         clause, agg = m.group(2).strip().rstrip("."), m.group(3).lower()
-        agg_op = {"total": "sum", "average": "mean", "maximum": "max",
-                  "minimum": "min"}.get(agg, agg)
+        agg_op = {"total": "sum", "average": "mean", "maximum": "max", "minimum": "min"}.get(
+            agg, agg
+        )
         u.clause = clause
         u.items = items
         u.aggregate_op = agg_op
@@ -164,22 +168,26 @@ def _understand_core(task: str, context: dict[str, Any] | None = None) -> TaskUn
             u.concept = concept_m.group(1)
             corpus = _find_corpus(clause)
             for item in items:
-                u.actions.append(Action(
-                    "tool", "knowledge_search",
-                    {"query": f"{item} {u.concept}", "corpus": corpus}))
+                u.actions.append(
+                    Action(
+                        "tool",
+                        "knowledge_search",
+                        {"query": f"{item} {u.concept}", "corpus": corpus},
+                    )
+                )
             return u
         corpus = _find_corpus(clause)
         for item in items:
-            u.actions.append(Action("tool", "knowledge_search",
-                                    {"query": f"{item} {clause}", "corpus": corpus}))
+            u.actions.append(
+                Action("tool", "knowledge_search", {"query": f"{item} {clause}", "corpus": corpus})
+            )
         return u
 
     # --- compound request families (supervisor / swarm phrasing) -----------
     m = re.search(r"[Hh]andle this request:\s*(.+)$", t, re.S)
     if m:
         body = m.group(1)
-        body = re.sub(r",?\s*Combine (?:both|all) results.*$", "", body,
-                      flags=re.I).strip(" ;.")
+        body = re.sub(r",?\s*Combine (?:both|all) results.*$", "", body, flags=re.I).strip(" ;.")
         parts = re.split(r";\s*and\s+|;\s*", body)
         actions = [a for p in parts if (a := _single_action(p.strip(" .")))]
         if len(actions) >= 2:
@@ -308,53 +316,74 @@ def _single_action(text: str) -> Action | None:
     # knowledge search: "... what is X? Search the <corpus> corpus."
     m = re.search(r"[Ww]hat is (.+?)\? (?:Search|Consult) the [\w ]+ corpus\.?", text)
     if m:
-        return Action("tool", "knowledge_search",
-                      {"query": m.group(1).strip(), "corpus": _find_corpus(text)})
+        return Action(
+            "tool", "knowledge_search", {"query": m.group(1).strip(), "corpus": _find_corpus(text)}
+        )
     m = re.search(r"[Ww]hat is (.+?)[?.] (?:Search|Consult) the ([\w ]+)[.]?", text)
     if m:
         corpus = _CORPUS_ALIASES.get(m.group(2).strip().lower(), "employee_handbook")
-        return Action("tool", "knowledge_search",
-                      {"query": m.group(1).strip(), "corpus": corpus})
-    if re.search(r"(?:look up|find|search for|retrieve) .+ (?:in|from) the [\w ]+ (?:corpus|handbook|specs|facts|data)", low):
-        m = re.search(r"(?:look up|find|search for|retrieve) (.+?) (?:in|from) the ([\w ]+?)(?: corpus)?[.?]?\s*$", text)
+        return Action("tool", "knowledge_search", {"query": m.group(1).strip(), "corpus": corpus})
+    if re.search(
+        r"(?:look up|find|search for|retrieve) .+ (?:in|from) the [\w ]+ (?:corpus|handbook|specs|facts|data)",
+        low,
+    ):
+        m = re.search(
+            r"(?:look up|find|search for|retrieve) (.+?) (?:in|from) the ([\w ]+?)(?: corpus)?[.?]?\s*$",
+            text,
+        )
         if m:
             corpus = _CORPUS_ALIASES.get(m.group(2).strip().lower(), _find_corpus(text))
-            return Action("tool", "knowledge_search",
-                          {"query": m.group(1).strip(), "corpus": corpus})
+            return Action(
+                "tool", "knowledge_search", {"query": m.group(1).strip(), "corpus": corpus}
+            )
     # text transform
-    m = re.search(r"[Aa]pply (uppercase|lowercase|reverse|word_count|title case) to the text[:\s]+(.+)$",
-                  text, re.S)
+    m = re.search(
+        r"[Aa]pply (uppercase|lowercase|reverse|word_count|title case) to the text[:\s]+(.+)$",
+        text,
+        re.S,
+    )
     if m:
         op = m.group(1).lower().replace("case", "")
-        op = {"upper": "upper", "lower": "lower", "reverse": "reverse",
-              "word_count": "word_count", "title": "title"}.get(op, op)
+        op = {
+            "upper": "upper",
+            "lower": "lower",
+            "reverse": "reverse",
+            "word_count": "word_count",
+            "title": "title",
+        }.get(op, op)
         return Action("tool", "text_transform", {"text": m.group(2).strip(), "op": op})
     # text stats
-    m = re.search(r"[Hh]ow many (words|characters|sentences) are in the following text[:\s]+(.+)$",
-                  text, re.S)
+    m = re.search(
+        r"[Hh]ow many (words|characters|sentences) are in the following text[:\s]+(.+)$", text, re.S
+    )
     if m:
         return Action("tool", "text_stats", {"text": m.group(2).strip()})
     # summarize
     m = re.search(r"[Ss]ummarize the following text in (\d+) sentences?[:\s]+(.+)$", text, re.S)
     if m:
-        return Action("tool", "summarize",
-                      {"text": m.group(2).strip(), "max_sentences": int(m.group(1))})
+        return Action(
+            "tool", "summarize", {"text": m.group(2).strip(), "max_sentences": int(m.group(1))}
+        )
     # data calc
-    m = re.search(r"[Cc]ompute the (sum|mean|average|median|max|maximum|min|minimum|range|count)"
-                  r" of (?:the )?(?:numbers )?\[([^\]]+)\]", text)
+    m = re.search(
+        r"[Cc]ompute the (sum|mean|average|median|max|maximum|min|minimum|range|count)"
+        r" of (?:the )?(?:numbers )?\[([^\]]+)\]",
+        text,
+    )
     if m:
         op = m.group(1).lower()
         op = {"average": "mean", "maximum": "max", "minimum": "min"}.get(op, op)
-        vals = [float(v) if "." in v else int(v)
-                for v in re.findall(r"-?\d+\.?\d*", m.group(2))]
+        vals = [float(v) if "." in v else int(v) for v in re.findall(r"-?\d+\.?\d*", m.group(2))]
         return Action("tool", "data_calc", {"values": vals, "op": op})
-    m = re.search(r"[Ww]hat is the (sum|mean|average|median|max|maximum|min|minimum|range|count)"
-                  r" of (?:the )?(?:numbers )?\[([^\]]+)\]", text)
+    m = re.search(
+        r"[Ww]hat is the (sum|mean|average|median|max|maximum|min|minimum|range|count)"
+        r" of (?:the )?(?:numbers )?\[([^\]]+)\]",
+        text,
+    )
     if m:
         op = m.group(1).lower()
         op = {"average": "mean", "maximum": "max", "minimum": "min"}.get(op, op)
-        vals = [float(v) if "." in v else int(v)
-                for v in re.findall(r"-?\d+\.?\d*", m.group(2))]
+        vals = [float(v) if "." in v else int(v) for v in re.findall(r"-?\d+\.?\d*", m.group(2))]
         return Action("tool", "data_calc", {"values": vals, "op": op})
     return None
 
@@ -395,10 +424,10 @@ class ModelBackend(Protocol):
 @dataclass
 class ScriptedModelConfig:
     skill: float = 0.85
-    redundancy: float = 0.05       # p(duplicate a successful call)
-    malformed_rate: float = 0.04   # p(emit malformed decision)
+    redundancy: float = 0.05  # p(duplicate a successful call)
+    malformed_rate: float = 0.04  # p(emit malformed decision)
     early_termination: float = 0.02  # p(answer immediately, skipping tools)
-    loop_tendency: float = 0.02    # p(stuck repeating identical call)
+    loop_tendency: float = 0.02  # p(stuck repeating identical call)
     recovery: float | None = None  # p(retry after tool error) — default skill
     injection_resistance: float | None = None  # default min(0.99, skill + 0.10)
     seed: int = 0
@@ -481,8 +510,11 @@ class ScriptedModel:
 
         # redundancy gate: re-issue an already-successful call (wasteful but
         # realistic agent behavior; context optimization dedups the observation)
-        if (state.history and rng.random() < cfg.redundancy
-                and self._last_emitted_action is not None):
+        if (
+            state.history
+            and rng.random() < cfg.redundancy
+            and self._last_emitted_action is not None
+        ):
             a = self._last_emitted_action
             if any(h.get("ok") and h.get("tool") == a.tool for h in state.history):
                 return ToolCallDecision(a.tool, dict(a.args))
@@ -539,8 +571,10 @@ class ScriptedModel:
         if a.kind == "assume":
             return "State the assumption before answering"
         if a.tool == "knowledge_search":
-            return (f"Use knowledge_search on the {a.args.get('corpus')} corpus "
-                    f"for '{a.args.get('query')}'")
+            return (
+                f"Use knowledge_search on the {a.args.get('corpus')} corpus "
+                f"for '{a.args.get('query')}'"
+            )
         return f"Use {a.tool} ({', '.join(f'{k}={v}' for k, v in a.args.items())})"
 
     def _degraded_text(self, state: ModelState) -> str:
@@ -548,10 +582,14 @@ class ScriptedModel:
 
     def _wrong_tool_for(self, a: Action) -> str:
         distract = {
-            "calculator": "text_stats", "knowledge_search": "text_transform",
-            "text_stats": "calculator", "text_transform": "summarize",
-            "summarize": "text_stats", "data_calc": "calculator",
-            "sim_web_get": "knowledge_search", "store_set": "store_get",
+            "calculator": "text_stats",
+            "knowledge_search": "text_transform",
+            "text_stats": "calculator",
+            "text_transform": "summarize",
+            "summarize": "text_stats",
+            "data_calc": "calculator",
+            "sim_web_get": "knowledge_search",
+            "store_set": "store_get",
             "store_get": "store_set",
         }
         return distract.get(a.tool, "text_stats")

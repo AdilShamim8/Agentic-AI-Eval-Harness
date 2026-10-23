@@ -6,6 +6,7 @@ The VersionBundle is embedded in every run manifest; its stable fingerprint
 (sorted-key JSON -> sha256) lets CI verify that two runs compared against each
 other actually share the components they claim to share.
 """
+
 from __future__ import annotations
 
 import hashlib
