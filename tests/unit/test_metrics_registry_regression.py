@@ -385,3 +385,96 @@ def test_regression_runnerlevel_cross_benchmark_rejected(tmp_path):
     gate = check_regression(fr_run, main_base)
     assert not gate.passed
     assert any(f.verdict == "incompatible_benchmark" for f in gate.findings)
+
+
+# ---- min_cases_for_gate configuration (Issue B) ------------------------------
+
+
+def _gate_cfg(tmp_path, default_min=None, top_min=None, bench_min=None,
+              pass_on_insufficient=None):
+    import yaml
+    cfg = {"default": {"pass_rate": -0.03}, "benchmarks": {}}
+    if default_min is not None:
+        cfg["default"]["min_cases_for_gate"] = default_min
+    if bench_min is not None:
+        cfg["benchmarks"]["react_basic"] = {"min_cases_for_gate": bench_min}
+    if top_min is not None:
+        cfg["min_cases_for_gate"] = top_min
+    if pass_on_insufficient is not None:
+        cfg["pass_on_insufficient"] = pass_on_insufficient
+    p = tmp_path / "gates.yaml"
+    p.write_text(yaml.safe_dump(cfg), encoding="utf-8")
+    return str(p)
+
+
+def test_min_cases_configured_under_default_is_honored(tmp_path):
+    """The shipped gates.yaml level: default.min_cases_for_gate."""
+    from agent_eval_harness.regression.engine import check_regression
+
+    # operator raises the bar from 10 to 30; a 20-case run must be inconclusive
+    gates = _gate_cfg(tmp_path, default_min=30)
+    gate = check_regression(_compat_record(0.88, n=20), _compat_baseline(0.89, n=20),
+                            gate_config_path=gates)
+    assert any(f.verdict == "insufficient_data" for f in gate.findings)
+    assert not gate.passed, "fail-closed when configured minimum is not met"
+
+
+def test_min_cases_per_benchmark_override_wins(tmp_path):
+    from agent_eval_harness.regression.engine import check_regression
+
+    gates = _gate_cfg(tmp_path, default_min=10, bench_min=40)
+    gate = check_regression(_compat_record(0.88, n=20), _compat_baseline(0.89, n=20),
+                            gate_config_path=gates)
+    assert any(f.verdict == "insufficient_data" for f in gate.findings)
+    assert not gate.passed
+
+
+def test_min_cases_boundary_exact_and_below(tmp_path):
+    from agent_eval_harness.regression.engine import check_regression
+
+    gates = _gate_cfg(tmp_path, default_min=20)
+    # exactly at the minimum -> sufficient -> normal comparison
+    gate = check_regression(_compat_record(0.88, n=20), _compat_baseline(0.89, n=20),
+                            gate_config_path=gates)
+    assert not any(f.verdict == "insufficient_data" for f in gate.findings)
+    assert gate.passed
+    # one below the minimum -> inconclusive
+    gate = check_regression(_compat_record(0.88, n=19), _compat_baseline(0.89, n=19),
+                            gate_config_path=gates)
+    assert any(f.verdict == "insufficient_data" for f in gate.findings)
+    assert not gate.passed
+
+
+def test_min_cases_zero_cases_is_insufficient(tmp_path):
+    from agent_eval_harness.regression.engine import check_regression
+
+    gates = _gate_cfg(tmp_path, default_min=10)
+    gate = check_regression(_compat_record(0.0, n=0), _compat_baseline(0.89, n=0),
+                            gate_config_path=gates)
+    assert any(f.verdict == "insufficient_data" for f in gate.findings)
+    assert not gate.passed
+
+
+def test_min_cases_legacy_top_level_still_honored(tmp_path):
+    from agent_eval_harness.regression.engine import check_regression
+
+    gates = _gate_cfg(tmp_path, top_min=30)
+    gate = check_regression(_compat_record(0.88, n=20), _compat_baseline(0.89, n=20),
+                            gate_config_path=gates)
+    assert any(f.verdict == "insufficient_data" for f in gate.findings)
+
+
+def test_pass_on_insufficient_policy_both_ways(tmp_path):
+    from agent_eval_harness.regression.engine import check_regression
+
+    # fail closed (default, what CI needs)
+    gates = _gate_cfg(tmp_path, default_min=30, pass_on_insufficient=False)
+    gate = check_regression(_compat_record(0.88, n=20), _compat_baseline(0.89, n=20),
+                            gate_config_path=gates)
+    assert not gate.passed
+    # explicitly authorized to pass: must still be visible as inconclusive
+    gates = _gate_cfg(tmp_path, default_min=30, pass_on_insufficient=True)
+    gate = check_regression(_compat_record(0.88, n=20), _compat_baseline(0.89, n=20),
+                            gate_config_path=gates)
+    assert gate.passed
+    assert "insufficient" in gate.summary

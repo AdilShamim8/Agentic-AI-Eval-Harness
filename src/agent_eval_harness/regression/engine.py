@@ -98,6 +98,29 @@ def _compatibility_problems(run: RunRecord,
                               f"baseline [{ev_base}]"))
     return problems
 
+
+def _min_cases_for_gate(cfg: dict, benchmark: str) -> int:
+    """Minimum sample size for a trustworthy gate, resolved in priority order:
+
+    1. benchmarks.<benchmark>.min_cases_for_gate   (per-benchmark override)
+    2. default.min_cases_for_gate                  (the level the shipped
+       configs/gates.yaml documents — the one the engine used to ignore)
+    3. top-level min_cases_for_gate                 (legacy key, still honored)
+    4. 10                                           (hardcoded fallback)
+
+    v0.2.1 defect: the engine read ONLY the top-level key while gates.yaml
+    declared the value under default:, so operators could not change the
+    minimum — the hardcoded 10 always won."""
+    per_bench = (cfg.get("benchmarks") or {}).get(benchmark) or {}
+    for holder in (per_bench, cfg.get("default") or {}, cfg):
+        try:
+            if "min_cases_for_gate" in holder and holder["min_cases_for_gate"] is not None:
+                return int(holder["min_cases_for_gate"])
+        except (TypeError, ValueError):
+            continue
+    return 10
+
+
 def check_regression(
     run: RunRecord,
     baseline: BaselineRecord,
@@ -145,7 +168,7 @@ def check_regression(
     thr = threshold_for("pass_rate")
     delta = round(new_rate - base_rate, 4)
     n = run.metrics.get("cases", 0)
-    if n < int(cfg.get("min_cases_for_gate", 10)):
+    if n < _min_cases_for_gate(cfg, run.benchmark):
         findings.append(RegressionFinding(
             metric="overall_pass_rate", baseline=base_rate, new=new_rate,
             delta=delta, threshold=thr, scope="overall",

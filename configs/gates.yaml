@@ -1,10 +1,15 @@
 # Quality gates for regression checking.
 # Thresholds are MAXIMUM ALLOWED DROPS (negative numbers).
 # CI blocks when any gated metric drops more than its threshold.
+#
+# min_cases_for_gate resolution order (most specific wins):
+#   benchmarks.<name>.min_cases_for_gate > default.min_cases_for_gate
+#   > top-level min_cases_for_gate > 10
 
 default:
   pass_rate: -0.03          # overall pass rate may drop at most 3 points
-  min_cases_for_gate: 10    # below this, gates are inconclusive (not failed)
+  min_cases_for_gate: 10    # below this, gates are inconclusive and FAIL CLOSED
+                            # (see pass_on_insufficient at the bottom)
 
 benchmarks:
   react_basic:
