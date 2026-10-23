@@ -1,5 +1,17 @@
 version: '3.8'
 
+# Two explicit deployment modes (do not mix them):
+#
+#   1. READ-ONLY VIEWER (default `dashboard` service): evals/runs and
+#      evals/baselines are mounted :ro. The web UI serves reports; POST
+#      /api/run is REFUSED with 503 ("READ-ONLY VIEWER mode") — the server
+#      detects the non-writable mount. This is the safe mode for exposing
+#      the dashboard.
+#
+#   2. AUTHORIZED EXECUTOR (`runner` / `status` services): writable mounts,
+#      used on demand via `docker compose run --rm runner run --benchmark X`.
+#      Never expose the runner to untrusted networks.
+
 services:
   # 1. Status service: runs status health check and exits
   status:
@@ -11,8 +23,8 @@ services:
       - ./evals/runs:/app/evals/runs
       - ./evals/baselines:/app/evals/baselines
 
-  # 2. Benchmark Runner service: run benchmarks with arbitrary flags
-  # Usage: docker compose run --rm runner run --benchmark react_basic
+  # 2. Benchmark Runner service (AUTHORIZED EXECUTOR): run benchmarks with
+  # arbitrary flags. Usage: docker compose run --rm runner run --benchmark react_basic
   runner:
     build:
       context: .
@@ -23,7 +35,9 @@ services:
       - ./evals/runs:/app/evals/runs
       - ./evals/baselines:/app/evals/baselines
 
-  # 3. Web Dashboard service: provides browser UI on port 8000
+  # 3. Web Dashboard service (READ-ONLY VIEWER): browser UI on port 8000.
+  #    Runs mounted read-only; execution requests are refused with 503 by
+  #    design. Use the runner service to execute benchmarks.
   dashboard:
     build:
       context: .

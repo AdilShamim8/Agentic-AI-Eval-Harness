@@ -75,11 +75,15 @@ agent-eval repro --benchmark react_basic --repeats 5
 
 ## Docker & Container Deployment
 
-Deploy with one command anywhere:
+Two explicit deployment modes (never mix them):
 
 ```bash
-docker compose up dashboard             # runs web dashboard on http://localhost:8000
-docker compose run runner run --benchmark react_basic   # execute in container
+# READ-ONLY VIEWER: dashboard on http://localhost:8000; evals/runs mounted
+# read-only. POST /api/run is refused (503) - execution is impossible by design.
+docker compose up dashboard
+
+# AUTHORIZED EXECUTOR: on-demand benchmark execution with writable mounts.
+docker compose run --rm runner run --benchmark react_basic
 ```
 
 ## What's measured (deterministic backend, seed 20260912)

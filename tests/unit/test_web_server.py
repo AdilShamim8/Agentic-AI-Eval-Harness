@@ -160,3 +160,117 @@ def test_web_execute_run_is_serialized(test_server, monkeypatch):
     assert len(spans) == 2
     a, b = sorted(spans)
     assert b[0] >= a[1], f"executions overlapped: {spans}"
+
+
+# ---- dashboard hardening (Issues F + J) --------------------------------------
+
+
+def _post(test_server, payload, raw=None, headers=None):
+    data = raw if raw is not None else json.dumps(payload).encode()
+    req = urllib.request.Request(
+        f"{test_server}/api/run", data=data,
+        headers=headers or {"Content-Type": "application/json"})
+    try:
+        resp = urllib.request.urlopen(req, timeout=15)
+        return resp.status, json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode("utf-8")
+        try:
+            body = json.loads(body)
+        except ValueError:
+            pass
+        return exc.code, body
+
+
+def test_web_rejects_invalid_benchmark(test_server):
+    code, body = _post(test_server, {"benchmark": "no_such_benchmark"})
+    assert code == 400
+    assert "error" in body
+
+
+def test_web_rejects_invalid_skill(test_server):
+    code, body = _post(test_server, {"benchmark": "react_basic", "skill": 1.5})
+    assert code == 400
+    code, body = _post(test_server, {"benchmark": "react_basic", "skill": "high"})
+    assert code == 400
+
+
+def test_web_rejects_invalid_limit(test_server):
+    # v0.2.1 silently treated limit=0 (and negatives) as a FULL run
+    code, body = _post(test_server, {"benchmark": "react_basic", "limit": 0})
+    assert code == 400
+    code, body = _post(test_server, {"benchmark": "react_basic", "limit": -3})
+    assert code == 400
+    code, body = _post(test_server, {"benchmark": "react_basic", "limit": "eight"})
+    assert code == 400
+
+
+def test_web_rejects_malformed_json_and_non_object(test_server):
+    code, body = _post(test_server, None, raw=b"{not json")
+    assert code == 400
+    code, body = _post(test_server, None, raw=b"[1,2,3]")
+    assert code == 400
+
+
+def test_web_rejects_oversized_body(test_server):
+    # declared length over the cap: refused before any body is read
+    req = urllib.request.Request(
+        f"{test_server}/api/run", data=b"",
+        headers={"Content-Type": "application/json",
+                 "Content-Length": str(100 * 1024 * 1024)})
+    try:
+        resp = urllib.request.urlopen(req, timeout=15)
+        code, body = resp.status, json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        code, body = exc.code, json.loads(exc.read().decode("utf-8"))
+    assert code == 413
+    assert "too large" in body["error"]
+
+
+def test_web_read_only_mode_refuses_execution(test_server, monkeypatch):
+    """Issue F: a dashboard deployed with a read-only runs mount (the compose
+    default) must refuse POST /api/run with an explicit 503, not fail at
+    write time with an opaque 500."""
+    monkeypatch.setattr(DashboardHandler, "runs_dir", "/nonexistent-readonly")
+    code, body = _post(test_server, {"benchmark": "react_basic"})
+    assert code == 503
+    assert "READ-ONLY VIEWER" in body["error"]
+    monkeypatch.undo()
+    # writable dir (the fixture's tmp runs dir) still executes
+    code, body = _post(test_server, {"benchmark": "react_basic", "limit": 2})
+    assert code == 200
+    assert body["benchmark"] == "react_basic"
+
+
+def test_web_index_escapes_untrusted_record_fields(test_server):
+    """Stored-XSS regression: a malicious run record (run_id/benchmark/
+    category/failure_class/final_answer carrying markup and quotes) must be
+    rendered inert by the client (esc() + data-run-id, no inline onclick)."""
+    import os
+    payload = {
+        "run_id": "xss'); alert(1); ('",
+        "benchmark": 'react"><img src=x onerror=alert(2)>',
+        "metrics": {"pass_rate": 0.5, "cases": 1},
+        "recorded_at": '"><script>alert(3)</script>',
+        "verdicts": [{
+            "case_id": "c1'><script>alert(4)</script>",
+            "category": "normal onload=alert(5)",
+            "passed": False, "failure_class": "test_failure",
+            "tool_calls": 0, "final_answer": "<b>bold</b> 'quoted' \"dq\"",
+        }],
+    }
+    with open(os.path.join(DashboardHandler.runs_dir, "xssrec.json"), "w",
+              encoding="utf-8") as fh:
+        json.dump(payload, fh)
+    with urllib.request.urlopen(f"{test_server}/") as resp:
+        html = resp.read().decode("utf-8")
+    # the page ships an esc() helper and never builds inline onclick strings
+    assert "function esc(" in html
+    assert "onclick=" not in html
+    # the record data is fetched via /api — server renders it as inert JSON
+    with urllib.request.urlopen(f"{test_server}/api/runs/xssrec") as resp:
+        served = json.loads(resp.read().decode("utf-8"))
+    assert served["benchmark"] == payload["benchmark"]  # stored payload served
+    # no raw HTML reflection server-side: JSON content-type + nosniff
+    assert resp.headers.get("X-Content-Type-Options") == "nosniff"
+    os.unlink(os.path.join(DashboardHandler.runs_dir, "xssrec.json"))

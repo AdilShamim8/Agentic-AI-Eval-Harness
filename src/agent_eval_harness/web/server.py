@@ -14,6 +14,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
 from urllib.parse import parse_qs, urlparse
 
+from agent_eval_harness.core.errors import InfraError
 from agent_eval_harness.registry.registry import list_benchmarks, load_benchmark
 from agent_eval_harness.runner.runner import BenchmarkRunner, RunConfig
 
@@ -393,6 +394,18 @@ INDEX_HTML = """<!DOCTYPE html>
     let currentRuns = [];
     let selectedRunId = null;
 
+    // HTML-escape untrusted record fields before innerHTML composition.
+    // Every run-record field rendered below passes through esc(); numbers
+    // are coerced with Number() first.
+    function esc(v) {
+      return String(v == null ? '' : v)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     async function loadStatus() {
       try {
         const res = await fetch('/api/runs');
@@ -401,7 +414,7 @@ INDEX_HTML = """<!DOCTYPE html>
         document.getElementById('stat-runs').innerText = currentRuns.length;
         if (currentRuns.length > 0) {
           const latest = currentRuns[0];
-          document.getElementById('stat-passrate').innerText = (latest.pass_rate * 100).toFixed(1) + '%';
+          document.getElementById('stat-passrate').innerText = ((Number(latest.pass_rate) || 0) * 100).toFixed(1) + '%';
           renderRunsList();
           if (!selectedRunId) {
             selectRun(latest.run_id);
@@ -418,21 +431,23 @@ INDEX_HTML = """<!DOCTYPE html>
         container.innerHTML = '<div class="empty-state">No runs recorded yet.</div>';
         return;
       }
-      container.innerHTML = currentRuns.map(r => `
-        <div class="run-item ${r.run_id === selectedRunId ? 'active' : ''}" onclick="selectRun('${r.run_id}')">
+      container.innerHTML = currentRuns.map(r => {
+        const pr = Number(r.pass_rate) || 0;
+        return `
+        <div class="run-item ${r.run_id === selectedRunId ? 'active' : ''}" data-run-id="${esc(r.run_id)}">
           <div class="run-header">
-            <span class="run-id">${r.run_id.substring(0, 12)}</span>
-            <span class="badge ${r.pass_rate >= 0.7 ? 'badge-success' : 'badge-danger'}">
-              ${(r.pass_rate * 100).toFixed(1)}%
+            <span class="run-id">${esc(String(r.run_id).substring(0, 12))}</span>
+            <span class="badge ${pr >= 0.7 ? 'badge-success' : 'badge-danger'}">
+              ${(pr * 100).toFixed(1)}%
             </span>
           </div>
           <div class="run-meta">
-            <span>${r.benchmark}</span>
-            <span>${r.cases} cases</span>
-            <span>${r.recorded_at ? r.recorded_at.substring(0, 10) : ''}</span>
+            <span>${esc(r.benchmark)}</span>
+            <span>${esc(r.cases)} cases</span>
+            <span>${r.recorded_at ? esc(String(r.recorded_at).substring(0, 10)) : ''}</span>
           </div>
-        </div>
-      `).join('');
+        </div>`;
+      }).join('');
     }
 
     async function selectRun(runId) {
@@ -442,20 +457,30 @@ INDEX_HTML = """<!DOCTYPE html>
       container.innerHTML = '<div class="empty-state">Loading run details...</div>';
 
       try {
-        const res = await fetch('/api/runs/' + runId);
+        const res = await fetch('/api/runs/' + encodeURIComponent(runId));
         const run = await res.json();
         renderRunDetail(run);
       } catch (e) {
-        container.innerHTML = '<div class="empty-state" style="color:var(--danger)">Failed to load details for ' + runId + '</div>';
+        container.innerHTML = '<div class="empty-state" style="color:var(--danger)">Failed to load details for ' + esc(runId) + '</div>';
       }
     }
 
+    // run selection via event delegation — never inline onclick with
+    // untrusted strings (run ids come from run-record files)
+    document.getElementById('runs-container').addEventListener('click', (ev) => {
+      const item = ev.target.closest('.run-item');
+      if (item && item.dataset.runId) {
+        selectRun(item.dataset.runId);
+      }
+    });
+
     function renderRunDetail(run) {
       document.getElementById('detail-title').innerText = `${run.benchmark} (${run.run_id})`;
+      run.pass_rate = Number(run.pass_rate) || 0;
       const passed = run.pass_rate >= 0.7;
       document.getElementById('detail-badge').innerHTML = `
         <span class="badge ${passed ? 'badge-success' : 'badge-danger'}">
-          ${(run.pass_rate * 100).toFixed(1)}% PASS (${run.metrics ? run.metrics.passed : 0}/${run.metrics ? run.metrics.cases : 0})
+          ${(run.pass_rate * 100).toFixed(1)}% PASS (${run.metrics ? esc(run.metrics.passed) : 0}/${run.metrics ? esc(run.metrics.cases) : 0})
         </span>
       `;
 
@@ -466,19 +491,19 @@ INDEX_HTML = """<!DOCTYPE html>
         <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
           <div style="flex:1; padding: 1rem; border-radius: 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border)">
             <div style="font-size:0.75rem; color:var(--text-muted)">Agent Pattern</div>
-            <div style="font-weight:700; margin-top:0.2rem;">${run.agent_pattern || run.agent || 'react'}</div>
+            <div style="font-weight:700; margin-top:0.2rem;">${esc(run.agent_pattern || run.agent || 'react')}</div>
           </div>
           <div style="flex:1; padding: 1rem; border-radius: 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border)">
             <div style="font-size:0.75rem; color:var(--text-muted)">Test Failures</div>
-            <div style="font-weight:700; color: ${failHist.test_failure ? 'var(--danger)' : 'var(--text)'}; margin-top:0.2rem;">${failHist.test_failure || 0}</div>
+            <div style="font-weight:700; color: ${failHist.test_failure ? 'var(--danger)' : 'var(--text)'}; margin-top:0.2rem;">${esc(failHist.test_failure || 0)}</div>
           </div>
           <div style="flex:1; padding: 1rem; border-radius: 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border)">
             <div style="font-size:0.75rem; color:var(--text-muted)">Evaluator Errors</div>
-            <div style="font-weight:700; color: ${failHist.evaluator_error ? 'var(--danger)' : 'var(--text)'}; margin-top:0.2rem;">${failHist.evaluator_error || 0}</div>
+            <div style="font-weight:700; color: ${failHist.evaluator_error ? 'var(--danger)' : 'var(--text)'}; margin-top:0.2rem;">${esc(failHist.evaluator_error || 0)}</div>
           </div>
           <div style="flex:1; padding: 1rem; border-radius: 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border)">
             <div style="font-size:0.75rem; color:var(--text-muted)">Infra Failures</div>
-            <div style="font-weight:700; color: ${failHist.infrastructure_failure ? 'var(--danger)' : 'var(--text)'}; margin-top:0.2rem;">${failHist.infrastructure_failure || 0}</div>
+            <div style="font-weight:700; color: ${failHist.infrastructure_failure ? 'var(--danger)' : 'var(--text)'}; margin-top:0.2rem;">${esc(failHist.infrastructure_failure || 0)}</div>
           </div>
         </div>
 
@@ -498,17 +523,17 @@ INDEX_HTML = """<!DOCTYPE html>
             <tbody>
               ${verdicts.map(v => `
                 <tr>
-                  <td class="mono" style="font-weight:600">${v.case_id}</td>
-                  <td><span class="badge badge-neutral">${v.category}</span></td>
+                  <td class="mono" style="font-weight:600">${esc(v.case_id)}</td>
+                  <td><span class="badge badge-neutral">${esc(v.category)}</span></td>
                   <td>
                     <span class="badge ${v.passed ? 'badge-success' : 'badge-danger'}">
                       ${v.passed ? 'PASS' : 'FAIL'}
                     </span>
                   </td>
-                  <td><span style="font-size:0.78rem; color:${v.failure_class === 'none' ? 'var(--text-muted)' : 'var(--danger)'}">${v.failure_class}</span></td>
-                  <td class="mono">${v.tool_calls || 0}</td>
+                  <td><span style="font-size:0.78rem; color:${v.failure_class === 'none' ? 'var(--text-muted)' : 'var(--danger)'}">${esc(v.failure_class)}</span></td>
+                  <td class="mono">${esc(v.tool_calls || 0)}</td>
                   <td style="max-width: 320px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color:var(--text-muted)">
-                    ${v.final_answer ? v.final_answer.replace(/</g, '&lt;') : '(none)'}
+                    ${v.final_answer ? esc(v.final_answer) : '(none)'}
                   </td>
                 </tr>
               `).join('')}
@@ -634,22 +659,89 @@ class DashboardHandler(BaseHTTPRequestHandler):
             })
       self._send_json({"baselines": baselines})
 
+    MAX_BODY_BYTES = 1 << 20  # 1 MiB request-body cap
+
     def _handle_execute_run(self) -> None:
       try:
-        content_length = int(self.headers.get("Content-Length", 0) or 0)
-        body = self.rfile.read(content_length) if content_length > 0 else b""
-        payload = json.loads(body.decode("utf-8")) if body else {}
+        # ---- request parsing + validation (fail with 4xx, never 500) ----
+        try:
+          length = int(self.headers.get("Content-Length", 0) or 0)
+        except ValueError:
+          self._send_json({"error": "invalid Content-Length header"},
+                           status=HTTPStatus.BAD_REQUEST)
+          return
+        if length < 0:
+          self._send_json({"error": "invalid Content-Length header"},
+                           status=HTTPStatus.BAD_REQUEST)
+          return
+        if length > self.MAX_BODY_BYTES:
+          # refuse before reading anything: don't let a client force the
+          # server to buffer an unbounded body
+          self.close_connection = True
+          self._send_json({"error": f"request body too large "
+                                    f"(max {self.MAX_BODY_BYTES} bytes)"},
+                           status=HTTPStatus.REQUEST_ENTITY_TOO_LARGE)
+          return
+        body = self.rfile.read(length) if length > 0 else b""
+        try:
+          payload = json.loads(body.decode("utf-8")) if body else {}
+        except (ValueError, UnicodeDecodeError):
+          self._send_json({"error": "invalid JSON body"},
+                           status=HTTPStatus.BAD_REQUEST)
+          return
+        if not isinstance(payload, dict):
+          self._send_json({"error": "request body must be a JSON object"},
+                           status=HTTPStatus.BAD_REQUEST)
+          return
 
         bench_name = payload.get("benchmark", "react_basic")
-        skill = float(payload.get("skill", 0.85))
-        limit = payload.get("limit")
-        limit = int(limit) if limit else None
+        if not isinstance(bench_name, str) or not bench_name.strip():
+          self._send_json({"error": "benchmark must be a non-empty string"},
+                           status=HTTPStatus.BAD_REQUEST)
+          return
+        try:
+          skill = float(payload.get("skill", 0.85))
+        except (TypeError, ValueError):
+          self._send_json({"error": "skill must be a number in [0,1]"},
+                           status=HTTPStatus.BAD_REQUEST)
+          return
+        if not 0.0 <= skill <= 1.0:
+          self._send_json({"error": "skill must be a number in [0,1]"},
+                           status=HTTPStatus.BAD_REQUEST)
+          return
+        raw_limit = payload.get("limit")
+        if raw_limit is None or raw_limit == "":
+          limit = None  # full run
+        else:
+          try:
+            limit = int(raw_limit)
+          except (TypeError, ValueError):
+            self._send_json({"error": "limit must be a positive integer (or null)"},
+                             status=HTTPStatus.BAD_REQUEST)
+            return
+          if limit < 1:
+            # v0.2.1 silently treated limit=0 (and negatives) as a full run
+            self._send_json({"error": "limit must be a positive integer (or null)"},
+                             status=HTTPStatus.BAD_REQUEST)
+            return
 
+        # ---- deployment mode check (read-only viewer vs executor) --------
+        if not (os.path.isdir(self.runs_dir) and os.access(self.runs_dir, os.W_OK)):
+          self._send_json(
+              {"error": "dashboard is deployed in READ-ONLY VIEWER mode "
+                        "(evals/runs is not writable). POST /api/run is "
+                        "disabled. Execute benchmarks with the runner "
+                        "service (docker compose run --rm runner "
+                        "run --benchmark <name>) or the agent-eval CLI."},
+              status=HTTPStatus.SERVICE_UNAVAILABLE)
+          return
+
+        # ---- authorized execution (serialized) ----------------------------
         with DashboardHandler._execute_lock:
-            bench = load_benchmark(bench_name)
-            cfg = RunConfig(benchmark=bench_name, skill=skill, limit=limit, out_dir=self.runs_dir)
-            runner = BenchmarkRunner(bench, cfg)
-            record = runner.run()
+          bench = load_benchmark(bench_name)
+          cfg = RunConfig(benchmark=bench_name, skill=skill, limit=limit, out_dir=self.runs_dir)
+          runner = BenchmarkRunner(bench, cfg)
+          record = runner.run()
 
         self._send_json({
             "run_id": record.run_id,
@@ -670,6 +762,9 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 for v in record.verdicts
             ],
         })
+      except InfraError as exc:
+        # unknown benchmark / bad registry config: a client error, not a 500
+        self._send_json({"error": str(exc)}, status=HTTPStatus.BAD_REQUEST)
       except Exception as exc:
         self._send_json({"error": str(exc)}, status=HTTPStatus.INTERNAL_SERVER_ERROR)
 
@@ -700,6 +795,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
       data = html.encode("utf-8")
       self.send_response(HTTPStatus.OK)
       self.send_header("Content-Type", "text/html; charset=utf-8")
+      self.send_header("X-Content-Type-Options", "nosniff")
       self.send_header("Content-Length", str(len(data)))
       self.end_headers()
       self.wfile.write(data)
@@ -708,7 +804,9 @@ class DashboardHandler(BaseHTTPRequestHandler):
       data = json.dumps(obj).encode("utf-8")
       self.send_response(status)
       self.send_header("Content-Type", "application/json")
-      self.send_header("Access-Control-Allow-Origin", "*")
+      # same-origin by default: the dashboard UI is served from this origin.
+      # No Access-Control-Allow-Origin: cross-origin readers are blocked by SOP.
+      self.send_header("X-Content-Type-Options", "nosniff")
       self.send_header("Content-Length", str(len(data)))
       self.end_headers()
       self.wfile.write(data)
