@@ -38,7 +38,7 @@ def percentile(values: list[float], pct: float) -> float:
     return s[lo] + (s[hi] - s[lo]) * (idx - lo)
 
 
-def _rate(num: int, den: int) -> float:
+def _rate(num: float, den: float) -> float:
     return round(num / den, 6) if den else 0.0
 
 

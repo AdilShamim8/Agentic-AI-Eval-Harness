@@ -217,14 +217,14 @@ def _understand_core(task: str, context: dict[str, Any] | None = None) -> TaskUn
     # --- multi-step (First ... Then ... Finally ...) ----------------------
     if re.search(r"\bFirst\b", t) and re.search(r"\bThen\b|\bFinally\b", t):
         parts = re.split(r"\b(?:First|Then|Finally|Next)\b", t)[1:]
-        actions: list[Action] = []
+        seq: list[Action] = []
         for part in parts:
             sub = _single_action(part.strip().rstrip("."))
             if sub:
-                actions.append(sub)
-        if actions:
-            u.actions = actions
-            u.compose = "all" if len(actions) > 1 else "last"
+                seq.append(sub)
+        if seq:
+            u.actions = seq
+            u.compose = "all" if len(seq) > 1 else "last"
             return u
 
     # --- single + follow-up store family ----------------------------------

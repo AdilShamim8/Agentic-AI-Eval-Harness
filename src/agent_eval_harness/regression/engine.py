@@ -154,7 +154,7 @@ def check_regression(
     cfg = _load_gate_config(gate_config_path)
     problems = _compatibility_problems(run, baseline)
     if problems:
-        findings = [
+        compat_findings = [
             RegressionFinding(
                 metric=f"compatibility:{kind}",
                 baseline=baseline.metrics.get("pass_rate", 0.0),
@@ -172,7 +172,10 @@ def check_regression(
             + ". Refusing to report a quality delta on incomparable evidence."
         )
         return GateDecision(
-            gate=f"regression:{baseline.name}", passed=False, findings=findings, summary=summary
+            gate=f"regression:{baseline.name}",
+            passed=False,
+            findings=compat_findings,
+            summary=summary,
         )
 
     defaults: dict[str, float] = cfg.get("default", {"pass_rate": -0.03})

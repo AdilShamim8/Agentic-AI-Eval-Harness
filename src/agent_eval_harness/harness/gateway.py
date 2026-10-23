@@ -42,7 +42,7 @@ def _repair_args(name: str, args: dict[str, Any]) -> dict[str, Any]:
             args["op"] = op
         if isinstance(args.get("values"), str):
             raw = args["values"].strip("[] ")
-            vals: list[float] = []
+            vals: list[Any] = []
             for piece in raw.split(","):
                 piece = piece.strip()
                 if not piece:
@@ -88,7 +88,7 @@ class ToolGateway:
         limits: ExecutionLimits,
         policy: PermissionPolicy,
         ablation: AblationProfile,
-        events: EventRecorder,
+        events: EventRecorder | None,
     ):
         self._case = case
         self._limits = limits
@@ -112,6 +112,11 @@ class ToolGateway:
     def case_id(self) -> str:
         return self._case.id
 
+    def _emit(self, kind: str, payload: dict[str, Any], phase: str = "", case_id: str = "") -> None:
+        """Emit through the run event recorder when one is attached."""
+        if self._events is not None:
+            self._events.emit(kind, payload, phase=phase, case_id=case_id)
+
     def remaining_tool_budget(self) -> int:
         return max(0, self._limits.max_tool_calls - self._calls)
 
@@ -130,15 +135,11 @@ class ToolGateway:
 
     # ------------------------------------------------------------------ call
     def call(self, name: str, args: dict[str, Any]) -> toolmod.ToolResult:
-        self._events.emit(
-            "tool_call", {"tool": name, "args": args}, phase="act", case_id=self._case.id
-        )
+        self._emit("tool_call", {"tool": name, "args": args}, phase="act", case_id=self._case.id)
         self._tokens_in += estimate_tokens(json.dumps(args, sort_keys=True, default=str))
 
         if self._calls >= self._limits.max_tool_calls:
-            self._events.emit(
-                "tool_limit", {"calls": self._calls}, phase="act", case_id=self._case.id
-            )
+            self._emit("tool_limit", {"calls": self._calls}, phase="act", case_id=self._case.id)
             return toolmod.ToolResult(ok=False, error="tool-call budget exhausted")
 
         denial = self._policy.check_tool(name)
@@ -147,7 +148,7 @@ class ToolGateway:
         if denial:
             self._denials += 1
             self.security_flags.append(f"denied_tool:{name}")
-            self._events.emit(
+            self._emit(
                 "security",
                 {"kind": "denied_tool", "tool": name, "detail": denial},
                 phase="act",
@@ -169,7 +170,7 @@ class ToolGateway:
         for key in args:
             if key in self._policy.forbidden_arg_keys:
                 self.security_flags.append(f"forbidden_arg:{name}.{key}")
-                self._events.emit(
+                self._emit(
                     "security",
                     {"kind": "forbidden_arg", "tool": name, "arg": key},
                     phase="act",
@@ -200,7 +201,7 @@ class ToolGateway:
             fault = self._match_fault(name)
             if fault is not None:
                 self.fault_injected = True
-                self._events.emit(
+                self._emit(
                     "fault_injected",
                     {"tool": name, "kind": fault.get("kind"), "attempt": attempt},
                     phase="act",
@@ -209,14 +210,14 @@ class ToolGateway:
                 if fault.get("kind") == "infra":
                     if self._ablation.retry and attempt <= self._limits.max_retries_per_call:
                         self._retried_calls += 1
-                        self._events.emit(
+                        self._emit(
                             "tool_retry",
                             {"tool": name, "attempt": attempt},
                             phase="act",
                             case_id=self._case.id,
                         )
                         continue  # fault occurrence consumed -> retry succeeds
-                    self._events.emit(
+                    self._emit(
                         "infra_fault_surfaced", {"tool": name}, phase="act", case_id=self._case.id
                     )
                     return toolmod.ToolResult(
@@ -263,7 +264,7 @@ class ToolGateway:
                 res = toolmod.ToolResult(ok=False, error="tool output exceeded size cap")
 
             self._tokens_out += estimate_tokens(blob)
-            self._events.emit(
+            self._emit(
                 "tool_result",
                 {
                     "tool": name,
@@ -281,7 +282,7 @@ class ToolGateway:
                 if flags:
                     for f in flags:
                         self.security_flags.append(f"injection_in_tool_output:{f}")
-                    self._events.emit(
+                    self._emit(
                         "security",
                         {"kind": "injection_flagged", "tool": name, "patterns": flags},
                         phase="observe",

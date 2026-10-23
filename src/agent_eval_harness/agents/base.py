@@ -57,6 +57,7 @@ class ToolGatewayProtocol(Protocol):
     def remaining_tool_budget(self) -> int: ...
     def case_id(self) -> str: ...
     def stats(self) -> dict[str, Any]: ...
+    def observation(self, name: str, res: ToolResult) -> dict[str, Any]: ...
 
 
 @dataclass
@@ -68,7 +69,7 @@ class RunContext:
     case: TestCase
     model: ModelBackend
     gateway: ToolGatewayProtocol
-    events: EventSink
+    events: EventSink | None
     limits: Any = None
     ablation: Any = None
 

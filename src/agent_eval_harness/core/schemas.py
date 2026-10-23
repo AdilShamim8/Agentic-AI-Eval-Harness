@@ -224,7 +224,10 @@ class RunMetrics:
     cost_estimate_usd: float = 0.0
     runtime_s: float = 0.0
 
-    def points(self) -> list[MetricPoint]: ...  # built by metrics module
+    def points(self) -> list[MetricPoint]:
+        raise NotImplementedError(
+            "RunMetrics is legacy scaffolding; metrics are built by metrics.aggregation"
+        )
 
 
 # ---------------------------------------------------------------------------

@@ -63,11 +63,11 @@ def _load_custom_agent(spec: str) -> AgentAdapter:
     attr = attr or "agent"
     try:
         mod_name = "aeh_custom_agent_" + path.replace("/", "_").replace(".", "_")
-        loader = importlib.util.spec_from_file_location(mod_name, path)
-        if loader is None or loader.loader is None:
+        module_spec = importlib.util.spec_from_file_location(mod_name, path)
+        if module_spec is None or module_spec.loader is None:
             raise InfraError(f"cannot load module from '{path}'")
-        module = importlib.util.module_from_spec(loader.loader and loader or None)
-        loader.loader.exec_module(module)
+        module = importlib.util.module_from_spec(module_spec)
+        module_spec.loader.exec_module(module)
     except FileNotFoundError as exc:
         raise InfraError(f"agent module not found: {path}") from exc
     except Exception as exc:  # noqa: BLE001 - surfaced as infra error with cause

@@ -31,7 +31,7 @@ class ToolSpec:
     name: str
     description: str
     params: dict[str, tuple[str, bool]]  # arg -> (type, required)
-    handler: Callable[[dict[str, Any]], Any] = field(repr=False, default=None)
+    handler: Callable[[dict[str, Any]], Any] = field(repr=False)
 
     def validate_args(self, args: dict[str, Any]) -> str:
         """Return error string ('' = valid). Type names: str,int,float,bool,list,any."""
@@ -77,7 +77,7 @@ def _err(msg: str) -> ToolResult:
 # calculator — AST-whitelisted arithmetic
 # ---------------------------------------------------------------------------
 
-_BIN_OPS = {
+_BIN_OPS: dict[type[ast.operator], "Callable[[float, float], float]"] = {
     ast.Add: operator.add,
     ast.Sub: operator.sub,
     ast.Mult: operator.mul,
@@ -86,7 +86,10 @@ _BIN_OPS = {
     ast.Mod: operator.mod,
     ast.Pow: operator.pow,
 }
-_UNARY_OPS = {ast.USub: operator.neg, ast.UAdd: operator.pos}
+_UNARY_OPS: dict[type[ast.unaryop], "Callable[[float], float]"] = {
+    ast.USub: operator.neg,
+    ast.UAdd: operator.pos,
+}
 
 
 def _calc_node(node: ast.AST) -> float:
@@ -277,7 +280,7 @@ def knowledge_search(args: dict[str, Any]) -> ToolResult:
     qterms = _terms(query)
     if not qterms:
         return _err("query has no searchable terms")
-    scored = []
+    scored: list[dict[str, Any]] = []
     for doc in CORPORA[corpus]:
         text = (doc["title"] + " " + doc["text"]).lower()
         hits = sum(1 for t in qterms if t in text)

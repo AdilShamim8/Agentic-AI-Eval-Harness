@@ -186,9 +186,10 @@ class BenchmarkRunner:
                 )
                 env = Environment(self.limits, self.policy, self.ablation, self.events)
                 gateway = env.prepare(case)
-                if hasattr(agent, "model") and hasattr(agent.model, "begin_case"):
-                    agent.model.begin_case(case.id, case_seed(self.config.seed, case.id))
-                ctx = env.run_context(case, agent.model, gateway)
+                model = getattr(agent, "model", None)
+                if model is not None and hasattr(model, "begin_case"):
+                    model.begin_case(case.id, case_seed(self.config.seed, case.id))
+                ctx = env.run_context(case, model, gateway)
 
                 t0 = time.perf_counter()
                 try:
@@ -230,9 +231,6 @@ class BenchmarkRunner:
                 # Trusted harness code: the network block is lifted for this
                 # phase ONLY, so a live judge can reach its authorized
                 # endpoint. Agent code stays blocked at every other point.
-                scores: dict[str, float] = {}
-                failed_evaluators: list[str] = []
-                evaluator_errors: list[str] = []
                 with guard.allowed():
                     scores: dict[str, float] = {}
                     failed_evaluators: list[str] = []
