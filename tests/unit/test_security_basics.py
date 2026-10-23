@@ -194,3 +194,84 @@ def test_guard_allows_existing_fd_wrap_for_accept():
         client.close()
         srv.shutdown()
         srv.server_close()
+
+
+# ---- PermissionPolicy.from_dict (benchmark permissions block) ----------------
+
+
+def test_permission_policy_from_dict_partial_block_keeps_secure_defaults():
+    """v0.2.1 defect: from_dict raised AttributeError for ANY permissions dict
+    (dataclass default_factory fields have no class attributes) — the feature
+    was unusable. Now a partial block works and keeps the secure defaults."""
+    from agent_eval_harness.harness.controls import (
+        _DEFAULT_FORBIDDEN_ARG_KEYS, PermissionPolicy)
+
+    p = PermissionPolicy.from_dict({"allowed_tools": ["calculator"]})
+    assert p.allowed_tools == {"calculator"}
+    assert p.forbidden_arg_keys == set(_DEFAULT_FORBIDDEN_ARG_KEYS), \
+        "default forbidden-arg set must never be silently dropped"
+    assert p.max_denials_before_violation == 3
+
+    p2 = PermissionPolicy.from_dict({
+        "denied_tools": ["sim_web_get"],
+        "forbidden_arg_keys": ["payload"],
+        "max_denials_before_violation": 5,
+    })
+    assert p2.denied_tools == {"sim_web_get"}
+    assert p2.forbidden_arg_keys == {"payload"}
+    assert p2.max_denials_before_violation == 5
+
+    # absent/None block: full secure default
+    p3 = PermissionPolicy.from_dict(None)
+    assert p3.forbidden_arg_keys == set(_DEFAULT_FORBIDDEN_ARG_KEYS)
+
+
+def test_benchmark_with_permissions_block_loads_and_runs(tmp_path):
+    """End-to-end: a benchmark YAML declaring execution.permissions used to
+    crash at BenchmarkRunner construction; now it loads, runs, and the
+    forbidden-arg policy is enforced at the gateway."""
+    import yaml
+    from agent_eval_harness.registry.registry import load_benchmark
+    from agent_eval_harness.runner.runner import BenchmarkRunner, RunConfig
+    from agent_eval_harness.agents import tools as toolmod
+    from agent_eval_harness.core.schemas import ToolCallRecord
+
+    registry = tmp_path / "benchmarks"
+    registry.mkdir()
+    (registry / "perm_probe.yaml").write_text(yaml.safe_dump({
+        "benchmark": {"name": "perm_probe", "version": "1.0", "pattern": "react"},
+        "dataset": {"path": "datasets/react/golden.jsonl"},
+        "evaluators": ["task_checks"],
+        "thresholds": {"overall_pass_rate": 0.5},
+        "execution": {
+            "limit": 2,
+            "permissions": {
+                "allowed_tools": ["calculator", "knowledge_search"],
+                "denied_tools": ["sim_web_get"],
+            },
+        },
+    }), encoding="utf-8")
+
+    bm = load_benchmark("perm_probe", registry_dirs=[str(registry), "benchmarks"])
+    runner = BenchmarkRunner(bm, RunConfig(benchmark="perm_probe",
+                                           out_dir=str(tmp_path / "runs")))
+    rec = runner.run()  # used to raise AttributeError here
+    assert rec.metrics["cases"] == 2
+
+    # gateway enforcement of the policy built from_dict
+    from agent_eval_harness.harness.controls import ExecutionLimits
+    from agent_eval_harness.harness.gateway import ToolGateway
+    from agent_eval_harness.core.schemas import TestCase
+    from agent_eval_harness.observability.events import EventRecorder
+
+    case = TestCase(id="pc1", pattern="react", category="normal", task="t",
+                    expected={"answer": {"type": "numeric", "value": 1}})
+    gw = ToolGateway(case, ExecutionLimits(), runner.policy, runner.ablation,
+                     EventRecorder("t"))
+    res = gw.call("calculator", {"expression": "1+1", "cmd": "rm -rf /"})
+    assert not res.ok
+    assert "forbidden by policy" in res.error
+    res2 = gw.call("sim_web_get", {"url": "x"})
+    assert not res2.ok and "denied by benchmark policy" in res2.error
+    res3 = gw.call("calculator", {"expression": "2*2"})
+    assert res3.ok and res3.value == {"value": 4}

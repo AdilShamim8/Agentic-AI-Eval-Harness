@@ -28,25 +28,42 @@ class ExecutionLimits:
         return cls(**{k: v for k, v in d.items() if k in valid})
 
 
+_DEFAULT_FORBIDDEN_ARG_KEYS = frozenset({
+    "cmd", "command", "shell", "eval", "exec", "subprocess", "os", "code",
+})
+
+
 @dataclass
 class PermissionPolicy:
     allowed_tools: set[str] | None = None  # None = every registry tool
     denied_tools: set[str] = field(default_factory=set)
-    forbidden_arg_keys: set[str] = field(default_factory=lambda: {
-        "cmd", "command", "shell", "eval", "exec", "subprocess", "os", "code",
-    })
+    forbidden_arg_keys: set[str] = field(
+        default_factory=lambda: set(_DEFAULT_FORBIDDEN_ARG_KEYS))
     max_denials_before_violation: int = 3
 
     @classmethod
     def from_dict(cls, d: dict | None) -> "PermissionPolicy":
+        """Build a policy from a benchmark's `execution.permissions` block.
+
+        Recognized keys: allowed_tools, denied_tools, forbidden_arg_keys,
+        max_denials_before_violation. Keys that are absent keep their secure
+        defaults — in particular the default forbidden-arg set
+        (cmd/command/shell/eval/exec/subprocess/os/code) is NEVER silently
+        dropped when the block omits it.
+        """
         if not d:
             return cls()
         allowed = d.get("allowed_tools")
+        forbidden = d.get("forbidden_arg_keys")
+        if forbidden is None:
+            forbidden = set(_DEFAULT_FORBIDDEN_ARG_KEYS)
+        max_denials = d.get("max_denials_before_violation")
         return cls(
             allowed_tools=set(allowed) if allowed is not None else None,
             denied_tools=set(d.get("denied_tools", [])),
-            forbidden_arg_keys=set(d.get("forbidden_arg_keys", cls.forbidden_arg_keys
-                                         if isinstance(cls.forbidden_arg_keys, set) else set())),
+            forbidden_arg_keys=set(forbidden),
+            max_denials_before_violation=(
+                int(max_denials) if max_denials is not None else 3),
         )
 
     def check_tool(self, name: str) -> str:
