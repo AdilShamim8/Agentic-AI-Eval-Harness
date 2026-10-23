@@ -110,3 +110,87 @@ def test_event_recorder_export_creates_parent_dir(tmp_path):
     assert res["redactions"] >= 1
     assert "\\" not in res["path"]
 
+
+
+# ---- sandbox scoping: blocked for agents, allowed window for trusted code ----
+
+
+def test_guard_allowed_window_lifts_block_temporarily():
+    """The guard.allowed() window (evaluator phase) allows socket creation;
+    outside the window new sockets are still blocked."""
+    with network_sandbox() as guard:
+        with pytest.raises(SecurityViolation):
+            socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        with guard.allowed():
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # allowed
+            s.close()
+        with pytest.raises(SecurityViolation):
+            socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # fully restored after exit
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.close()
+
+
+def test_guard_records_attempts_but_not_allowed_traffic():
+    with network_sandbox() as guard:
+        try:
+            socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        except SecurityViolation:
+            pass
+        with guard.allowed():
+            socket.socket(socket.AF_INET, socket.SOCK_STREAM).close()
+    assert len(guard.attempts) == 1  # only the blocked one is recorded
+
+
+def test_guard_allows_existing_fd_wrap_for_accept():
+    """http.server accept() wraps an EXISTING fd via socket.socket(fileno=...):
+    wrapping is not creating a connection and must keep working while the
+    guard is active (the dashboard server must not die during a run).
+
+    The client connection is established BEFORE the guard activates (external
+    clients are outside the process); the accept + handle happens while the
+    guard is active in the main thread.
+    """
+    import http.server
+    import threading
+    import urllib.request
+
+    class _Quiet(http.server.BaseHTTPRequestHandler):
+        def do_GET(self):
+            self.send_response(200)
+            self.send_header("Content-Length", "2")
+            self.end_headers()
+            self.wfile.write(b"ok")
+
+        def log_message(self, *a):
+            pass
+
+    srv = http.server.ThreadingHTTPServer(("127.0.0.1", 0), _Quiet)
+    import threading
+    t = threading.Thread(target=srv.serve_forever, daemon=True)
+    t.start()
+    addr = srv.server_address
+    # 1. pre-establish the client connection (outside the guard, like a
+    #    browser connecting to the dashboard before a run starts)
+    client = socket.create_connection(addr, timeout=5)
+    try:
+        with network_sandbox():
+            # 2. while the guard is active: direct new-socket creation blocked
+            with pytest.raises(SecurityViolation):
+                socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            # 3. ...but the pre-established connection is accepted by the
+            #    server thread via the fileno wrap and served normally
+            client.sendall(b"GET / HTTP/1.0\r\nHost: t\r\n\r\n")
+            client.settimeout(5)
+            data = b""
+            while b"ok" not in data:
+                chunk = client.recv(4096)
+                if not chunk:
+                    break
+                data += chunk
+            assert b"HTTP/1.0 200 OK" in data
+            assert b"ok" in data
+    finally:
+        client.close()
+        srv.shutdown()
+        srv.server_close()

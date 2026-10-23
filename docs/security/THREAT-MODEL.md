@@ -13,7 +13,8 @@ the host running the evaluation.
 ```
 
 Boundaries: (B1) benchmark/agent inputs are UNTRUSTED content; (B2) the live
-judge endpoint is an external service; (B3) arbitrary agent code executes
+judge endpoint is an external service the OPERATOR configures (trusted
+egress, see network guard below); (B3) arbitrary agent code executes
 in-process with test privileges — outside the v0.1 sandbox (documented).
 
 ## 2. STRIDE analysis
@@ -27,6 +28,7 @@ in-process with test privileges — outside the v0.1 sandbox (documented).
 | Info disclosure | secrets leaked via traces/events | redaction at export boundary (sk-/ghp_/AKIA/bearer/assignments); audit count; `scan_secrets.py --strict` in CI | redaction is pattern-based — exotic formats can evade |
 | DoS | infinite agent loops, huge outputs | step/tool/time/output/state caps; loop detection; per-case budgets; post-hoc per-call timeout check | timeouts are cooperative (no preemption) — bounded, not instant |
 | Elevation | agent calls dangerous tools | tool registry is offline-only; allow/deny lists; forbidden-arg keys; network guard blocks sockets; no subprocess imports (statically tested); multi-stage Docker container runs as non-root `aeh` (UID 10001) | in-process agent code (B3): isolation enforced in container runtime |
+| Egress | agent opens network connections during a run | network guard blocks NEW socket creation for the whole run; the block is lifted ONLY inside `guard.allowed()` windows — trusted harness code (the live judge's authorized HTTP evaluation in the evaluator phase); `socket.socket(fileno=...)` wraps of EXISTING fds (http.server accept) are allowed so servers keep working; creating a connection is always blocked for agent code | in-process code can bypass any Python-level guard via ctypes/os tricks — best-effort control, OS/container isolation is the real boundary |
 | Exposure | unauthorized access to Web UI / REST API | `agent-eval serve` binds exclusively to `127.0.0.1` (localhost loopback) by default; endpoint parameters strictly parsed; read-only default views | remote exposure requires explicit operator port binding (`0.0.0.0`) |
 
 ## 3. Prompt-injection handling

@@ -195,36 +195,43 @@ class BenchmarkRunner:
                     phase="case", case_id=case.id)
 
                 # ---- isolated evaluation ------------------------------------
+                # Trusted harness code: the network block is lifted for this
+                # phase ONLY, so a live judge can reach its authorized
+                # endpoint. Agent code stays blocked at every other point.
                 scores: dict[str, float] = {}
                 failed_evaluators: list[str] = []
                 evaluator_errors: list[str] = []
-                for ev in self.evaluators:
-                    self.events.emit("evaluator_start",
-                                     {"evaluator": ev.name, "case_id": case.id},
-                                     phase="evaluate", case_id=case.id)
-                    try:
-                        res = ev.evaluate(case, outcome)
-                        scores[ev.name] = round(res.score, 4)
-                        if not res.passed:
-                            failed_evaluators.append(ev.name)
-                        fb = (res.meta or {}).get("fallback")
-                        if fb:
-                            # a live judge degraded to the deterministic rubric:
-                            # visible at run level (metrics.judge_fallbacks) and
-                            # per case (judge_fallback event) — never silent.
-                            judge_fallbacks[ev.name] = judge_fallbacks.get(ev.name, 0) + 1
-                            self.events.emit("judge_fallback",
-                                             {"evaluator": ev.name,
-                                              "note": str(fb)[:200]},
-                                             phase="evaluate", case_id=case.id)
-                    except Exception as exc:  # noqa: BLE001 - never crash run
-                        evaluator_errors.append(ev.name)
-                        self.events.emit("evaluator_error",
-                                         {"evaluator": ev.name, "error": str(exc)[:300]},
+                with guard.allowed():
+                    scores: dict[str, float] = {}
+                    failed_evaluators: list[str] = []
+                    evaluator_errors: list[str] = []
+                    for ev in self.evaluators:
+                        self.events.emit("evaluator_start",
+                                         {"evaluator": ev.name, "case_id": case.id},
                                          phase="evaluate", case_id=case.id)
-                    self.events.emit("evaluator_end",
-                                     {"evaluator": ev.name, "case_id": case.id},
-                                     phase="evaluate", case_id=case.id)
+                        try:
+                            res = ev.evaluate(case, outcome)
+                            scores[ev.name] = round(res.score, 4)
+                            if not res.passed:
+                                failed_evaluators.append(ev.name)
+                            fb = (res.meta or {}).get("fallback")
+                            if fb:
+                                # a live judge degraded to the deterministic rubric:
+                                # visible at run level (metrics.judge_fallbacks) and
+                                # per case (judge_fallback event) — never silent.
+                                judge_fallbacks[ev.name] = judge_fallbacks.get(ev.name, 0) + 1
+                                self.events.emit("judge_fallback",
+                                                 {"evaluator": ev.name,
+                                                  "note": str(fb)[:200]},
+                                                 phase="evaluate", case_id=case.id)
+                        except Exception as exc:  # noqa: BLE001 - never crash run
+                            evaluator_errors.append(ev.name)
+                            self.events.emit("evaluator_error",
+                                             {"evaluator": ev.name, "error": str(exc)[:300]},
+                                             phase="evaluate", case_id=case.id)
+                        self.events.emit("evaluator_end",
+                                         {"evaluator": ev.name, "case_id": case.id},
+                                         phase="evaluate", case_id=case.id)
 
                 # ---- verdict + failure classification ------------------------
                 if evaluator_errors:

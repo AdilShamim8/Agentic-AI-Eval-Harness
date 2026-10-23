@@ -123,3 +123,78 @@ def test_live_judge_fallbacks_are_counted_and_visible(tmp_path, monkeypatch):
     # the persisted record keeps the counts
     data = json.load(open(f"{tmp_path}/runs/{rec.run_id}.json"))
     assert data["metrics"]["judge_fallbacks"]["llm_answer_correctness"] == 3
+
+
+def test_live_judge_reaches_local_endpoint_during_sandboxed_run(
+        tmp_path, monkeypatch):
+    """Issue D regression: a live judge must be able to perform its AUTHORIZED
+    HTTP evaluation while the benchmark run's network sandbox is active.
+
+    Uses a controlled local HTTP double (no external service, no cost):
+    the double records every request it serves — proof that judge traffic
+    flowed during the run while arbitrary agent socket creation stays blocked.
+    """
+    import http.server
+    import json as _json
+    import threading
+    import urllib.error
+
+    served = []  # (path, body) of every judge request served during the run
+
+    class _JudgeDouble(http.server.BaseHTTPRequestHandler):
+        def do_POST(self):
+            length = int(self.headers.get("Content-Length", 0) or 0)
+            body = self.rfile.read(length)
+            served.append((self.path, body))
+            payload = _json.dumps({"choices": [{"message": {"content": _json.dumps(
+                {"score": 0.95, "passed": True, "rationale": "live double",
+                 "confidence": 0.9})}}]}).encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(payload)))
+            self.end_headers()
+            self.wfile.write(payload)
+
+        def log_message(self, *a):
+            pass
+
+    srv = http.server.ThreadingHTTPServer(("127.0.0.1", 0), _JudgeDouble)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    try:
+        import yaml
+        registry = tmp_path / "benchmarks"
+        registry.mkdir(exist_ok=True)
+        (registry / "live_probe2.yaml").write_text(yaml.safe_dump({
+            "benchmark": {"name": "live_probe2", "version": "1.0", "pattern": "react"},
+            "dataset": {"path": "datasets/react/golden.jsonl"},
+            "evaluators": ["llm_answer_correctness"],
+            "thresholds": {"overall_pass_rate": 0.5},
+            "execution": {"limit": 3},
+        }), encoding="utf-8")
+
+        monkeypatch.setenv("AEH_JUDGE_BACKEND", "live")
+        monkeypatch.setenv("OPENAI_API_KEY", "test-key-not-real")
+        monkeypatch.setenv("OPENAI_BASE_URL",
+                            f"http://127.0.0.1:{srv.server_address[1]}/v1")
+        monkeypatch.setenv("AEH_PROMPTS_DIR", "prompts")
+
+        bm = load_benchmark("live_probe2", registry_dirs=[str(registry), "benchmarks"])
+        runner = BenchmarkRunner(bm, RunConfig(benchmark="live_probe2",
+                                               out_dir=str(tmp_path / "runs")))
+        rec = runner.run()
+
+        # the judge served every case over HTTP DURING the sandboxed run
+        assert len(served) == 3
+        assert all(p == "/v1/chat/completions" for p, _ in served)
+        # no fallback occurred (all live responses valid)
+        assert "judge_fallbacks" not in rec.metrics
+        # live scores came from the double (0.95), not the rubric
+        assert all(v.scores["llm_answer_correctness"] == 0.95
+                   for v in rec.verdicts)
+        # and agent-side network creation was blocked the whole time — the
+        # guard stayed installed for the run (no attempts by the built-in
+        # agent, which is offline by construction)
+        assert rec.metrics["network_guard_attempts"] == []
+    finally:
+        srv.shutdown()
+        srv.server_close()
