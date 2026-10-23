@@ -50,6 +50,7 @@ Or with the pytest bridge in your own suite:
 # conftest.py
 pytest_plugins = ["agent_eval_harness.pytest_plugin"]
 
+
 def test_react(eval_case):
     assert eval_case("react_basic", limit=8, gate=True) >= 0.7
 ```

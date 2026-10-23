@@ -56,6 +56,7 @@ Or in your own test suite:
 # conftest.py
 pytest_plugins = ["agent_eval_harness.pytest_plugin"]
 
+
 def test_react(eval_case):
     assert eval_case("react_basic", limit=8, gate=True) >= 0.7
 ```
@@ -67,10 +68,14 @@ def test_react(eval_case):
 from agent_eval_harness.agents.base import BasePatternAgent, RunContext
 from agent_eval_harness.core.schemas import AgentRunOutcome
 
+
 class MyAgent(BasePatternAgent):
     pattern = "react"
-    def run(self, ctx: RunContext) -> AgentRunOutcome:
-        ...  # use ctx.gateway.call(tool, args) for every tool interaction
+
+    def run(
+        self, ctx: RunContext
+    ) -> AgentRunOutcome: ...  # use ctx.gateway.call(tool, args) for every tool interaction
+
 
 agent = MyAgent("my_agent", my_model_backend)
 ```
