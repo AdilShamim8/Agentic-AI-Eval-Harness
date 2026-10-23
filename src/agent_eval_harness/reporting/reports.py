@@ -133,6 +133,14 @@ def build_markdown(
                      f"{_fmt_pct(slot['pass_rate'])} | {slot['n']} | "
                      f"{slot.get('errors', 0)} |")
     lines.append("")
+    judge_fallbacks = m.get("judge_fallbacks") or {}
+    if judge_fallbacks:
+        lines.append("Judge backend fallbacks (live judge degraded to the "
+                     "deterministic rubric; never silent):")
+        lines.append("")
+        for ev, count in sorted(judge_fallbacks.items()):
+            lines.append(f"- `{ev}`: {count} case(s) judged by fallback")
+        lines.append("")
 
     lines.append("## Per-pattern / per-category")
     lines.append("")

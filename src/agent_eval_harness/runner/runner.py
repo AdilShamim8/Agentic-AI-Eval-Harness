@@ -150,6 +150,7 @@ class BenchmarkRunner:
         verdicts: list[CaseVerdict] = []
         outcome_rows: list[dict] = []
         tokens_in = tokens_out = 0
+        judge_fallbacks: dict[str, int] = {}
 
         with network_sandbox() as guard:
             for case in self.cases:
@@ -206,6 +207,16 @@ class BenchmarkRunner:
                         scores[ev.name] = round(res.score, 4)
                         if not res.passed:
                             failed_evaluators.append(ev.name)
+                        fb = (res.meta or {}).get("fallback")
+                        if fb:
+                            # a live judge degraded to the deterministic rubric:
+                            # visible at run level (metrics.judge_fallbacks) and
+                            # per case (judge_fallback event) — never silent.
+                            judge_fallbacks[ev.name] = judge_fallbacks.get(ev.name, 0) + 1
+                            self.events.emit("judge_fallback",
+                                             {"evaluator": ev.name,
+                                              "note": str(fb)[:200]},
+                                             phase="evaluate", case_id=case.id)
                     except Exception as exc:  # noqa: BLE001 - never crash run
                         evaluator_errors.append(ev.name)
                         self.events.emit("evaluator_error",
@@ -265,6 +276,8 @@ class BenchmarkRunner:
             outcome_rows, runtime_s, tokens_in, tokens_out)
         metrics["threshold_gates"] = self._threshold_gates(metrics)
         metrics["network_guard_attempts"] = list(guard.attempts)
+        if judge_fallbacks:
+            metrics["judge_fallbacks"] = judge_fallbacks
 
         record = RunRecord(
             run_id=rid,

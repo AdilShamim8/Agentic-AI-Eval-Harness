@@ -6,10 +6,21 @@ Backends:
   this release (calibration vs hand labels, Cohen's kappa).
 - `live`: any OpenAI-compatible endpoint via stdlib urllib
   (OPENAI_API_KEY / OPENAI_BASE_URL / JUDGE_MODEL env). Structured JSON
-  output, versioned prompts, judge metadata recorded. On request failure it
-  falls back to the rubric backend and records the failure in metadata —
-  judged cases never silently vanish. Live-backend reliability: Not measured
-  yet (no endpoint available in the build environment).
+  output, versioned prompts, judge metadata recorded.
+
+Live-backend fallback policy (explicit, recorded, deterministic):
+- No API key, transport failure, timeout, rate limit, non-JSON body, or any
+  response-contract violation (score outside [0,1], non-boolean passed,
+  score/pass contradiction, missing rationale, non-numeric confidence)
+  degrades THAT evaluation to the deterministic rubric backend.
+- Every fallback is recorded in the result metadata (meta.fallback) and
+  counted at run level (metrics.judge_fallbacks) + per-case events
+  (judge_fallback) — a blocking live-judge gate can never silently become a
+  different evaluator without the change being visible in the record.
+- Fallback is the explicitly authorized deterministic path; it is NOT an
+  evaluator error (the rubric result stands as evidence, labeled as such).
+Live-backend reliability: Not measured yet (no endpoint available in the
+  build environment).
 
 Selection: env AEH_JUDGE_BACKEND=live|rubric, or constructor argument.
 """
@@ -24,6 +35,7 @@ import urllib.error
 import urllib.request
 from typing import Any
 
+from agent_eval_harness.core.errors import SecurityViolation
 from agent_eval_harness.core.schemas import AgentRunOutcome, EvaluationResult, TestCase
 from agent_eval_harness.evaluators.base import _result
 
@@ -244,6 +256,72 @@ def _prompt_path(criterion: str) -> str:
     return p
 
 
+class _InvalidLiveResponse(Exception):
+    """Live-judge response violates the response contract. The caller falls
+    back to the deterministic rubric backend and records the reason — a
+    malformed judge verdict must never be silently accepted as evidence."""
+
+
+def _validated_live_payload(parsed: object) -> dict:
+    """Validate a parsed live-judge response against the response contract:
+
+    - a JSON object
+    - score: numeric (not bool), within [0, 1]
+    - passed: boolean, or the strings 'true'/'false'; when present it must
+      agree with score >= 0.7 (threshold) — contradictory score/pass fields are
+      rejected, not honored
+    - rationale: required string (auditability — every judged result must
+      carry the judge's reason)
+    - confidence: optional numeric in [0, 1]
+    - items: optional list
+
+    Raises _InvalidLiveResponse with a human-readable reason on any violation.
+    """
+    if not isinstance(parsed, dict):
+        raise _InvalidLiveResponse("response is not a JSON object")
+    raw_score = parsed.get("score")
+    if isinstance(raw_score, bool) or not isinstance(raw_score, (int, float)):
+        raise _InvalidLiveResponse(
+            f"score {raw_score!r} is missing or not numeric")
+    score = float(raw_score)
+    if not 0.0 <= score <= 1.0:
+        # no silent clamping: a judge claiming 5.0 is out of contract
+        raise _InvalidLiveResponse(f"score {score} outside [0, 1]")
+
+    if "passed" in parsed and parsed["passed"] is not None:
+        raw_passed = parsed["passed"]
+        if isinstance(raw_passed, bool):
+            passed = raw_passed
+        elif isinstance(raw_passed, str) and raw_passed.strip().lower() in ("true", "false"):
+            passed = raw_passed.strip().lower() == "true"
+        else:
+            raise _InvalidLiveResponse(
+                f"passed {raw_passed!r} is not a boolean or 'true'/'false'")
+        if passed != (score >= 0.7):
+            raise _InvalidLiveResponse(
+                f"passed={passed} contradicts score={score} (threshold 0.7)")
+    else:
+        passed = score >= 0.7
+
+    rationale = parsed.get("rationale")
+    if not isinstance(rationale, str):
+        raise _InvalidLiveResponse("rationale is missing or not a string")
+
+    confidence = parsed.get("confidence")
+    if confidence is not None:
+        if isinstance(confidence, bool) or not isinstance(confidence, (int, float)):
+            raise _InvalidLiveResponse(f"confidence {confidence!r} is not numeric")
+        if not 0.0 <= float(confidence) <= 1.0:
+            raise _InvalidLiveResponse(f"confidence {confidence} outside [0, 1]")
+
+    items = parsed.get("items")
+    if items is not None and not isinstance(items, list):
+        raise _InvalidLiveResponse("items is not a list")
+
+    return {"score": score, "passed": passed, "rationale": rationale,
+            "confidence": confidence, "items": items}
+
+
 class LiveJudge(RubricJudge):
     """Calls an OpenAI-compatible endpoint with the versioned judge prompt;
     falls back to the deterministic rubric on any failure (recorded)."""
@@ -284,23 +362,25 @@ class LiveJudge(RubricJudge):
                 content = re.sub(r"^```(?:json)?\s*", "", content)
                 content = re.sub(r"\s*```$", "", content)
             parsed = json.loads(content)
+            payload = _validated_live_payload(parsed)
             latency = round((time.perf_counter() - t0) * 1000, 1)
-            score = max(0.0, min(1.0, float(parsed.get("score", 0))))
-            passed = bool(parsed.get("passed", score >= 0.7))
             return _result(
-                case, self.name, self.version, score, passed,
-                {"rationale": str(parsed.get("rationale", ""))[:500],
-                 "items": parsed.get("items", [])},
+                case, self.name, self.version, payload["score"], payload["passed"],
+                {"rationale": payload["rationale"][:500],
+                 "items": payload["items"] or []},
                 {"backend": "openai-compatible-live",
                  "model": self.model,
                  "prompt_version": os.path.basename(
                      PROMPT_FILES.get(self.criterion, "?")),
                  "prompt_sha": self._prompt_sha(),
                  "latency_ms": latency,
-                 "confidence": parsed.get("confidence"),
+                 "confidence": payload["confidence"],
                  "fallback": None})
+        except _InvalidLiveResponse as exc:
+            return self._with_fallback_note(
+                rubric, f"invalid live response: {exc}")
         except (urllib.error.URLError, TimeoutError, ValueError, KeyError,
-                OSError) as exc:
+                OSError, SecurityViolation) as exc:
             return self._with_fallback_note(rubric, f"live judge failed: {exc}")
 
     # -- helpers ---------------------------------------------------------------
