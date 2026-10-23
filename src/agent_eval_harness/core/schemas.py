@@ -274,7 +274,7 @@ class RegressionFinding:
     delta: float
     threshold: float
     scope: str = ""  # e.g. "overall" or "per_evaluator:task_completion"
-    verdict: str = "ok"  # ok|regression|improvement|insufficient_data
+    verdict: str = "ok"  # ok|regression|improvement|insufficient_data|incompatible_*
 
 
 @dataclass

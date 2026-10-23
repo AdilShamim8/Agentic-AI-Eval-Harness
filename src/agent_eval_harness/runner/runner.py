@@ -358,9 +358,15 @@ def save_baseline(record: RunRecord, name: str, notes: str = "",
     """Persist a run record as a named baseline for regression checking."""
     os.makedirs(out_dir, exist_ok=True)
     clean_name = name[:-5] if name.endswith(".json") else name
+    metrics = dict(record.metrics)
+    # carry the experiment's case-selection identity so future gates can
+    # verify selection compatibility exactly (legacy baselines only had counts)
+    sel = (record.config or {}).get("case_selection")
+    if sel:
+        metrics.setdefault("case_selection", sel)
     base = BaselineRecord(
         name=clean_name, run_id=record.run_id, benchmark=record.benchmark,
-        created_at=record.recorded_at, metrics=dict(record.metrics),
+        created_at=record.recorded_at, metrics=metrics,
         versions=dict(record.versions), notes=notes)
     path = os.path.join(out_dir, f"{clean_name}.json")
     with open(path, "w", encoding="utf-8") as fh:

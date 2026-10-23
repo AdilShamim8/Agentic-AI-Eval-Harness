@@ -48,13 +48,86 @@ def load_baseline(name: str, baselines_dir: str = "evals/baselines") -> Baseline
                           notes=d.get("notes", ""))
 
 
+def _compatibility_problems(run: RunRecord,
+                            baseline: BaselineRecord) -> list[tuple[str, str]]:
+    """Identity checks a regression comparison must pass before any numbers
+    are trusted. Returns a list of (kind, human description) problems; an
+    empty list means the samples are comparable. Checks that cannot be
+    verified (fields absent on legacy records) are skipped rather than
+    guessed — but every check that CAN be verified is enforced."""
+    problems: list[tuple[str, str]] = []
+
+    # 1. benchmark identity — hard requirement whenever the baseline declares one
+    if baseline.benchmark and run.benchmark != baseline.benchmark:
+        problems.append(("benchmark",
+                          f"run is '{run.benchmark}' but baseline '{baseline.name}' "
+                          f"measured '{baseline.benchmark}'"))
+
+    # 2. dataset identity — same golden data, by revision (sha) when recorded
+    ds_run = (run.versions or {}).get("dataset", {}).get("revision")
+    ds_base = (baseline.versions or {}).get("dataset", {}).get("revision")
+    if ds_run and ds_base and ds_run != ds_base:
+        problems.append(("dataset",
+                          f"dataset revision differs: run {ds_run} vs baseline {ds_base}"))
+
+    # 3. case selection — the gate compares identical case subsets.
+    #    Exact digest when both sides record it; fall back to case counts for
+    #    legacy baselines (equal count is necessary, not sufficient).
+    sel_run = (run.config or {}).get("case_selection")
+    sel_base = (baseline.metrics or {}).get("case_selection")
+    n_run = (run.metrics or {}).get("cases")
+    n_base = (baseline.metrics or {}).get("cases")
+    if sel_run and sel_base:
+        if sel_run != sel_base:
+            problems.append(("selection",
+                              f"case selection differs: run {sel_run} "
+                              f"vs baseline {sel_base}"))
+    elif n_run is not None and n_base is not None and n_run != n_base:
+        problems.append(("selection",
+                          f"case count differs: run has {n_run} cases, "
+                          f"baseline measured {n_base} (different subsets are "
+                          "not comparable evidence)"))
+
+    # 4. evaluator set — comparing different metrics is meaningless.
+    ev_run = (run.versions or {}).get("evaluator", {}).get("revision")
+    ev_base = (baseline.versions or {}).get("evaluator", {}).get("revision")
+    if ev_run and ev_base:
+        if sorted(ev_run.split(",")) != sorted(ev_base.split(",")):
+            problems.append(("evaluators",
+                              f"evaluator set differs: run [{ev_run}] vs "
+                              f"baseline [{ev_base}]"))
+    return problems
+
 def check_regression(
     run: RunRecord,
     baseline: BaselineRecord,
     gate_config_path: str | None = None,
 ) -> GateDecision:
-    """Compare a run against a baseline using configured thresholds."""
+    """Compare a run against a baseline using configured thresholds.
+
+    The comparison is only meaningful when the two samples are compatible:
+    same benchmark, same dataset, same case selection, same evaluator set.
+    Incompatible comparisons (e.g. gating a failure_recovery run against a
+    react_basic baseline) used to be accepted silently and produced a
+    seemingly valid quality delta — the gate now rejects them explicitly
+    and fails closed.
+    """
     cfg = _load_gate_config(gate_config_path)
+    problems = _compatibility_problems(run, baseline)
+    if problems:
+        findings = [
+            RegressionFinding(
+                metric=f"compatibility:{kind}", baseline=baseline.metrics.get("pass_rate", 0.0),
+                new=run.pass_rate, delta=round(run.pass_rate - baseline.metrics.get("pass_rate", 0.0), 4),
+                threshold=0.0, scope="compatibility", verdict=f"incompatible_{kind}")
+            for kind, _desc in problems
+        ]
+        summary = ("GATE INCOMPATIBLE: run and baseline are not comparable — "
+                   + "; ".join(desc for _k, desc in problems)
+                   + ". Refusing to report a quality delta on incomparable evidence.")
+        return GateDecision(gate=f"regression:{baseline.name}", passed=False,
+                            findings=findings, summary=summary)
+
     defaults: dict[str, float] = cfg.get("default", {"pass_rate": -0.03})
     per_bench = cfg.get("benchmarks", {}).get(run.benchmark, {})
 

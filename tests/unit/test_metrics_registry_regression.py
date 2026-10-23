@@ -255,3 +255,133 @@ def test_export_calibration_sample_flat_path(tmp_path):
             os.remove(flat_path)
 
 
+
+
+# ---- regression gate compatibility (Issue H) ---------------------------------
+
+
+def _compat_record(rate, n=56, benchmark="react_basic", selection=None,
+                   ds_rev="6b2d6a9a48bc7c96", evaluators="task_checks,tool_selection,trajectory,termination,tool_efficiency,loop_detection"):
+    """A run record with the identity fields real runner records carry."""
+    from agent_eval_harness.core.schemas import CaseVerdict
+
+    verdicts = []
+    for i in range(n):
+        passed = i < int(rate * n)
+        verdicts.append(CaseVerdict(
+            case_id=f"c{i}", pattern="react", category="normal", passed=passed,
+            scores={}, failed_evaluators=[] if passed else ["task_checks"]))
+    cfg = {}
+    if selection:
+        cfg["case_selection"] = selection
+    return RunRecord(
+        run_id="r-compat", benchmark=benchmark, benchmark_version="1.0",
+        agent="builtin:react", agent_pattern="react", seed=1, ablation="full",
+        versions={"dataset": {"revision": ds_rev},
+                  "evaluator": {"revision": evaluators}},
+        config=cfg, verdicts=verdicts,
+        metrics={"cases": n, "passed": int(rate * n), "pass_rate": rate,
+                 "per_evaluator": {}})
+
+
+def _compat_baseline(rate, benchmark="react_basic", n=56, selection=None,
+                     ds_rev="6b2d6a9a48bc7c96",
+                     evaluators="task_checks,tool_selection,trajectory,termination,tool_efficiency,loop_detection"):
+    metrics = {"pass_rate": rate, "per_evaluator": {}, "cases": n}
+    if selection:
+        metrics["case_selection"] = selection
+    return BaselineRecord(
+        name="b", run_id="r0", benchmark=benchmark, created_at="t",
+        metrics=metrics,
+        versions={"dataset": {"revision": ds_rev}, "evaluator": {"revision": evaluators}})
+
+
+def test_regression_rejects_cross_benchmark():
+    from agent_eval_harness.regression.engine import check_regression
+
+    gate = check_regression(_compat_record(0.75, benchmark="failure_recovery"),
+                            _compat_baseline(0.89))
+    assert not gate.passed
+    assert gate.exit_code == 1
+    assert any(f.verdict == "incompatible_benchmark" for f in gate.findings)
+    assert "GATE INCOMPATIBLE" in gate.summary
+    # must NOT present numeric deltas as if they were meaningful evidence
+    assert not any(f.verdict in ("ok", "regression", "improvement")
+                   for f in gate.findings)
+
+
+def test_regression_rejects_case_count_mismatch():
+    from agent_eval_harness.regression.engine import check_regression
+
+    # a --limit 8 smoke run gated against a 56-case full baseline
+    gate = check_regression(_compat_record(0.9, n=8), _compat_baseline(0.89, n=56))
+    assert not gate.passed
+    assert any(f.verdict == "incompatible_selection" for f in gate.findings)
+
+
+def test_regression_rejects_selection_digest_mismatch():
+    from agent_eval_harness.regression.engine import check_regression
+
+    gate = check_regression(
+        _compat_record(0.9, selection="n=56;sha=aaaaaaaaaaaa"),
+        _compat_baseline(0.89, selection="n=56;sha=bbbbbbbbbbbb"))
+    assert not gate.passed
+    assert any(f.verdict == "incompatible_selection" for f in gate.findings)
+
+
+def test_regression_rejects_dataset_revision_mismatch():
+    from agent_eval_harness.regression.engine import check_regression
+
+    gate = check_regression(_compat_record(0.9, ds_rev="ffffffffffffffff"),
+                            _compat_baseline(0.89, ds_rev="6b2d6a9a48bc7c96"))
+    assert not gate.passed
+    assert any(f.verdict == "incompatible_dataset" for f in gate.findings)
+
+
+def test_regression_rejects_evaluator_set_mismatch():
+    from agent_eval_harness.regression.engine import check_regression
+
+    gate = check_regression(
+        _compat_record(0.9, evaluators="task_checks,termination"),
+        _compat_baseline(0.89, evaluators="task_checks,tool_selection"))
+    assert not gate.passed
+    assert any(f.verdict == "incompatible_evaluators" for f in gate.findings)
+
+
+def test_regression_accepts_comparable_samples():
+    from agent_eval_harness.regression.engine import check_regression
+
+    # same benchmark, same dataset, same selection digest, same evaluators
+    gate = check_regression(
+        _compat_record(0.88, selection="n=56;sha=deadbeef1234"),
+        _compat_baseline(0.89, selection="n=56;sha=deadbeef1234"))
+    assert gate.passed  # -0.01 within -0.03 threshold
+    assert not any(f.verdict.startswith("incompatible") for f in gate.findings)
+
+
+def test_regression_legacy_baseline_count_fallback():
+    from agent_eval_harness.regression.engine import check_regression
+
+    # legacy baseline: no selection digest, no versions — equal counts pass
+    base = _compat_baseline(0.89)
+    base.versions = {}
+    base.metrics = {"pass_rate": 0.89, "per_evaluator": {}, "cases": 56}
+    gate = check_regression(_compat_record(0.88), base)
+    assert gate.passed
+    assert not any(f.verdict.startswith("incompatible") for f in gate.findings)
+
+
+def test_regression_runnerlevel_cross_benchmark_rejected(tmp_path):
+    """The exact CI failure mode: failure_recovery run gated vs react_basic
+    'main' baseline used to be accepted silently."""
+    from agent_eval_harness.regression.engine import check_regression, load_baseline
+    from agent_eval_harness.registry.registry import load_benchmark
+    from agent_eval_harness.runner.runner import BenchmarkRunner, RunConfig
+
+    main_base = load_baseline("main")
+    bm = load_benchmark("failure_recovery")
+    fr_run = BenchmarkRunner(bm, RunConfig(benchmark="failure_recovery",
+                                           out_dir=str(tmp_path))).run()
+    gate = check_regression(fr_run, main_base)
+    assert not gate.passed
+    assert any(f.verdict == "incompatible_benchmark" for f in gate.findings)
