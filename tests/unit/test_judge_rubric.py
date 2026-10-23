@@ -131,9 +131,9 @@ def _live_env(monkeypatch, content=None, exc=None):
     import json as _json
     from agent_eval_harness.evaluators.llm_judge.judge import LiveJudge
 
-    monkeypatch.setenv("OPENAI_API_KEY", "test-key-not-real")
+    monkeypatch.setenv("OPENAI_API_KEY", "k")
     monkeypatch.delenv("AEH_JUDGE_BACKEND", raising=False)
-    judge = LiveJudge(api_key="test-key-not-real", base_url="http://test.invalid", timeout_s=5)
+    judge = LiveJudge(api_key="k", base_url="http://test.invalid", timeout_s=5)
 
     class _Resp:
         def read(self):

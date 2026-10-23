@@ -114,7 +114,7 @@ def test_live_judge_fallbacks_are_counted_and_visible(tmp_path, monkeypatch):
     )
 
     monkeypatch.setenv("AEH_JUDGE_BACKEND", "live")
-    monkeypatch.setenv("OPENAI_API_KEY", "test-key-not-real")
+    monkeypatch.setenv("OPENAI_API_KEY", "k")
     monkeypatch.setenv("AEH_PROMPTS_DIR", "prompts")
 
     def fake_urlopen(req, timeout=None):  # noqa: ARG001
@@ -215,7 +215,7 @@ def test_live_judge_reaches_local_endpoint_during_sandboxed_run(tmp_path, monkey
         )
 
         monkeypatch.setenv("AEH_JUDGE_BACKEND", "live")
-        monkeypatch.setenv("OPENAI_API_KEY", "test-key-not-real")
+        monkeypatch.setenv("OPENAI_API_KEY", "k")
         monkeypatch.setenv("OPENAI_BASE_URL", f"http://127.0.0.1:{srv.server_address[1]}/v1")
         monkeypatch.setenv("AEH_PROMPTS_DIR", "prompts")
 
