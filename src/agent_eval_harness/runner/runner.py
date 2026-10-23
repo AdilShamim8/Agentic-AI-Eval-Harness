@@ -360,16 +360,28 @@ class BenchmarkRunner:
                 f"{limit}")
 
     def _persist(self, record: RunRecord) -> str:
+        """Persist the run record + event log atomically.
+
+        The record is written to a temp file and os.replace()d into place, so
+        concurrent readers (dashboard, status scans) never observe a partial
+        JSON file, and a crash mid-write cannot clobber an existing record.
+        Events are exported first so a single record write carries the final
+        events_path (no double-write window).
+        """
         os.makedirs(self.config.out_dir, exist_ok=True)
         path = os.path.join(self.config.out_dir, f"{record.run_id}.json")
-        with open(path, "w", encoding="utf-8") as fh:
-            fh.write(dumps(record))
         events_path = os.path.join(self.config.out_dir,
                                    f"{record.run_id}.events.jsonl")
         self.events.export_jsonl(events_path)
         record.events_path = os.path.normpath(events_path).replace("\\", "/")
-        with open(path, "w", encoding="utf-8") as fh:  # rewrite with events path
-            fh.write(dumps(record))
+        tmp = path + ".tmp"
+        try:
+            with open(tmp, "w", encoding="utf-8") as fh:
+                fh.write(dumps(record))
+            os.replace(tmp, path)  # atomic on POSIX and Windows
+        finally:
+            if os.path.exists(tmp):  # only on failure; replace() consumed it
+                os.unlink(tmp)
         return path
 
 

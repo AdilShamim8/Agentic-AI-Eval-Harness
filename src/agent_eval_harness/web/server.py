@@ -8,6 +8,7 @@ from __future__ import annotations
 import json
 import os
 import sys
+import threading
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
@@ -557,6 +558,11 @@ INDEX_HTML = """<!DOCTYPE html>
 class DashboardHandler(BaseHTTPRequestHandler):
     runs_dir: str = "evals/runs"
     baselines_dir: str = "evals/baselines"
+    # POST /api/run executes a benchmark run (CPU + writes). Runs are
+    # SERIALIZED per process: two concurrent executions would interleave
+    # run artifacts and contend on the process-global network guard. This is
+    # a single-operator ops tool, not a multi-tenant executor.
+    _execute_lock = threading.Lock()
 
     def do_GET(self) -> None:
       parsed = urlparse(self.path)
@@ -639,10 +645,11 @@ class DashboardHandler(BaseHTTPRequestHandler):
         limit = payload.get("limit")
         limit = int(limit) if limit else None
 
-        bench = load_benchmark(bench_name)
-        cfg = RunConfig(benchmark=bench_name, skill=skill, limit=limit, out_dir=self.runs_dir)
-        runner = BenchmarkRunner(bench, cfg)
-        record = runner.run()
+        with DashboardHandler._execute_lock:
+            bench = load_benchmark(bench_name)
+            cfg = RunConfig(benchmark=bench_name, skill=skill, limit=limit, out_dir=self.runs_dir)
+            runner = BenchmarkRunner(bench, cfg)
+            record = runner.run()
 
         self._send_json({
             "run_id": record.run_id,

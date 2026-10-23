@@ -478,3 +478,41 @@ def test_pass_on_insufficient_policy_both_ways(tmp_path):
                             gate_config_path=gates)
     assert gate.passed
     assert "insufficient" in gate.summary
+
+
+# ---- run artifact atomicity (Issue G) ----------------------------------------
+
+
+def test_persist_is_atomic_and_leaves_no_tmp(tmp_path, monkeypatch):
+    """_persist: tmp file + os.replace — a crash mid-write must not clobber
+    an existing record, and no .tmp residue may remain."""
+    import agent_eval_harness.runner.runner as runner_mod
+    from agent_eval_harness.registry.registry import load_benchmark
+    from agent_eval_harness.runner.runner import BenchmarkRunner, RunConfig
+
+    bm = load_benchmark("react_basic")
+    r = BenchmarkRunner(bm, RunConfig(benchmark="react_basic", limit=2,
+                                      out_dir=str(tmp_path))).run()
+    rec_path = tmp_path / f"{r.run_id}.json"
+    assert rec_path.read_text(encoding="utf-8").startswith("{")
+    assert not list(tmp_path.glob("*.tmp")), "no .tmp residue after success"
+
+    # now force a failure mid-persist on a re-run: existing record must survive
+    target = tmp_path / f"{r.run_id}.json"
+    sentinel = '{"sentinel": true}'
+    target.write_text(sentinel, encoding="utf-8")
+
+    def boom(obj):
+        raise ValueError("simulated serialization crash")
+
+    monkeypatch.setattr(runner_mod, "dumps", boom)
+    try:
+        BenchmarkRunner(bm, RunConfig(benchmark="react_basic", limit=2,
+                                      out_dir=str(tmp_path))).run()
+    except ValueError:
+        pass
+    finally:
+        monkeypatch.undo()
+    assert target.read_text(encoding="utf-8") == sentinel, \
+        "existing record clobbered by a failed persist"
+    assert not list(tmp_path.glob("*.tmp")), "no .tmp residue after failure"
