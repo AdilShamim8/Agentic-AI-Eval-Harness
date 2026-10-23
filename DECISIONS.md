@@ -155,3 +155,50 @@ If you read only three, read D-01 (what we refused to fabricate), D-05 (what
 we chose to make annoying), and D-11 (what we chose to build with zero dependencies). Those
 three explain the product's shape more than any architecture diagram.
 
+
+
+## D11 — Run identity preimage v2 (2026-10)
+
+- **Decision:** the run-id preimage now includes case selection
+  (n + sha over selected case ids) and model configuration identity, and the
+  preimage tag moved v1 -> v2.
+- **Alternative rejected:** appending a timestamp/uuid — breaks the
+  reproducible-identity contract (same experiment must map to the same id).
+- **Reason:** v1 let two experiments differing only in `--limit` (or model
+  config) collide on one id; the later run silently overwrote the earlier
+  run's artifacts. CI's own smoke step triggered this on every push.
+- **Accepted cost:** all historical run ids change; existing records and
+  baselines keep their v1 ids and are never overwritten by v2 re-runs
+  (different preimage tag = different hash domain).
+
+## D12 — Regression gates verify comparability before numbers (2026-10)
+
+- **Decision:** `check_regression` rejects run/baseline pairs that differ in
+  benchmark, dataset revision, case selection, or evaluator set — with an
+  explicit `incompatible_*` finding and a GATE INCOMPATIBLE summary, failing
+  closed. Numeric findings are not emitted for incompatible pairs.
+- **Alternative rejected:** soft warnings — the v0.2.1 behavior already
+  showed the failure mode: meaningless deltas reported as 'ok' findings.
+- **Reason:** a gate that compares incomparable evidence is worse than no
+  gate: it lends its credibility to the comparison.
+- **Accepted cost:** legacy baselines can only be checked by count equality
+  (selection digests are recorded from now on via save_baseline).
+
+## D13 — Network sandbox boundary v0.2 (2026-10)
+
+- **Decision:** the network guard stays installed for the whole run, but the
+  block is lifted ONLY inside `guard.allowed()` windows — used by the runner
+  for the evaluator phase so a live judge can perform authorized HTTP
+  evaluation. `socket.socket(fileno=...)` wraps of existing fds (http.server
+  accept) are allowed; creating a connection is always blocked for agent code.
+- **Alternative rejected:** disabling the guard for the whole run (kills the
+  agent boundary) or for evaluators permanently (same effect while any run
+  is active).
+- **Reason:** v0.2.1 made live judging impossible inside a run
+  (SecurityViolation escaped LiveJudge -> every case an EVALUATOR_ERROR), and
+  the dashboard's accept loop could crash during runs.
+- **Accepted cost:** during an evaluator window, ANY in-process code could
+  create sockets; the runner is single-threaded per run and the dashboard
+  serializes executions, and in-process code can bypass Python-level guards
+  anyway (documented in THREAT-MODEL.md) — the container remains the real
+  isolation boundary.

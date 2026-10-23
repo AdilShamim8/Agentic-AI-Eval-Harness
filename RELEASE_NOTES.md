@@ -54,5 +54,5 @@ Live-LLM measurements: Not measured yet.
 ```bash
 unzip production-agentic-ai-eval-harness-v0.2.0-fde.zip -d harness && cd harness
 python scripts/demo.py      # the whole story in ~90 seconds, no install needed
-pip install -e source/.[dev] && make test   # full suite (126 tests)
+pip install -e .[dev] && make test   # full suite (215 tests as of the 2026-10 audit)
 ```

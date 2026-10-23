@@ -130,7 +130,7 @@ datasets/                 280 machine-verified golden cases (5 patterns × 56)
 evals/                    runs/ baselines/ calibration/ results/
 prompts/                  versioned judge prompts
 configs/                  gates.yaml (regression thresholds), settings.yaml
-tests/                    126 tests: unit/integration/e2e/security/failure-injection
+tests/                    215 tests: unit/integration/e2e/security/failure-injection
 docs/                     fde/ research/ concepts/ security/ career/ journal
 docs/fde/                 the engagement record: brief → discovery → spec → bar
 scripts/                  dataset generator, experiments, demo, release

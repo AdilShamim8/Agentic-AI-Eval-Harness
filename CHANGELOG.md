@@ -1,5 +1,57 @@
 # Changelog
 
+## Unreleased — 2026-10 engineering audit & hardening
+
+End-to-end audit (evidence in `docs/audits/engineering-review/`); every fix
+ships with regression tests (215 passing, up from 152 at baseline).
+
+### Fixed — correctness & integrity
+- Run identity v2: case selection + model config are part of the preimage;
+  distinct experiments no longer silently overwrite each other's records
+  (a `--limit 8` run used to replace a full 56-case record).
+- Regression gates verify comparability (benchmark / dataset / case
+  selection / evaluator set) before trusting any numbers — fail closed
+  with `incompatible_*` findings; no more cross-benchmark comparisons.
+- `min_cases_for_gate` honored from the level `configs/gates.yaml` declares
+  (per-benchmark > default > top-level > 10); boundary semantics tested.
+- Live-judge responses validated against an explicit contract (score in
+  [0,1], boolean-or-'true'/'false' passed agreeing with score, required
+  rationale, numeric confidence); every violation/transport failure falls
+  back to the deterministic rubric RECORDED — counted at run level
+  (`metrics.judge_fallbacks`), per-case events, and a report section.
+  `passed:'false'` (string) no longer false-passes a case.
+- Network sandbox boundary v0.2: the block is lifted only for the trusted
+  evaluator phase (`guard.allowed()`) — a live judge can actually evaluate
+  during a sandboxed run; `socket.socket(fileno=...)` wraps allowed so
+  servers keep accepting during runs; SecurityViolation no longer escapes
+  LiveJudge.
+- Atomic run artifacts: record + events written via tmp + os.replace (no
+  partial reads, no clobber on crash); dashboard POST /api/run serialized.
+- Dashboard: explicit deployment modes — read-only viewer refuses execution
+  with 503 (was an opaque 500 on the read-only compose mount); input
+  validation with 4xx (benchmark/skill/limit; limit=0 no longer silently
+  means a full run); 1 MiB body cap (413); stored-XSS escaping (esc() +
+  data-run-id delegation, no inline onclick); same-origin default (no
+  ACAO:*); nosniff.
+- CLI works without rich on every error/warning path (was AssertionError
+  crashes on the documented minimal install).
+- `PermissionPolicy.from_dict` no longer crashes for any `permissions`
+  block (feature was unusable); secure defaults never silently dropped.
+- `AEH_RUNS_DIR` / `AEH_BASELINES_DIR` (declared by the Dockerfile) are now
+  actually read — single source of truth for storage defaults.
+- Makefile: recipes used 8 spaces instead of TABs — every `make` invocation
+  aborted with 'missing separator'; all documented make workflows were
+  broken. `gate` selects the run id explicitly (no `ls -t` mtime guessing).
+- CI: ruff lint/format + mypy are BLOCKING (were `|| true` while the repo
+  had real failures); eval-gate gates the explicitly captured react_basic
+  run (was the newest-mtime artifact, cross-benchmark).
+- mypy clean (was 15 errors); ruff format applied (was 42+ files failing).
+
+### Removed
+- Stale release-layout duplicates: `source/` (67 files, drifted from src/),
+  `infra/.github/`, root `MANIFEST.sha256` — unread, regenerable, and
+  actively misleading. `evaluators/` reviewer copies refreshed from src/.
+
 ## 0.2.1 — 2026-09-16
 
 Production readiness, web dashboard, cross-platform compatibility, and deployment packaging.

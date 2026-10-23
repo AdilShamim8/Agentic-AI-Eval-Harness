@@ -191,3 +191,26 @@ cloud containerization, and visual observability:
   `ubuntu-latest` across Python 3.11 and 3.12. All matrix runners verified 100% green.
 - **Test Suite:** 126 → **132 passing tests** (added 6 dedicated web server & API integration tests).
 
+
+
+## Addendum — 2026-10 engineering audit (post v0.2.1)
+
+The historical counts above (121 -> 126 -> 132 tests) describe past releases
+and are left as recorded. Current verified state after the 2026-10
+end-to-end audit and hardening pass:
+
+- **Tests:** 215 passing (63 new regression tests added by the audit; see
+  `docs/audits/engineering-review/`).
+- **Quality gates:** ruff lint + format + mypy are now clean AND blocking in
+  CI (they were `|| true` non-blocking at v0.2.1 with real failures hidden).
+- **Run identity:** v2 preimage — case selection and model configuration are
+  part of experiment identity; distinct experiments no longer overwrite each
+  other's artifacts.
+- **Regression gates:** reject incompatible baselines (benchmark / dataset /
+  selection / evaluator set) instead of silently comparing them.
+- **Judge:** live responses are validated against an explicit contract;
+  every fallback is recorded and counted; a live judge can reach its
+  authorized endpoint while the network sandbox stays active for agent code.
+- **Docker:** explicit read-only viewer vs authorized executor modes.
+- All benchmark pass-rate measurements above remain reproducible (same seed,
+  same verdicts, byte-identical records); see the audit's TEST_REPORT.md.
