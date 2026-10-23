@@ -64,7 +64,11 @@ Deployment (infra/)  = Dockerfile (multi-stage, non-root) + docker-compose (runn
 - Single seeded RNG stream per case (seed derived from run seed + case id hash).
 - No wall-clock in scores; latency measured but never influencing decisions.
 - Ordered dict serialization (sort_keys=True) for byte-identical run records.
-- run_id = sha256(benchmark|agent|seed|ablation|dataset_sha) — replayable identity.
+- run_id = sha256(v2 preimage: benchmark|agent|seed|ablation|dataset_sha|
+  case_selection|model_identity|extra) — replayable identity. v2 (2026-10)
+  adds case selection (limit/category filters) and model config to the
+  preimage so distinct experiments never share a run id; see
+  DECISIONS.md and core/ids.py for the v1→v2 rationale.
 - Event timestamps are recorded metadata (excluded from run_id preimage).
 - Cross-platform determinism: .gitattributes enforces LF line endings; dataset hashing normalizes CRLF to LF; stdout reconfigures to UTF-8 on Windows.
 
