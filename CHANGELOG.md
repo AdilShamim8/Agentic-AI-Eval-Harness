@@ -3,7 +3,7 @@
 ## Unreleased — 2026-10 engineering audit & hardening
 
 End-to-end audit (evidence in `docs/audits/engineering-review/`); every fix
-ships with regression tests (215 passing, up from 152 at baseline).
+ships with regression tests (218 passing, up from 152 at baseline).
 
 ### Fixed — correctness & integrity
 - Run identity v2: case selection + model config are part of the preimage;
@@ -46,6 +46,13 @@ ships with regression tests (215 passing, up from 152 at baseline).
   had real failures); eval-gate gates the explicitly captured react_basic
   run (was the newest-mtime artifact, cross-benchmark).
 - mypy clean (was 15 errors); ruff format applied (was 42+ files failing).
+- Self-review pass (2026-10, post-audit): live-judge response-SHAPE violations
+  (content=null, non-dict message/choices) raised AttributeError/TypeError that
+  escaped `evaluate()` into the evaluator phase — the exact failure class the
+  live-judge contract fix was meant to contain. Now: explicit envelope shape
+  validation (`_InvalidLiveResponse` with specific messages → recorded rubric
+  fallback) plus `AttributeError`/`TypeError` in the fallback except tuple as
+  defense in depth; nothing escapes, every fallback is recorded and counted.
 
 ### Removed
 - Stale release-layout duplicates: `source/` (67 files, drifted from src/),

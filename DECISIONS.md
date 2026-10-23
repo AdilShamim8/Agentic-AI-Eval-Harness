@@ -202,3 +202,28 @@ three explain the product's shape more than any architecture diagram.
   serializes executions, and in-process code can bypass Python-level guards
   anyway (documented in THREAT-MODEL.md) — the container remains the real
   isolation boundary.
+
+## D14 — Live-judge evaluate() can never raise into the evaluator phase (2026-10, self-review)
+
+- **Decision:** live-judge response-SHAPE violations are contract violations:
+  extracting `choices[0].message.content` now raises `_InvalidLiveResponse`
+  with a specific message (missing/mistyped envelope parts, non-string
+  content) — recorded rubric fallback, like every other contract violation.
+  On top of that, `AttributeError` and `TypeError` joined the fallback except
+  tuple as defense in depth: no exception class escapes `evaluate()` into
+  the evaluator phase.
+- **Alternative rejected:** only widening the except tuple (loses the
+  specific, actionable messages); only the explicit validator (any
+  unforeseen path — e.g. a future refactor reintroducing a bare attribute
+  access — could still escape).
+- **Reason:** found in the post-audit self-review: `content=null` crashed
+  with `AttributeError` and non-dict `message`/`choices` with `TypeError`;
+  both escaped `evaluate()` — the exact failure class the fix-E contract was
+  meant to contain. Empirical probes before the fix, 3 regression tests
+  after (215→218 tests).
+- **Accepted cost:** a genuine TypeError/AttributeError bug in the
+  result-construction path would be masked as a rubric fallback note instead
+  of crashing loudly. The happy path is pinned by
+  `test_live_valid_response_used_as_live_backend`, and every fallback is
+  recorded (meta) and counted (`metrics.judge_fallbacks`), so drift is
+  visible in run reports.

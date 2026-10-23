@@ -131,7 +131,7 @@ datasets/                 280 machine-verified golden cases (5 patterns × 56)
 evals/                    runs/ baselines/ calibration/ results/
 prompts/                  versioned judge prompts
 configs/                  gates.yaml (regression thresholds), settings.yaml
-tests/                    215 tests: unit/integration/e2e/security/failure-injection
+tests/                    218 tests: unit/integration/e2e/security/failure-injection
 docs/                     fde/ research/ concepts/ security/ career/ journal
 docs/fde/                 the engagement record: brief → discovery → spec → bar
 scripts/                  dataset generator, experiments, demo, release
@@ -163,7 +163,8 @@ scripts/                  dataset generator, experiments, demo, release
 - [docs/concepts/](docs/concepts/) — 13 concept docs (why/how/trade-offs/failure modes)
 - [docs/audits/engineering-review/](docs/audits/engineering-review/) — 2026-10
   end-to-end engineering audit: findings, test matrix, security review,
-  evaluation integrity, roadmap (18 fixes, 152→215 tests)
+  evaluation integrity, roadmap (18 fixes + self-review pass,
+  152→218 tests)
 
 
 License: MIT. Python ≥ 3.11. Runtime deps: PyYAML.
