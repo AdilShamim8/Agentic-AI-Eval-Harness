@@ -51,8 +51,11 @@ repro:
 	agent-eval repro --benchmark $(BENCH) --repeats 5
 
 gate:
-	agent-eval run --benchmark $(BENCH) && \
-	RUN_ID=$$(ls -t evals/runs/*.json | head -1 | xargs basename | cut -d. -f1) && \
+	@RUN_JSON=$$($(PYTHON) -c 'import tempfile; print(tempfile.mkstemp(suffix=".json")[1])'); \
+	agent-eval run --benchmark $(BENCH) --json > $$RUN_JSON || { rm -f $$RUN_JSON; exit 1; }; \
+	RUN_ID=$$($(PYTHON) -c 'import json,sys; print(json.load(open(sys.argv[1]))["run_id"])' $$RUN_JSON); \
+	rm -f $$RUN_JSON; \
+	echo "gating run $$RUN_ID (benchmark: $(BENCH)) vs baseline 'main'"; \
 	agent-eval regression $$RUN_ID --baseline main
 
 experiments:
