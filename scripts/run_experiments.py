@@ -117,7 +117,9 @@ def main() -> int:
         )
     summary["repro"] = repro
     for key, r in repro.items():
-        print(f"  {key}: spread={r['max_spread_pp']}pp identical={r['byte_identical_same_seed']}")
+        print(
+            f"  {key}: spread={r['max_spread_pp']}pp semantically-identical={r['byte_identical_same_seed']}"
+        )
 
     # ---- 5. regression demo ---------------------------------------------------
     print("== Regression demo (baseline vs degraded challenger) ==")

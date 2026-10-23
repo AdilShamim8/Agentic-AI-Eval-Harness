@@ -239,6 +239,7 @@ def run_repro(
         "target_within_pp": 2.0,
         "target_met": spread * 100 <= 2.0,
         "byte_identical_same_seed": byte_identical,
+        "semantically_identical_same_seed": byte_identical,  # precise name; legacy key kept for JSON consumers
         "run_ids": run_ids,
     }
 

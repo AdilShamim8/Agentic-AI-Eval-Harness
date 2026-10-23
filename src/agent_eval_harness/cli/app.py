@@ -419,7 +419,7 @@ def cmd_repro(args) -> int:
         f"(target <= {result['target_within_pp']}pp: "
         f"{'MET' if result['target_met'] else 'MISSED'})"
     )
-    print(f"  byte-identical (same seed): {result['byte_identical_same_seed']}")
+    print(f"  semantically identical (same seed): {result['byte_identical_same_seed']}")
     return 0 if result["target_met"] else 1
 
 

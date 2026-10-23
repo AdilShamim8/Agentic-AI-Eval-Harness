@@ -62,7 +62,9 @@ blamed on "the model" without evidence, and evaluation results are not reproduci
 ## 5. Non-functional requirements
 
 - Correctness: evaluators unit-tested; runner never conflates failure classes (132 passing tests).
-- Reproducibility: same inputs + seed => byte-identical run records (verified by test).
+- Reproducibility: same inputs + seed => semantically identical run records
+  (same run_id, verdicts, scores, config; wall-clock fields excluded by
+  design); datasets regenerate byte-identically (verified by test).
 - Zero network at runtime by default (tools are offline fixtures; socket guard on).
 - Runtime: full 280-case suite < 60 s on the deterministic backend; smoke < 10 s.
 - Extensibility: new evaluator/adapter/tool = one module + registry entry.

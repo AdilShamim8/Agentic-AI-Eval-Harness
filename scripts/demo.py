@@ -188,7 +188,7 @@ def main() -> int:
         if repro:
             print(
                 f"  same-seed repro      : max spread {repro.get('max_spread_pp')}pp "
-                f"(byte-identical: {repro.get('byte_identical_same_seed')})"
+                f"(semantically identical: {repro.get('semantically_identical_same_seed', repro.get('byte_identical_same_seed'))})"
             )
         abl = exp.get("ablation", {}).get("skill_0.6", {}).get("attribution", {})
         if abl.get("no_retry"):

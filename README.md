@@ -102,7 +102,8 @@ costs −12.5pp (recovery 100%→50%); removing verification −6.2pp; removing
 tool validation doubles the loop rate. Judge calibration vs hand labels:
 Cohen's κ = 1.0 (after rubric v1.1; v1.0 measured 0.082 and was rejected —
 see `INCIDENTS.md` INC-4). Same-seed reproducibility: 0.0pp spread,
-byte-identical run records. Regression demo: injected −26.8pp drop → gate
+semantically identical run records (same run_id, verdicts, scores, config;
+wall-clock fields excluded by design). Regression demo: injected −26.8pp drop → gate
 FAIL in 0.3s (`make demo`).
 
 **Honesty note**: all benchmark scores above are measured on the deterministic
@@ -141,7 +142,9 @@ scripts/                  dataset generator, experiments, demo, release
 ## Key guarantees
 
 - **Deterministic**: same (agent, benchmark, seed, ablation, dataset) →
-  byte-identical verdicts; datasets regenerate byte-identically (hash-verified).
+  semantically identical run records (same run_id, verdicts, scores;
+  wall-clock fields excluded by design); datasets regenerate
+  byte-identically (hash-verified).
 - **No fabrication**: every number in docs is produced by
   `scripts/run_experiments.py`; anything unmeasured is labeled
   *Not measured yet*.
