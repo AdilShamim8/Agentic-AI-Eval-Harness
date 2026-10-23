@@ -406,7 +406,18 @@ class LiveJudge(RubricJudge):
             )
             with urllib.request.urlopen(req, timeout=self.timeout_s) as resp:
                 data = json.loads(resp.read().decode())
-            content = data["choices"][0]["message"]["content"].strip()
+            try:
+                content = data["choices"][0]["message"]["content"]
+            except (KeyError, IndexError, TypeError) as exc:
+                # envelope shape violations (content null, message/choices not
+                # the expected structure) are contract violations like any
+                # other: fall back to rubric, never escape evaluate().
+                raise _InvalidLiveResponse(
+                    f"response envelope has no message content ({exc!r})"
+                ) from exc
+            if not isinstance(content, str):
+                raise _InvalidLiveResponse(f"content {content!r} is not a string")
+            content = content.strip()
             if content.startswith("```"):
                 content = re.sub(r"^```(?:json)?\s*", "", content)
                 content = re.sub(r"\s*```$", "", content)
@@ -439,7 +450,12 @@ class LiveJudge(RubricJudge):
             KeyError,
             OSError,
             SecurityViolation,
+            AttributeError,
+            TypeError,
         ) as exc:
+            # defense in depth: a live endpoint that misbehaves in any way
+            # degrades to the deterministic rubric with a recorded note —
+            # nothing escapes evaluate() into the evaluator phase.
             return self._with_fallback_note(rubric, f"live judge failed: {exc}")
 
     # -- helpers ---------------------------------------------------------------

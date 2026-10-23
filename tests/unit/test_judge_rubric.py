@@ -124,10 +124,14 @@ def test_live_judge_build_prompt_includes_plan_and_criterion():
 # ---- live-judge response contract + fallback policy (Issue E) ----------------
 
 
-def _live_env(monkeypatch, content=None, exc=None):
+def _live_env(monkeypatch, content=None, exc=None, envelope=None):
     """Point a LiveJudge at a controlled transport double (no real network,
     no paid service): monkeypatched urlopen returning a fixed payload or
-    raising a supplied exception."""
+    raising a supplied exception.
+
+    ``content`` is wrapped in the standard envelope; ``envelope`` (when given)
+    is returned verbatim — for testing response-SHAPE violations (null
+    content, non-dict message, non-list choices)."""
     import json as _json
     from agent_eval_harness.evaluators.llm_judge.judge import LiveJudge
 
@@ -137,6 +141,8 @@ def _live_env(monkeypatch, content=None, exc=None):
 
     class _Resp:
         def read(self):
+            if envelope is not None:
+                return _json.dumps(envelope).encode()
             return _json.dumps({"choices": [{"message": {"content": content}}]}).encode()
 
         def __enter__(self):
@@ -297,6 +303,34 @@ def test_live_server_error_falls_back(monkeypatch):
     )
     res = judge.evaluate(_c(), _o())
     assert "live judge failed" in res.meta["fallback"]
+
+
+def test_live_null_content_falls_back(monkeypatch):
+    """Self-review finding: a live endpoint returning content=null crashed
+    evaluate() with AttributeError (content.strip() on None) — the exception
+    escaped instead of falling back. Shape violations must degrade to rubric
+    with a recorded note, like every other contract violation."""
+    judge = _live_env(monkeypatch, envelope={"choices": [{"message": {"content": None}}]})
+    res = judge.evaluate(_c(), _o())
+    assert res.meta["backend"] == "deterministic-rubric-v1"
+    assert "content" in res.meta["fallback"]
+
+
+def test_live_non_dict_message_falls_back(monkeypatch):
+    """message as a plain string raised TypeError ('string indices...') and
+    escaped evaluate() before the fix."""
+    judge = _live_env(monkeypatch, envelope={"choices": [{"message": "nope"}]})
+    res = judge.evaluate(_c(), _o())
+    assert res.meta["backend"] == "deterministic-rubric-v1"
+    assert "envelope" in res.meta["fallback"]
+
+
+def test_live_choices_not_a_list_falls_back(monkeypatch):
+    """choices as a plain string raised TypeError and escaped evaluate()."""
+    judge = _live_env(monkeypatch, envelope={"choices": "nope"})
+    res = judge.evaluate(_c(), _o())
+    assert res.meta["backend"] == "deterministic-rubric-v1"
+    assert "envelope" in res.meta["fallback"]
 
 
 def test_live_malformed_json_falls_back(monkeypatch):
