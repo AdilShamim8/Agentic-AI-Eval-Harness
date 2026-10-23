@@ -35,7 +35,10 @@ def test_runconfig_default_out_dir_follows_env(tmp_path, monkeypatch):
     assert runner.config.out_dir == str(tmp_path)
     rec = runner.run()
     assert os.path.isfile(os.path.join(str(tmp_path), f"{rec.run_id}.json"))
-    assert rec.events_path.startswith(str(tmp_path))
+    # events_path is POSIX-normalized by design (no backslashes — see
+    # test_runner_persist_posix_events_path); compare against the
+    # normalized form so the assertion holds on Windows too.
+    assert rec.events_path.startswith(str(tmp_path).replace("\\", "/"))
 
 
 def test_cli_run_respects_env_runs_dir(tmp_path, monkeypatch):
