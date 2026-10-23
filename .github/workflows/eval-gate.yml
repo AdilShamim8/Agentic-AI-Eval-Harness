@@ -27,12 +27,24 @@ jobs:
       - name: Full benchmark run + threshold gates (blocking)
         run: |
           set -e
-          agent-eval run --benchmark react_basic
+          agent-eval run --benchmark react_basic --json > "$RUNNER_TEMP/react_full_run.json"
           agent-eval run --benchmark failure_recovery
+        env:
+          RUNNER_TEMP: ${{ runner.temp }}
       - name: Regression gate vs committed baseline (blocking)
         run: |
-          RUN_ID=$(ls -t evals/runs/*.json | head -1 | xargs basename | cut -d. -f1)
+          set -e
+          # Select the run EXPLICITLY by the id captured from the react_basic
+          # command above. Never `ls -t evals/runs` — mtime-based selection can
+          # pick the wrong benchmark's artifact (it used to gate the
+          # failure_recovery run against the react_basic baseline).
+          RUN_ID=$(python -c "import json,sys; print(json.load(open(sys.argv[1]))['run_id'])" "$RUNNER_TEMP/react_full_run.json")
+          BENCH=$(python -c "import json,sys; print(json.load(open(sys.argv[1]))['benchmark'])" "$RUNNER_TEMP/react_full_run.json")
+          echo "gating run: $RUN_ID (benchmark: $BENCH) vs baseline 'main'"
+          test "$BENCH" = "react_basic"
           agent-eval regression "$RUN_ID" --baseline main
+        env:
+          RUNNER_TEMP: ${{ runner.temp }}
       - name: Adversarial security evaluation (blocking)
         run: |
           agent-eval run --benchmark adversarial
