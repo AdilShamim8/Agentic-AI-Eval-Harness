@@ -21,7 +21,7 @@ format:
 	ruff format src tests scripts
 
 type:
-	mypy src/agent_eval_harness --ignore-missing-imports || true
+	mypy src/agent_eval_harness --ignore-missing-imports
 
 test:
 	pytest tests/

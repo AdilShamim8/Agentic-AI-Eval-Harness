@@ -19,12 +19,12 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install
         run: pip install -e .[dev]
-      - name: Lint (ruff)
-        run: ruff check src tests scripts || true
-      - name: Format check (ruff)
-        run: ruff format --check src tests scripts || true
-      - name: Type check (mypy, non-blocking detail level)
-        run: mypy src/agent_eval_harness --ignore-missing-imports || true
+      - name: Lint (ruff, blocking)
+        run: ruff check src tests scripts
+      - name: Format check (ruff, blocking)
+        run: ruff format --check src tests scripts
+      - name: Type check (mypy, blocking)
+        run: mypy src/agent_eval_harness --ignore-missing-imports
       - name: Unit + integration tests
         run: pytest -m "not agent_eval" tests/unit tests/integration tests/failure_injection
       - name: E2E + CLI tests
