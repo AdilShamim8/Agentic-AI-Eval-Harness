@@ -21,7 +21,12 @@ from agent_eval_harness.core.errors import (
     InfraError,
     classify_exception,
 )
-from agent_eval_harness.core.ids import case_seed, run_id as make_run_id
+from agent_eval_harness.core.ids import (
+    case_seed,
+    case_selection_digest,
+    run_id as make_run_id,
+    short_hash,
+)
 from agent_eval_harness.core.schemas import (
     BaselineRecord,
     CaseVerdict,
@@ -100,19 +105,47 @@ class BenchmarkRunner:
             return alt
         raise InfraError(f"dataset not found: {path}")
 
+    # ------------------------------------------------------------------
+    def _experiment_identity(self, ds_sha: str) -> tuple[str, dict[str, Any]]:
+        """Deterministic experiment identity (run id v2 preimage inputs).
+
+        Identity covers everything that can change a verdict: benchmark, agent,
+        seed, ablation, dataset hash, WHICH cases ran (limit + category filters),
+        the model configuration that drove the agent, and the skill knob.
+        Two runs that differ in any of these are DIFFERENT experiments and must
+        never share a run id (v1 collided on case selection and model config,
+        silently overwriting run artifacts — see ids.py v2 note).
+        """
+        case_selection = (f"n={len(self.cases)};"
+                          f"sha={case_selection_digest([c.id for c in self.cases])}")
+        if self.config.model_config is None:
+            model_identity = "default"
+        else:
+            model_identity = f"cfg:{short_hash(dumps(self.config.model_config))}"
+        rid = make_run_id(
+            self.benchmark.name, self.agent_spec, self.config.seed,
+            self.ablation.name, ds_sha,
+            extra=f"skill={self.config.skill}",
+            case_selection=case_selection,
+            model_identity=model_identity)
+        identity_debug = {
+            "case_selection": case_selection,
+            "model_identity": model_identity,
+        }
+        return rid, identity_debug
+
     def run(self) -> RunRecord:
         t_start = time.perf_counter()
         ds_sha = dataset_sha256(self._resolve(self.benchmark.dataset_path))
-        rid = make_run_id(self.benchmark.name, self.agent_spec, self.config.seed,
-                          self.ablation.name, ds_sha,
-                          extra=f"skill={self.config.skill}")
+        rid, identity = self._experiment_identity(ds_sha)
         self.events = EventRecorder(rid)
         self.events.emit("run_start", {
             "run_id": rid, "benchmark": self.benchmark.name,
             "benchmark_version": self.benchmark.version,
             "agent": self.agent_spec, "seed": self.config.seed,
             "ablation": self.ablation.name, "cases": len(self.cases),
-            "skill": self.config.skill})
+            "skill": self.config.skill,
+            "identity": identity})
 
         verdicts: list[CaseVerdict] = []
         outcome_rows: list[dict] = []
@@ -245,7 +278,9 @@ class BenchmarkRunner:
             config={"skill": self.config.skill, "limit": self.config.limit,
                     "limits": dumps(self.limits),
                     "evaluators": self.benchmark.evaluators,
-                    "thresholds": self.benchmark.thresholds},
+                    "thresholds": self.benchmark.thresholds,
+                    "case_selection": identity["case_selection"],
+                    "model_identity": identity["model_identity"]},
             verdicts=verdicts,
             metrics=metrics,
             recorded_at=time.strftime("%Y-%m-%dT%H:%M:%S%z"),
@@ -298,9 +333,11 @@ class BenchmarkRunner:
         }
 
     def _command_str(self) -> str:
+        limit = f" --limit {self.config.limit}" if self.config.limit else ""
         return (f"agent-eval run --benchmark {self.benchmark.name} "
                 f"--agent {self.agent_spec} --seed {self.config.seed} "
-                f"--skill {self.config.skill} --ablation {self.ablation.name}")
+                f"--skill {self.config.skill} --ablation {self.ablation.name}"
+                f"{limit}")
 
     def _persist(self, record: RunRecord) -> str:
         os.makedirs(self.config.out_dir, exist_ok=True)
