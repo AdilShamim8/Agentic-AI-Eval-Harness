@@ -160,6 +160,9 @@ scripts/                  dataset generator, experiments, demo, release
 - [docs/engineering-journal.md](docs/engineering-journal.md) — build log
 - [SECURITY.md](SECURITY.md) + [docs/security/THREAT-MODEL.md](docs/security/THREAT-MODEL.md)
 - [docs/concepts/](docs/concepts/) — 13 concept docs (why/how/trade-offs/failure modes)
+- [docs/audits/engineering-review/](docs/audits/engineering-review/) — 2026-10
+  end-to-end engineering audit: findings, test matrix, security review,
+  evaluation integrity, roadmap (18 fixes, 152→215 tests)
 
 
 License: MIT. Python ≥ 3.11. Runtime deps: PyYAML.
