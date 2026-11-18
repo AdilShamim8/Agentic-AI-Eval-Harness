@@ -1,4 +1,4 @@
-# agent-eval-harness
+# Agent Eval Harness
 
 **A CI gate for AI agents.** Three teams ship agents on LangGraph, OpenAI
 Agents SDK, CrewAI, or plain Python; this platform runs each one against
